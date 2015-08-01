@@ -1,4 +1,4 @@
-package nl.rwslinkman.hueme;
+package nl.rwslinkman.hueme.hueservice;
 
 import android.app.Service;
 import android.content.Intent;
@@ -9,11 +9,14 @@ import android.util.Log;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
+import com.philips.lighting.hue.sdk.PHMessageType;
 import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueParsingError;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 /**
@@ -26,30 +29,32 @@ public class HueService extends Service implements PHSDKListener
     public static final String TAG = HueService.class.getSimpleName();
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
+    private HueBroadcaster broadcaster;
 
     @Override
     public IBinder onBind(Intent intent)
     {
+        broadcaster = new HueBroadcaster(this);
+
         Log.d(TAG, "HueService bound to application");
         phHueSDK = PHHueSDK.getInstance();
 
         PHNotificationManager phNotificationManager = phHueSDK.getNotificationManager();
         phNotificationManager.registerSDKListener(this);
 
-        PHBridgeSearchManager phSearchManager = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
-        phSearchManager.upnpSearch();
-        phSearchManager.portalSearch();
-
-
+        List<PHAccessPoint> foundAccessPoints = phHueSDK.getAccessPointsFound();
         PHBridge phHueBridge = phHueSDK.getSelectedBridge();
-        if(phHueBridge == null)
+        if(foundAccessPoints.size() == 0 || phHueBridge == null)
         {
-            Log.d(TAG, "No Hue bridge connected");
+            // No bridges found
+            Log.d(TAG, "Starting bridge search, nothing found");
+            Log.d(TAG, "Access points found: " + Integer.toString(foundAccessPoints.size()));
+            Log.d(TAG, "Is bridge null: " + Boolean.toString(phHueBridge == null));
 
+            PHBridgeSearchManager phSearchManager = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
+            phSearchManager.upnpSearch();
+            phSearchManager.portalSearch();
         }
-
-       // phHueBridge is null
-
         return mBinder;
     }
 
@@ -78,9 +83,17 @@ public class HueService extends Service implements PHSDKListener
     }
 
     @Override
-    public void onError(int i, String s)
+    public void onError(int errorCode, String errorMessage)
     {
-        Log.e(TAG, s);
+        if(errorCode == PHMessageType.BRIDGE_NOT_FOUND)
+        {
+            // Broadcast to listeners
+            broadcaster.setAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
+            broadcaster.broadcast();
+        }
+        String errorName = this.getMessageTypeName(errorCode);
+        Log.d(TAG, "Hue SDK error: " + errorName);
+        Log.e(TAG, "Hue SDK error: " + errorMessage);
     }
 
     @Override
@@ -110,5 +123,29 @@ public class HueService extends Service implements PHSDKListener
         {
             return HueService.this;
         }
+    }
+
+    private String getMessageTypeName(int phError)
+    {
+        Field[] constants = PHMessageType.class.getFields();
+        for(Field field : constants)
+        {
+            if(Modifier.isStatic(field.getModifiers()) && field.getType() == int.class)
+            {
+                try
+                {
+                    Object some = new PHMessageType();
+                    if(phError == field.getInt(some))
+                    {
+                        return field.getName();
+                    }
+
+                } catch (IllegalAccessException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "";
     }
 }
