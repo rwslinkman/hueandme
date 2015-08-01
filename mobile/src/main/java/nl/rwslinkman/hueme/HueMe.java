@@ -21,14 +21,13 @@ public class HueMe extends Application
         @Override
         public void onServiceConnected(ComponentName name, IBinder service)
         {
-            Log.d(TAG, "HueService connected to HueMe");
             hueService = ((HueService.LocalBinder) service).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name)
         {
-            Log.d(TAG, "HueService disconnected from HueMe");
+            hueService = null;
         }
     };
 

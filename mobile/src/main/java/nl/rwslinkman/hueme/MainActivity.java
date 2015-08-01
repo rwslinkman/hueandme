@@ -52,7 +52,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
         HueMe app = (HueMe) getApplication();
         HueService hueService = app.getHueService();
         Log.d(TAG, "HueService obtained in MainActivity");
