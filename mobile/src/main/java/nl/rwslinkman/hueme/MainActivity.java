@@ -4,15 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,7 +25,8 @@ import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
 import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks, HueServiceStateListener {
+public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks, HueServiceStateListener
+{
     public static final String TAG = MainActivity.class.getSimpleName();
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
     {
@@ -36,6 +34,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
+            if(action.equals(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE))
+            {
+                // TODO: Display "NoBridgeFragment"
+                Log.d(TAG, "No bridge found");
+            }
             Log.d(TAG, "Broadcast received: " + action);
         }
     };
@@ -57,12 +60,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         fragmentList.add(GroupsFragment.newInstance());
         fragmentList.add(InfoFragment.newInstance());
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.fragment_drawer);
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar);
-        // populate the navigation drawer
-        mNavigationDrawerFragment.setUserData("John Doe", "johndoe@doe.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
+        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar, fragmentList);
+        // TODO: populate the navigation drawer
     }
 
     @Override
@@ -89,6 +91,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     {
         // update the main content by replacing fragments
         Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
+        Fragment selectedFragment = fragmentList.get(position);
+        Log.d(TAG, selectedFragment.getClass().getSimpleName());
     }
 
 
@@ -124,5 +128,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
         return intentFilter;
+    }
+
+    public List<Fragment> getChildFragments() {
+        return fragmentList;
     }
 }

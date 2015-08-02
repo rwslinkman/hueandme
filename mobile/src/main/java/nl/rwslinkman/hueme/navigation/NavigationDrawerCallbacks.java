@@ -1,5 +1,10 @@
 package nl.rwslinkman.hueme.navigation;
 
-public interface NavigationDrawerCallbacks {
+import android.support.v4.app.Fragment;
+
+import java.util.List;
+
+public interface NavigationDrawerCallbacks
+{
     void onNavigationDrawerItemSelected(int position);
 }

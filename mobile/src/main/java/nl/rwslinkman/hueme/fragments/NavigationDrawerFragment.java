@@ -1,63 +1,40 @@
 package nl.rwslinkman.hueme.fragments;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
-import nl.rwslinkman.hueme.navigation.NavigationItem;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
-public class NavigationDrawerFragment extends Fragment implements NavigationDrawerCallbacks {
-
-    /**
-     * Remember the position of the selected item.
-     */
+public class NavigationDrawerFragment extends Fragment implements NavigationDrawerCallbacks
+{
+    public static final String TAG = NavigationDrawerFragment.class.getSimpleName();
     private static final String STATE_SELECTED_POSITION = "selected_navigation_drawer_position";
-
-    /**
-     * Per the design guidelines, you should show the drawer on launch until the user manually
-     * expands it. This shared preference tracks this.
-     */
     private static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
-
-    /**
-     * A pointer to the current callbacks instance (the Activity).
-     */
     private NavigationDrawerCallbacks mCallbacks;
-
-    /**
-     * Helper component that ties the action bar to the navigation drawer.
-     */
     private ActionBarDrawerToggle mActionBarDrawerToggle;
 
     private DrawerLayout mDrawerLayout;
@@ -66,18 +43,20 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     private int mCurrentSelectedPosition = 0;
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
-    private TextView mDrawerList;
+    private ListView mDrawerList;
+    private List<Fragment> menuItems;
+    private RelativeLayout navigationTopLayout;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
 
-        // Read in the flag indicating whether or not the user has demonstrated awareness of the
-        // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mUserLearnedDrawer = sp.getBoolean(PREF_USER_LEARNED_DRAWER, false);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
+        {
             mCurrentSelectedPosition = savedInstanceState.getInt(STATE_SELECTED_POSITION);
             mFromSavedInstanceState = true;
         }
@@ -88,12 +67,14 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     {
         View view = inflater.inflate(R.layout.fragment_navigation_drawer, container, false);
 
+        this.navigationTopLayout = (RelativeLayout) view.findViewById(R.id.navigationHeader);
 
-        mDrawerList = (TextView) view.findViewById(R.id.drawerList);
+        mDrawerList = (ListView) view.findViewById(R.id.drawerList);
         return view;
     }
 
-    public boolean isDrawerOpen() {
+    public boolean isDrawerOpen()
+    {
         return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(mFragmentContainerView);
     }
 
@@ -106,16 +87,9 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(int position)
+    {
         selectItem(position);
-    }
-
-    public List<NavigationItem> getMenu() {
-        List<NavigationItem> items = new ArrayList<NavigationItem>();
-        items.add(new NavigationItem("item 1", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 2", getResources().getDrawable(R.drawable.ic_menu_check)));
-        items.add(new NavigationItem("item 3", getResources().getDrawable(R.drawable.ic_menu_check)));
-        return items;
     }
 
     /**
@@ -125,9 +99,11 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      * @param toolbar      The Toolbar of the activity.
      */
-    public void setup(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar) {
-        mFragmentContainerView = getActivity().findViewById(fragmentId);
-        mDrawerLayout = drawerLayout;
+    public void setup(int fragmentId, DrawerLayout drawerLayout, Toolbar toolbar, List<Fragment> menuItems)
+    {
+        this.mFragmentContainerView = getActivity().findViewById(fragmentId);
+        this.mDrawerLayout = drawerLayout;
+        this.menuItems = menuItems;
 
         mDrawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.myPrimaryDarkColor));
 
@@ -156,7 +132,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 
         // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
         // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+        if (!mUserLearnedDrawer && !mFromSavedInstanceState)
+        {
             mDrawerLayout.openDrawer(mFragmentContainerView);
         }
 
@@ -191,124 +168,37 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     }
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Activity activity)
+    {
         super.onAttach(activity);
-        try {
+        try
+        {
             mCallbacks = (NavigationDrawerCallbacks) activity;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
     }
 
     @Override
-    public void onDetach() {
+    public void onDetach()
+    {
         super.onDetach();
         mCallbacks = null;
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState)
+    {
         super.onSaveInstanceState(outState);
         outState.putInt(STATE_SELECTED_POSITION, mCurrentSelectedPosition);
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(Configuration newConfig)
+    {
         super.onConfigurationChanged(newConfig);
         // Forward the new configuration the drawer toggle component.
         mActionBarDrawerToggle.onConfigurationChanged(newConfig);
-    }
-
-    public void setUserData(String user, String email, Bitmap avatar) {
-        ImageView avatarContainer = (ImageView) mFragmentContainerView.findViewById(R.id.imgAvatar);
-        ((TextView) mFragmentContainerView.findViewById(R.id.txtUserEmail)).setText(email);
-        ((TextView) mFragmentContainerView.findViewById(R.id.txtUsername)).setText(user);
-        avatarContainer.setImageDrawable(new RoundImage(avatar));
-    }
-
-    public View getGoogleDrawer() {
-        return mFragmentContainerView.findViewById(R.id.googleDrawer);
-    }
-
-    public static class RoundImage extends Drawable {
-        private final Bitmap mBitmap;
-        private final Paint mPaint;
-        private final RectF mRectF;
-        private final int mBitmapWidth;
-        private final int mBitmapHeight;
-
-        public RoundImage(Bitmap bitmap) {
-            mBitmap = bitmap;
-            mRectF = new RectF();
-            mPaint = new Paint();
-            mPaint.setAntiAlias(true);
-            mPaint.setDither(true);
-            final BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-            mPaint.setShader(shader);
-
-            mBitmapWidth = mBitmap.getWidth();
-            mBitmapHeight = mBitmap.getHeight();
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            canvas.drawOval(mRectF, mPaint);
-        }
-
-        @Override
-        protected void onBoundsChange(Rect bounds) {
-            super.onBoundsChange(bounds);
-            mRectF.set(bounds);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            if (mPaint.getAlpha() != alpha) {
-                mPaint.setAlpha(alpha);
-                invalidateSelf();
-            }
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter cf) {
-            mPaint.setColorFilter(cf);
-        }
-
-        @Override
-        public int getOpacity() {
-            return PixelFormat.TRANSLUCENT;
-        }
-
-        @Override
-        public int getIntrinsicWidth() {
-            return mBitmapWidth;
-        }
-
-        @Override
-        public int getIntrinsicHeight() {
-            return mBitmapHeight;
-        }
-
-        public void setAntiAlias(boolean aa) {
-            mPaint.setAntiAlias(aa);
-            invalidateSelf();
-        }
-
-        @Override
-        public void setFilterBitmap(boolean filter) {
-            mPaint.setFilterBitmap(filter);
-            invalidateSelf();
-        }
-
-        @Override
-        public void setDither(boolean dither) {
-            mPaint.setDither(dither);
-            invalidateSelf();
-        }
-
-        public Bitmap getBitmap() {
-            return mBitmap;
-        }
-
     }
 }
