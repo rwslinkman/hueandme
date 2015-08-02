@@ -12,10 +12,12 @@
         android:background="@android:color/holo_blue_dark"
         android:paddingTop="24dp">
 
-        <TextView
+        <nl.rwslinkman.awesome.TextAwesome
+            android:id="@+id/navdrwr_statebulb"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Top navigation header"/>
+            android:text="@string/fa_lightbulb_o"
+            android:textSize="@dimen/navdrwr_statebulb"/>
     </RelativeLayout>
 
     <View
