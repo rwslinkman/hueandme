@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/fa_lightbulb_o"
-            android:textSize="@dimen/navdrwr_statebulb"/>
+            android:textSize="@dimen/navdrwr_statebulb"
+            android:background="@drawable/circle"/>
     </RelativeLayout>
 
     <View
