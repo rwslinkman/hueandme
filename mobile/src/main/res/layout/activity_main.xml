@@ -1,9 +1,12 @@
+<!--suppress AndroidElementNotAllowed -->
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
+    <!-- Top toolbar -->
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_actionbar"
         style="@style/ToolBarStyle"
@@ -13,24 +16,27 @@
         android:minHeight="@dimen/abc_action_bar_default_height_material" />
 
 
+    <!-- DrawerLayout below toolbar (menu + container) -->
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
-        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar_actionbar">
 
+        <!-- Container (app content) -->
         <FrameLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:clickable="true"
             android:layout_height="match_parent" />
 
-        <!-- android:layout_marginTop="?android:attr/actionBarSize"-->
-        <fragment
-            android:id="@+id/fragment_drawer"
-            android:name="nl.rwslinkman.hueme.fragments.NavigationDrawerFragment"
-            android:layout_width="@dimen/navigation_drawer_width"
+        <!-- NavigationDrawer -->
+        <android.support.design.widget.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="start" />
+            android:layout_gravity="start"
+            app:headerLayout="@layout/drawer_header" />
 
     </android.support.v4.widget.DrawerLayout>
 </RelativeLayout>

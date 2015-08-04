@@ -4,12 +4,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,10 +49,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             Log.d(TAG, "Broadcast received: " + action);
         }
     };
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+//    private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
     private List<Fragment> fragmentList;
     private HueMe app;
+    private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -55,16 +63,44 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         mToolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(mToolbar);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+
+        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
+                this,  mDrawerLayout, mToolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        );
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        mDrawerToggle.syncState();
+
+
         fragmentList = new ArrayList<>();
         fragmentList.add(LightsFragment.newInstance());
         fragmentList.add(GroupsFragment.newInstance());
         fragmentList.add(InfoFragment.newInstance());
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.inflateMenu(R.menu.drawer);
 
-        // Set up the drawer.
-        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar, fragmentList);
+        switchFragment(fragmentList.get(1));
+
+
+//        mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
+//
+//        // Set up the drawer.
+//        mNavigationDrawerFragment.setup(R.id.fragment_drawer, (DrawerLayout) findViewById(R.id.drawer), mToolbar, fragmentList);
         // TODO: populate the navigation drawer
+    }
+
+    private void switchFragment(Fragment fragmentToDisplay)
+    {
+        // update the main content by replacing fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.container, fragmentToDisplay)
+                .commit();
     }
 
     @Override
@@ -99,14 +135,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     @Override
     public void onBackPressed()
     {
-        if (mNavigationDrawerFragment.isDrawerOpen())
-        {
-            mNavigationDrawerFragment.closeDrawer();
-        }
-        else
-        {
-            super.onBackPressed();
-        }
+//        if (mNavigationDrawerFragment.isDrawerOpen())
+//        {
+//            mNavigationDrawerFragment.closeDrawer();
+//        }
+//        else
+//        {
+//            super.onBackPressed();
+//        }
     }
 
 
