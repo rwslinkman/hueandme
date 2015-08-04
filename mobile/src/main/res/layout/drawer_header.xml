@@ -3,15 +3,18 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/navigation_header_height"
-    android:weightSum="2">
+    android:weightSum="2"
+    android:background="@android:color/white">
 
     <TextView
+        android:padding="16dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="Lightbulb state"/>
 
     <TextView
+        android:padding="16dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

@@ -80,6 +80,10 @@ public class HueService extends Service implements PHSDKListener
     public void onAccessPointsFound(List<PHAccessPoint> list)
     {
         Log.d(TAG, "Found Hue access points");
+        for(PHAccessPoint ap : list)
+        {
+            Log.d(TAG, "Found Hue AP @ IP " + ap.getIpAddress());
+        }
     }
 
     @Override

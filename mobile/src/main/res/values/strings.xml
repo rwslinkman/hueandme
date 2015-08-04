@@ -19,4 +19,7 @@
     <string name="drawer_close">Menu closed</string>
     <string name="navigation_item_1">First navigation item</string>
     <string name="navigation_item_2">Second navigation item</string>
+    <string name="lights_text_helloworld">Hello LightsFragment</string>
+    <string name="groups_text_helloworld">Hello GroupsFragment</string>
+    <string name="info_text_helloworld">Hello InfoFragment</string>
 </resources>
