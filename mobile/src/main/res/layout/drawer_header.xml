@@ -14,6 +14,7 @@
         android:layout_margin="@dimen/drawerhead_statebulb_padding"/>
 
     <TextView
+        android:id="@+id/drawer_head_statemsg"
         android:padding="16dp"
         android:layout_width="0dp"
         android:layout_height="match_parent"

@@ -52,8 +52,7 @@ public class HueMe extends Application
         super.onCreate();
 
         this.subscribers = new ArrayList<>();
-
-        Log.d(TAG, "HueMe binding service onCreate");
+        // Start HueService
         bindService(new Intent(this, HueService.class), hueServiceConnection, BIND_AUTO_CREATE);
     }
 

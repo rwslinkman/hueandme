@@ -19,6 +19,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import nl.rwslinkman.hueme.R;
+
 /**
  * HueService
  * Keeps up with the Hue SDK instance
@@ -31,33 +33,37 @@ public class HueService extends Service implements PHSDKListener
     // State constants
     public static final int STATE_IDLE = 0;
     public static final int STATE_SCANNING = 1;
+    public static final int STATE_CONNECTING = 2;
+    public static final int STATE_CONNECTED = 3;
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
     private HueBroadcaster broadcaster;
-    private int currentServiceState = HueService.STATE_IDLE;
+    private int currentServiceState;
 
     @Override
     public IBinder onBind(Intent intent)
     {
         broadcaster = new HueBroadcaster(this);
+        currentServiceState = HueService.STATE_IDLE;
 
         Log.d(TAG, "HueService bound to application");
         phHueSDK = PHHueSDK.getInstance();
+        phHueSDK.setAppName(getString(R.string.app_name));
 
         PHNotificationManager phNotificationManager = phHueSDK.getNotificationManager();
         phNotificationManager.registerSDKListener(this);
 
-        List<PHAccessPoint> foundAccessPoints = phHueSDK.getAccessPointsFound();
         PHBridge phHueBridge = phHueSDK.getSelectedBridge();
-        if(foundAccessPoints.size() == 0 || phHueBridge == null)
+        if(phHueBridge == null)
         {
             // No bridges found
-            Log.d(TAG, "Starting bridge search, nothing found");
-            Log.d(TAG, "Access points found: " + Integer.toString(foundAccessPoints.size()));
-            Log.d(TAG, "Is bridge null: " + Boolean.toString(phHueBridge == null));
-
+            Log.d(TAG, "HueService starting bridge search");
             this.startScanning();
+        }
+        else
+        {
+            phHueSDK.enableHeartbeat(phHueBridge, PHHueSDK.HB_INTERVAL);
         }
         return mBinder;
     }
@@ -65,10 +71,9 @@ public class HueService extends Service implements PHSDKListener
     public void startScanning()
     {
         PHBridgeSearchManager phSearchManager = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
-        phSearchManager.upnpSearch();
-        phSearchManager.portalSearch();
+        phSearchManager.search(true, true);
 
-        this.currentServiceState = HueService.STATE_IDLE;
+        this.currentServiceState = HueService.STATE_SCANNING;
     }
 
     public int getCurrentServiceState()
@@ -86,6 +91,7 @@ public class HueService extends Service implements PHSDKListener
     public void onBridgeConnected(PHBridge phBridge)
     {
         Log.d(TAG, "Hue bridge connected");
+        this.currentServiceState = HueService.STATE_CONNECTED;
     }
 
     @Override
@@ -102,6 +108,7 @@ public class HueService extends Service implements PHSDKListener
         {
             Log.d(TAG, "Found Hue AP @ IP " + ap.getIpAddress());
         }
+        this.currentServiceState = HueService.STATE_IDLE;
     }
 
     @Override
@@ -142,27 +149,19 @@ public class HueService extends Service implements PHSDKListener
         }
     }
 
-    private String getMessageTypeName(int phError)
+    @Override
+    public void onDestroy()
     {
-        Field[] constants = PHMessageType.class.getFields();
-        for(Field field : constants)
+        PHBridge bridge = phHueSDK.getSelectedBridge();
+        if (bridge != null)
         {
-            if(Modifier.isStatic(field.getModifiers()) && field.getType() == int.class)
+            if (phHueSDK.isHeartbeatEnabled(bridge))
             {
-                try
-                {
-                    Object some = new PHMessageType();
-                    if(phError == field.getInt(some))
-                    {
-                        return field.getName();
-                    }
-
-                } catch (IllegalAccessException e)
-                {
-                    e.printStackTrace();
-                }
+                phHueSDK.disableHeartbeat(bridge);
             }
+
+            phHueSDK.disconnect(bridge);
+            super.onDestroy();
         }
-        return "";
     }
 }

@@ -12,8 +12,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
 import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks, HueServiceStateListener
+public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener, NavigationView.OnNavigationItemSelectedListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
@@ -42,14 +45,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             {
                 // TODO: Display "NoBridgeFragment"
                 Log.d(TAG, "No bridge found, received via broadcast");
+                return;
             }
             Log.d(TAG, "Broadcast received: " + action);
         }
     };
     private Toolbar mToolbar;
-    private List<Fragment> fragmentList;
+    private List<Fragment> mFragmentsList;
     private HueMe app;
     private DrawerLayout mDrawerLayout;
+    private FloatingActionButton mStateBulbView;
+    private TextView mStateMessageView;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -74,26 +80,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         mDrawerToggle.syncState();
 
         // Init menu
-        fragmentList = new ArrayList<>();
-        fragmentList.add(LightsFragment.newInstance());
-        fragmentList.add(GroupsFragment.newInstance());
-        fragmentList.add(InfoFragment.newInstance());
+        mFragmentsList = new ArrayList<>();
+        mFragmentsList.add(LightsFragment.newInstance());
+        mFragmentsList.add(GroupsFragment.newInstance());
+        mFragmentsList.add(InfoFragment.newInstance());
 
+        // Init NavigationDrawer
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.inflateMenu(R.menu.drawer);
+        navigationView.setNavigationItemSelectedListener(this);
 
-        FloatingActionButton stateBulbView = (FloatingActionButton) findViewById(R.id.drawer_head_statebulb);
-        DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
-        stateBulbBuilder.setColor(getResources().getColor(android.R.color.white));
-        stateBulbBuilder.setSize(15);
-        stateBulbView.setImageDrawable(stateBulbBuilder.build());
-
-        // TODO: Display state "No bridges"
-        Log.d(TAG, "stateBulb found: " + Boolean.toString(stateBulbView != null));
-
-        switchFragment(fragmentList.get(1));
+        // Init NavigationDrawer header elements
+        mStateBulbView = (FloatingActionButton) findViewById(R.id.drawer_head_statebulb);
+        mStateMessageView = (TextView) findViewById(R.id.drawer_head_statemsg);
 
         // TODO: populate the navigation drawer
+        switchFragment(mFragmentsList.get(1));
     }
 
     private void switchFragment(Fragment fragmentToDisplay)
@@ -123,10 +125,24 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
     }
 
+    private void displayScanningState()
+    {
+        // TODO: Make MainActivity switch to ScanningFragment
+        // TODO: Set HEader state to "scanning"
+        mStateMessageView.setText("App is scanning");
+    }
+
     private void displayLoadingState()
     {
+        int STATE_BULB_SIZE = 15;
+
         // TODO: Make MainActivity switch to LoadingFragment
         // TODO: Set header state to "loading"
+        DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
+        stateBulbBuilder.setSize(STATE_BULB_SIZE);
+        mStateBulbView.setImageDrawable(stateBulbBuilder.build());
+
+        mStateMessageView.setText("App is loading");
     }
 
     @Override
@@ -134,7 +150,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     {
         // update the main content by replacing fragments
         Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-        Fragment selectedFragment = fragmentList.get(position);
+        Fragment selectedFragment = mFragmentsList.get(position);
         Log.d(TAG, selectedFragment.getClass().getSimpleName());
     }
 
@@ -143,7 +159,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     {
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
+
+        switch(service.getCurrentServiceState())
+        {
+            case HueService.STATE_SCANNING:
+                this.displayScanningState();
+                break;
+            // TODO: Undecided
+        }
     }
+
+
 
     @Override
     public void onHueServiceHalted()
@@ -158,7 +184,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         return intentFilter;
     }
 
-    public List<Fragment> getChildFragments() {
-        return fragmentList;
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem)
+    {
+        // Return boolean tells if item must be selected after TODO action
+        // TODO: Switch to selected item
+        return true;
     }
 }
