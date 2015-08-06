@@ -26,10 +26,16 @@ import java.util.List;
  */
 public class HueService extends Service implements PHSDKListener
 {
+    // Debug name
     public static final String TAG = HueService.class.getSimpleName();
+    // State constants
+    public static final int STATE_IDLE = 0;
+    public static final int STATE_SCANNING = 1;
+    // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
     private HueBroadcaster broadcaster;
+    private int currentServiceState = HueService.STATE_IDLE;
 
     @Override
     public IBinder onBind(Intent intent)
@@ -51,11 +57,23 @@ public class HueService extends Service implements PHSDKListener
             Log.d(TAG, "Access points found: " + Integer.toString(foundAccessPoints.size()));
             Log.d(TAG, "Is bridge null: " + Boolean.toString(phHueBridge == null));
 
-            PHBridgeSearchManager phSearchManager = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
-            phSearchManager.upnpSearch();
-            phSearchManager.portalSearch();
+            this.startScanning();
         }
         return mBinder;
+    }
+
+    public void startScanning()
+    {
+        PHBridgeSearchManager phSearchManager = (PHBridgeSearchManager) phHueSDK.getSDKService(PHHueSDK.SEARCH_BRIDGE);
+        phSearchManager.upnpSearch();
+        phSearchManager.portalSearch();
+
+        this.currentServiceState = HueService.STATE_IDLE;
+    }
+
+    public int getCurrentServiceState()
+    {
+        return this.currentServiceState;
     }
 
     @Override
@@ -95,8 +113,6 @@ public class HueService extends Service implements PHSDKListener
             broadcaster.setAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
             broadcaster.broadcast();
         }
-        String errorName = this.getMessageTypeName(errorCode);
-        Log.d(TAG, "Hue SDK error: " + errorName);
         Log.e(TAG, "Hue SDK error: " + errorMessage);
     }
 
@@ -118,9 +134,6 @@ public class HueService extends Service implements PHSDKListener
         Log.d(TAG, "Hue has parsing errors: " + Integer.toString(list.size()) + " problems");
     }
 
-    /**
-     * class LocalBinder
-     */
     public class LocalBinder extends Binder
     {
         public HueService getService()

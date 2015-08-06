@@ -6,12 +6,12 @@
     android:weightSum="2"
     android:background="@android:color/white">
 
-    <TextView
-        android:padding="16dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/drawer_head_statebulb"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="Lightbulb state"/>
+        android:layout_margin="@dimen/drawerhead_statebulb_padding"/>
 
     <TextView
         android:padding="16dp"

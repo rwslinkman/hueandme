@@ -8,4 +8,5 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
     <dimen name="navigation_header_height">120dp</dimen>
     <dimen name="navdrwr_statebulb">20pt</dimen>
+    <dimen name="drawerhead_statebulb_padding">8dp</dimen>
 </resources>

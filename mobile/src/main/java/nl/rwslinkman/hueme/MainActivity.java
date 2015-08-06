@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
@@ -39,7 +41,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             if(action.equals(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE))
             {
                 // TODO: Display "NoBridgeFragment"
-                Log.d(TAG, "No bridge found");
+                Log.d(TAG, "No bridge found, received via broadcast");
             }
             Log.d(TAG, "Broadcast received: " + action);
         }
@@ -80,6 +82,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.inflateMenu(R.menu.drawer);
 
+        FloatingActionButton stateBulbView = (FloatingActionButton) findViewById(R.id.drawer_head_statebulb);
+        DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
+        stateBulbBuilder.setColor(getResources().getColor(android.R.color.white));
+        stateBulbBuilder.setSize(15);
+        stateBulbView.setImageDrawable(stateBulbBuilder.build());
+
+        // TODO: Display state "No bridges"
+        Log.d(TAG, "stateBulb found: " + Boolean.toString(stateBulbView != null));
+
         switchFragment(fragmentList.get(1));
 
         // TODO: populate the navigation drawer
@@ -104,14 +115,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         if(!app.isServiceReady())
         {
             app.subscribeHueServiceState(this);
+            this.displayLoadingState();
         }
         else
         {
-            // Subscribe to HueService for display events
-            HueService hueService = app.getHueService();
-            hueService.registerReceiver(hueUpdateReceiver, getDisplayUpdatesFilter());
-            Log.d(TAG, "HueService obtained in MainActivity and registered to updates");
+            this.onHueServiceReady();
         }
+    }
+
+    private void displayLoadingState()
+    {
+        // TODO: Make MainActivity switch to LoadingFragment
+        // TODO: Set header state to "loading"
     }
 
     @Override
@@ -122,21 +137,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         Fragment selectedFragment = fragmentList.get(position);
         Log.d(TAG, selectedFragment.getClass().getSimpleName());
     }
-
-
-    @Override
-    public void onBackPressed()
-    {
-//        if (mNavigationDrawerFragment.isDrawerOpen())
-//        {
-//            mNavigationDrawerFragment.closeDrawer();
-//        }
-//        else
-//        {
-//            super.onBackPressed();
-//        }
-    }
-
 
     @Override
     public void onHueServiceReady()
