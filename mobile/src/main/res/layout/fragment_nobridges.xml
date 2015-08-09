@@ -11,24 +11,22 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin">
 
-    <com.github.rahatarmanahmed.cpv.CircularProgressView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/loading_spinner_view"
-        android:layout_width="@dimen/loading_spinner_width"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:cpv_animAutostart="true"
-        app:cpv_indeterminate="true"
-        app:cpv_thickness="@dimen/loading_spinner_thickness"
-        app:cpv_color="@color/rwslinkman_blue_light"/>
-
-    <TextView
+    <nl.rwslinkman.awesome.TextAwesome
+        android:id="@+id/nobridges_warning_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loading_spinner_view"
+        android:layout_centerInParent="true"
+        android:text="@string/fa_exclamation_circle"
+        android:textSize="@dimen/nobridges_warning_size"
+        android:textColor="@color/rwslinkman_blue_light"/>
+
+    <TextView
+        android:id="@+id/nobridges_scanningtext_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nobridges_warning_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/loading_text_margintop"
-        android:text="@string/philips_hue_loading"
         android:textColor="@color/rwslinkman_blue_dark"
         android:textSize="@dimen/loading_text_textsize"/>
 
