@@ -27,4 +27,7 @@
     <string name="navitem_lights">Lampen</string>
     <string name="navitem_info">Info</string>
     <string name="navitem_starting">Thank you for your patience</string>
+    <string name="navheader_state_searching_for_bridges">Zoeken naar bridges…</string>
+    <string name="navitem_nobridge">Er zijn nog geen bridges verbonden</string>
+    <string name="navheader_state_no_bridges_connected">Geen bridges verbonden</string>
 </resources>

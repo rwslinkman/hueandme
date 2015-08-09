@@ -141,6 +141,11 @@ public class HueService extends Service implements PHSDKListener
         Log.d(TAG, "Hue has parsing errors: " + Integer.toString(list.size()) + " problems");
     }
 
+    public boolean isBridgeConnected()
+    {
+        return this.phHueSDK.getSelectedBridge() != null;
+    }
+
     public class LocalBinder extends Binder
     {
         public HueService getService()

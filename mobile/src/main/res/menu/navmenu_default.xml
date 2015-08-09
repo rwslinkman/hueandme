@@ -6,14 +6,6 @@
         android:checkableBehavior="single">
 
         <item
-            android:id="@+id/navitem_starting"
-            android:checkable="false"
-            android:checked="false"
-            android:visible="true"
-            android:enabled="true"
-            android:title="@string/navitem_starting" />
-
-        <item
             android:id="@+id/navitem_groups"
             android:checked="true"
             android:icon="@mipmap/ic_launcher"

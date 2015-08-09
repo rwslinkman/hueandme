@@ -27,6 +27,7 @@ import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
+import nl.rwslinkman.hueme.fragments.ScanningFragment;
 import nl.rwslinkman.hueme.hueservice.HueBroadcaster;
 import nl.rwslinkman.hueme.hueservice.HueService;
 import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
@@ -36,6 +37,7 @@ import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener, NavigationView.OnNavigationItemSelectedListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int NAVHEADER_STATE_BULB_SIZE = 15; // unit of measure unclear
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
     {
         @Override
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     private FloatingActionButton mStateBulbView;
     private TextView mStateMessageView;
     private Menu mNavigationMenu;
+    private NavigationView mNavigationView;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -88,15 +91,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         mFragmentsList.add(InfoFragment.newInstance());
 
         // Init NavigationDrawer
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
-        navigationView.inflateMenu(R.menu.drawer);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.navigation);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         // Init NavigationDrawer header elements
         mStateBulbView = (FloatingActionButton) findViewById(R.id.drawer_head_statebulb);
         mStateMessageView = (TextView) findViewById(R.id.drawer_head_statemsg);
 
-        // TODO: populate the navigation drawer
+        // TODO: populate the navigation navmenu_default
         switchFragment(mFragmentsList.get(1));
     }
 
@@ -104,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     public boolean onCreateOptionsMenu(Menu menu)
     {
         super.onCreateOptionsMenu(menu);
-
         this.mNavigationMenu = menu;
         return true; // false = hide, true = display
     }
@@ -136,24 +137,55 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         }
     }
 
-    private void displayScanningState()
+    private void displayNoBridgeState(boolean isScanning)
     {
-        // TODO: Make MainActivity switch to ScanningFragment
-        // TODO: Set HEader state to "scanning"
-//        mStateMessageView.setText("App is scanning");
-        Log.d(TAG, "Show scanning state");
+        // Set Header state to "scanning"
+        DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
+        stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
+        stateBulbBuilder.setColor(getResources().getColor(R.color.navheader_statebulb_disabled));
+
+        if(isScanning)
+        {
+            mStateMessageView.setText(getString(R.string.navheader_state_searching_for_bridges));
+        }
+        else
+        {
+            mStateMessageView.setText(getString(R.string.navheader_state_no_bridges_connected));
+        }
+
+        mNavigationView.getMenu().clear();
+        mNavigationView.inflateMenu(R.menu.navmenu_nobridges);
+
+
+        // Make MainActivity switch to ScanningFragment
+        if(null != this.mNavigationMenu)
+        {
+            Log.d(TAG, "Scanning state change menu");
+            // Hide all menu items
+            this.mNavigationMenu.findItem(R.id.navitem_groups).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_lights).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_info).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_starting).setVisible(false);
+            // Show item "starting"
+            this.mNavigationMenu.findItem(R.id.navitem_nobridge).setVisible(true);
+        }
+
+        // Switch to LoadingFragment (main view)
+        this.switchFragment(ScanningFragment.newInstance());
     }
 
     private void displayLoadingState()
     {
-        int STATE_BULB_SIZE = 15; // unit of measure unclear
-
         // Set header state to "loading"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
-        stateBulbBuilder.setSize(STATE_BULB_SIZE);
+        stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
         stateBulbBuilder.setColor(getResources().getColor(android.R.color.white));
         mStateBulbView.setImageDrawable(stateBulbBuilder.build());
         mStateMessageView.setText(getString(R.string.philips_hue_loading));
+
+
+        mNavigationView.getMenu().clear();
+        mNavigationView.inflateMenu(R.menu.navmenu_loading);
 
         if(null != this.mNavigationMenu)
         {
@@ -161,17 +193,18 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             this.mNavigationMenu.findItem(R.id.navitem_groups).setVisible(false);
             this.mNavigationMenu.findItem(R.id.navitem_lights).setVisible(false);
             this.mNavigationMenu.findItem(R.id.navitem_info).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_nobridge).setVisible(false);
             // Show item "starting"
             this.mNavigationMenu.findItem(R.id.navitem_starting).setVisible(true);
         }
-
 
         // Switch to LoadingFragment (main view)
         this.switchFragment(LoadingFragment.newInstance());
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position) {
+    public void onNavigationDrawerItemSelected(int position)
+    {
         // update the main content by replacing fragments
         Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         Fragment selectedFragment = mFragmentsList.get(position);
@@ -184,12 +217,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
-        switch(service.getCurrentServiceState())
+        if(!service.isBridgeConnected())
         {
-            case HueService.STATE_SCANNING:
-                this.displayScanningState();
-                break;
-            // TODO: Undecided
+            this.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+        }
+        else
+        {
+            // TODO: Display "bridge connected" state
         }
     }
 

@@ -9,6 +9,7 @@
     <!--<color name="myNavigationColor">#000</color>-->
     <color name="rwslinkman_blue_dark">#2c3e50</color>
     <color name="rwslinkman_blue_light">#18bc9c</color>
+    <color name="navheader_statebulb_disabled">#2c000000</color>
 
     <drawable name="pressed_gray">#0c000000</drawable>
     <drawable name="selected_gray">#2c000000</drawable>
