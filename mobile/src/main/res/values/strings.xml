@@ -22,4 +22,9 @@
     <string name="lights_text_helloworld">Hello LightsFragment</string>
     <string name="groups_text_helloworld">Hello GroupsFragment</string>
     <string name="info_text_helloworld">Hello InfoFragment</string>
+    <string name="philips_hue_loading">Philips Hue is starting…</string>
+    <string name="navitem_groups">Groepen</string>
+    <string name="navitem_lights">Lampen</string>
+    <string name="navitem_info">Info</string>
+    <string name="navitem_starting">Thank you for your patience</string>
 </resources>

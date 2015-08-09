@@ -9,4 +9,10 @@
     <dimen name="navigation_header_height">120dp</dimen>
     <dimen name="navdrwr_statebulb">20pt</dimen>
     <dimen name="drawerhead_statebulb_padding">8dp</dimen>
+
+    <dimen name="loading_spinner_width">100dp</dimen>
+    <dimen name="loading_spinner_thickness">6dp</dimen>
+    <dimen name="loading_text_margintop">16dp</dimen>
+    <dimen name="loading_text_textsize">18sp</dimen>
+    <dimen name="navigationheader_statemsg_textsize">18sp</dimen>
 </resources>

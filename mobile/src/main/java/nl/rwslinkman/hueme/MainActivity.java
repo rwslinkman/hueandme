@@ -10,11 +10,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +26,7 @@ import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
+import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.hueservice.HueBroadcaster;
 import nl.rwslinkman.hueme.hueservice.HueService;
 import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mStateBulbView;
     private TextView mStateMessageView;
+    private Menu mNavigationMenu;
 
     @SuppressWarnings("ConstantConditions")
     @Override
@@ -98,6 +100,15 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         switchFragment(mFragmentsList.get(1));
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+
+        this.mNavigationMenu = menu;
+        return true; // false = hide, true = display
+    }
+
     private void switchFragment(Fragment fragmentToDisplay)
     {
         // update the main content by replacing fragments
@@ -129,25 +140,38 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     {
         // TODO: Make MainActivity switch to ScanningFragment
         // TODO: Set HEader state to "scanning"
-        mStateMessageView.setText("App is scanning");
+//        mStateMessageView.setText("App is scanning");
+        Log.d(TAG, "Show scanning state");
     }
 
     private void displayLoadingState()
     {
-        int STATE_BULB_SIZE = 15;
+        int STATE_BULB_SIZE = 15; // unit of measure unclear
 
-        // TODO: Make MainActivity switch to LoadingFragment
-        // TODO: Set header state to "loading"
+        // Set header state to "loading"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(this, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(STATE_BULB_SIZE);
+        stateBulbBuilder.setColor(getResources().getColor(android.R.color.white));
         mStateBulbView.setImageDrawable(stateBulbBuilder.build());
+        mStateMessageView.setText(getString(R.string.philips_hue_loading));
 
-        mStateMessageView.setText("App is loading");
+        if(null != this.mNavigationMenu)
+        {
+            // Hide all menu items
+            this.mNavigationMenu.findItem(R.id.navitem_groups).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_lights).setVisible(false);
+            this.mNavigationMenu.findItem(R.id.navitem_info).setVisible(false);
+            // Show item "starting"
+            this.mNavigationMenu.findItem(R.id.navitem_starting).setVisible(true);
+        }
+
+
+        // Switch to LoadingFragment (main view)
+        this.switchFragment(LoadingFragment.newInstance());
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position)
-    {
+    public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
         Fragment selectedFragment = mFragmentsList.get(position);
@@ -168,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             // TODO: Undecided
         }
     }
-
-
 
     @Override
     public void onHueServiceHalted()

@@ -7,11 +7,13 @@
     android:background="@android:color/white">
 
     <android.support.design.widget.FloatingActionButton
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/drawer_head_statebulb"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_margin="@dimen/drawerhead_statebulb_padding"/>
+        android:layout_margin="@dimen/drawerhead_statebulb_padding"
+        app:backgroundTint="@color/rwslinkman_blue_light" />
 
     <TextView
         android:id="@+id/drawer_head_statemsg"
@@ -19,6 +21,8 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="State message"/>
+        android:gravity="center"
+        android:textSize="@dimen/navigationheader_statemsg_textsize"
+        android:textColor="@color/rwslinkman_blue_dark"/>
 
 </LinearLayout>

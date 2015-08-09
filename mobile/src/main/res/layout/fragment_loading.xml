@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.github.rahatarmanahmed.cpv.CircularProgressView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/loading_spinner_view"
+        android:layout_width="@dimen/loading_spinner_width"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:cpv_animAutostart="true"
+        app:cpv_indeterminate="true"
+        app:cpv_thickness="@dimen/loading_spinner_thickness"
+        app:cpv_color="@color/rwslinkman_blue_light"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loading_spinner_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/loading_text_margintop"
+        android:text="@string/philips_hue_loading"
+        android:textColor="@color/rwslinkman_blue_dark"
+        android:textSize="@dimen/loading_text_textsize"/>
+
+</RelativeLayout>

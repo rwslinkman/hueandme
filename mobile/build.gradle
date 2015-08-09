@@ -21,10 +21,10 @@ android {
 
 dependencies {
     wearApp project(':wear')
-    compile 'com.android.support:appcompat-v7:22.0.0'
-    compile 'com.google.android.gms:play-services:7.0.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
     compile files('libs/huelocalsdk.jar')
     compile files('libs/huesdkresources.jar')
     compile project(':awesome')
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.3.2'
 }
