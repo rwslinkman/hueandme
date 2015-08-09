@@ -128,4 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         intentFilter.addAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
         return intentFilter;
     }
+
+    public MainActivityView getView()
+    {
+        return mView;
+    }
 }

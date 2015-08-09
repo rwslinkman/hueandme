@@ -26,10 +26,12 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     private TextView mStateMessageView;
     private Menu mNavigationMenu;
     private NavigationView mNavigationView;
+    public boolean overrideScanning;
 
     public MainActivityView(MainActivity parent)
     {
         this.mActivity = parent;
+        overrideScanning = true;
     }
 
     public void create()
@@ -60,6 +62,10 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayNoBridgeState(boolean isScanning)
     {
+        if(this.overrideScanning)
+        {
+            isScanning = false;
+        }
         int stateMessage = (isScanning) ? R.string.navheader_state_searching_for_bridges : R.string.navheader_state_no_bridges_connected;
         int stateColor = (isScanning) ? R.color.navheader_statebulb_disabled : R.color.android_red;
 

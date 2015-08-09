@@ -21,13 +21,24 @@
         android:textColor="@color/rwslinkman_blue_light"/>
 
     <TextView
-        android:id="@+id/nobridges_scanningtext_view"
+        android:id="@+id/nobridges_nonefound_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/nobridges_warning_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/loading_text_margintop"
+        android:text="@string/nobridges_noneselected_text"
         android:textColor="@color/rwslinkman_blue_dark"
-        android:textSize="@dimen/loading_text_textsize"/>
+        android:textSize="@dimen/loading_text_textsize" />
+
+    <Button
+        android:id="@+id/nobridges_startscan_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nobridges_nonefound_view"
+        android:layout_marginTop="@dimen/nobridges_startscanbtn_margintop"
+        android:background="@color/rwslinkman_blue_dark"
+        android:text="@string/nobridges_startscan_text"
+        android:textColor="@android:color/white"/>
 
 </RelativeLayout>

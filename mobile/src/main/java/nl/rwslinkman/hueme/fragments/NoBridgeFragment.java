@@ -10,12 +10,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import nl.rwslinkman.hueme.HueMe;
+import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.MainActivityView;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.hueservice.HueBroadcaster;
+import nl.rwslinkman.hueme.hueservice.HueService;
 
-public class NoBridgeFragment extends Fragment
+public class NoBridgeFragment extends Fragment implements View.OnClickListener
 {
     public static final String TAG = NoBridgeFragment.class.getSimpleName();
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
@@ -24,43 +27,56 @@ public class NoBridgeFragment extends Fragment
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if(action.equals(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE))
-            {
-                Log.d(TAG, "No bridge found, received via broadcast");
-                return;
-            }
             Log.d(TAG, "Broadcast received: " + action);
         }
     };
-    private boolean isScanningForBridges;
+    private boolean mIsScanningForBridges;
+    private View mRootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_nobridges, container, false);
+        int rootViewToInflate = (mIsScanningForBridges) ? R.layout.fragment_scanning : R.layout.fragment_nobridges;
+        this.mRootView = inflater.inflate(rootViewToInflate, container, false);
 
-        TextView scanningTextView = (TextView) rootView.findViewById(R.id.nobridges_scanningtext_view);
-        String scanningText = (isScanningForBridges) ? "Scanning" : "Not scanning";
-        scanningTextView.setText(scanningText);
-        // TODO: Show startScan button if applicable
-        // TODO: Hide button when scanning
-        // TODO: Show list of found Bridge APs
-
-        return rootView;
+        if(mIsScanningForBridges)
+        {
+            HueService service = ((HueMe)getActivity().getApplication()).getHueService();
+            if(service != null)
+            {
+                service.registerReceiver(hueUpdateReceiver, this.getScanningUpdatesFilters());
+            }
+            this.createScanningView();
+        }
+        else
+        {
+            this.createNotScanningView();
+        }
+        return mRootView;
     }
 
-    private IntentFilter getScanningUpdateFilters()
+    private void createNotScanningView()
+    {
+        mRootView.findViewById(R.id.nobridges_startscan_button).setOnClickListener(this);
+    }
+
+    private void createScanningView()
+    {
+        Log.d(TAG, "Load spinner and listview to indicate search");
+    }
+
+    private IntentFilter getScanningUpdatesFilters()
     {
         final IntentFilter intentFilter = new IntentFilter();
-//        intentFilter.addAction(HueBroadcaster.SCANNING_UPDATE);
+        intentFilter.addAction(HueBroadcaster.SCANNING_STARTED);
+        intentFilter.addAction(HueBroadcaster.HUE_AP_FOUND);
         return intentFilter;
     }
 
     public void setScanningMode(boolean isScanning)
     {
-        this.isScanningForBridges = isScanning;
+        this.mIsScanningForBridges = isScanning;
     }
-
 
     public static NoBridgeFragment newInstance()
     {
@@ -68,5 +84,21 @@ public class NoBridgeFragment extends Fragment
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v.getId() == R.id.nobridges_startscan_button)
+        {
+            MainActivityView activityView = ((MainActivity)getActivity()).getView();
+            activityView.overrideScanning = false;
+            HueService service = ((HueMe)getActivity().getApplication()).getHueService();
+            if(service != null)
+            {
+                service.registerReceiver(hueUpdateReceiver, this.getScanningUpdatesFilters());
+            }
+            activityView.displayNoBridgeState(true);
+        }
     }
 }

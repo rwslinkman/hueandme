@@ -74,6 +74,7 @@ public class HueService extends Service implements PHSDKListener
         phSearchManager.search(true, true);
 
         this.currentServiceState = HueService.STATE_SCANNING;
+        this.broadcaster.setAction(HueBroadcaster.SCANNING_STARTED);
     }
 
     public int getCurrentServiceState()
@@ -106,6 +107,8 @@ public class HueService extends Service implements PHSDKListener
         Log.d(TAG, "Found Hue access points");
         for(PHAccessPoint ap : list)
         {
+            this.broadcaster.setAction(HueBroadcaster.HUE_AP_FOUND);
+            this.broadcaster.broadcast();
             Log.d(TAG, "Found Hue AP @ IP " + ap.getIpAddress());
         }
         this.currentServiceState = HueService.STATE_IDLE;
