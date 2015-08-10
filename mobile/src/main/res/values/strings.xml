@@ -32,4 +32,5 @@
     <string name="navheader_state_no_bridges_connected">Geen bridges verbonden</string>
     <string name="nobridges_noneselected_text">Er is geen bridge verbonden</string>
     <string name="nobridges_startscan_text">Zoek bridges</string>
+    <string name="scanning_text_scanning">Zoeken naar Hue bridges…</string>
 </resources>
