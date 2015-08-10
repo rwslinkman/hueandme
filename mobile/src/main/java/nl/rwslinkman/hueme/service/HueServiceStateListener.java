@@ -1,4 +1,4 @@
-package nl.rwslinkman.hueme.hueservice;
+package nl.rwslinkman.hueme.service;
 
 public interface HueServiceStateListener
 {

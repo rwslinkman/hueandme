@@ -13,7 +13,7 @@ import java.util.List;
 import nl.rwslinkman.awesome.ButtonAwesome;
 import nl.rwslinkman.hueme.R;
 
-public class HueAccessPointAdapter extends RecyclerView.Adapter<HueAccessPointAdapter.ViewHolder>
+public class HueIPAddressAdapter extends RecyclerView.Adapter<HueIPAddressAdapter.ViewHolder>
 {
     private List<PHAccessPoint> mDataset;
 
@@ -34,14 +34,14 @@ public class HueAccessPointAdapter extends RecyclerView.Adapter<HueAccessPointAd
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HueAccessPointAdapter(List<PHAccessPoint> accessPoints)
+    public HueIPAddressAdapter(List<PHAccessPoint> accessPoints)
     {
         mDataset = accessPoints;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public HueAccessPointAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public HueIPAddressAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hue_ap, parent, false);

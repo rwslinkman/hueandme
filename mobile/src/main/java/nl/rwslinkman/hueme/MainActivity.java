@@ -17,9 +17,8 @@ import java.util.List;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
-import nl.rwslinkman.hueme.hueservice.HueBroadcaster;
-import nl.rwslinkman.hueme.hueservice.HueService;
-import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
+import nl.rwslinkman.hueme.service.HueService;
+import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 
 
@@ -33,13 +32,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if(action.equals(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE))
+            if(action.equals(HueService.DISPLAY_NO_BRIDGE_STATE))
             {
                 // TODO: Display "NoBridgeFragment"
                 Log.d(TAG, "No bridge found, received via broadcast");
-                return;
             }
-            Log.d(TAG, "Broadcast received: " + action);
         }
     };
 
@@ -125,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     private IntentFilter getDisplayUpdatesFilter()
     {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
+        intentFilter.addAction(HueService.DISPLAY_NO_BRIDGE_STATE);
         return intentFilter;
     }
 

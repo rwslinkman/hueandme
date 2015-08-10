@@ -21,9 +21,8 @@ import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.MainActivityView;
 import nl.rwslinkman.hueme.R;
-import nl.rwslinkman.hueme.hueservice.HueBroadcaster;
-import nl.rwslinkman.hueme.hueservice.HueService;
-import nl.rwslinkman.hueme.ui.HueAccessPointAdapter;
+import nl.rwslinkman.hueme.service.HueService;
+import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;
 
 public class NoBridgeFragment extends Fragment implements View.OnClickListener
 {
@@ -34,14 +33,18 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            Log.d(TAG, "Broadcast received: " + action);
+            if(action.equals(HueService.HUE_AP_FOUND))
+            {
+                ArrayList<String> apList = intent.getStringArrayListExtra(HueService.INTENT_EXTRA_ACCESSPOINTS_IP);
+                Log.d(TAG, "apList size: " + apList.size());
+            }
         }
     };
     private boolean mIsScanningForBridges;
     private View mRootView;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;
-    private HueAccessPointAdapter mAdapter;
+    private HueIPAddressAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -72,7 +75,6 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
 
     private void createScanningView()
     {
-        Log.d(TAG, "Load spinner and listview to indicate search");
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.scanning_list_bridges);
         mRecyclerView.setHasFixedSize(true);
 
@@ -80,15 +82,15 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new HueAccessPointAdapter(new ArrayList<PHAccessPoint>());
+        mAdapter = new HueIPAddressAdapter(new ArrayList<PHAccessPoint>());
         mRecyclerView.setAdapter(mAdapter);
     }
 
     private IntentFilter getScanningUpdatesFilters()
     {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(HueBroadcaster.SCANNING_STARTED);
-        intentFilter.addAction(HueBroadcaster.HUE_AP_FOUND);
+        intentFilter.addAction(HueService.SCANNING_STARTED);
+        intentFilter.addAction(HueService.HUE_AP_FOUND);
         return intentFilter;
     }
 

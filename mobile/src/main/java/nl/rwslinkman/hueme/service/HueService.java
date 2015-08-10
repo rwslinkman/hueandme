@@ -1,4 +1,4 @@
-package nl.rwslinkman.hueme.hueservice;
+package nl.rwslinkman.hueme.service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -12,12 +12,14 @@ import com.philips.lighting.hue.sdk.PHHueSDK;
 import com.philips.lighting.hue.sdk.PHMessageType;
 import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
+import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHHueParsingError;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.rwslinkman.hueme.R;
 
@@ -35,19 +37,21 @@ public class HueService extends Service implements PHSDKListener
     public static final int STATE_SCANNING = 1;
     public static final int STATE_CONNECTING = 2;
     public static final int STATE_CONNECTED = 3;
+    public static final String DISPLAY_NO_BRIDGE_STATE = "display.no.bridge.state";
+    public static final String SCANNING_STARTED = "ap.scanning.started";
+    public static final String HUE_AP_FOUND = "hue.ap.found";
+    public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
-    private HueBroadcaster broadcaster;
+    private Map<String,PHAccessPoint> mAccessPoints;
     private int currentServiceState;
 
     @Override
     public IBinder onBind(Intent intent)
     {
-        broadcaster = new HueBroadcaster(this);
         currentServiceState = HueService.STATE_IDLE;
 
-        Log.d(TAG, "HueService bound to application");
         phHueSDK = PHHueSDK.getInstance();
         phHueSDK.setAppName(getString(R.string.app_name));
 
@@ -58,7 +62,6 @@ public class HueService extends Service implements PHSDKListener
         if(phHueBridge == null)
         {
             // No bridges found
-            Log.d(TAG, "HueService starting bridge search");
             this.startScanning();
         }
         else
@@ -74,12 +77,28 @@ public class HueService extends Service implements PHSDKListener
         phSearchManager.search(true, true);
 
         this.currentServiceState = HueService.STATE_SCANNING;
-        this.broadcaster.setAction(HueBroadcaster.SCANNING_STARTED);
+        Intent intent = new Intent(HueService.SCANNING_STARTED);
+        this.sendBroadcast(intent);
     }
 
     public int getCurrentServiceState()
     {
         return this.currentServiceState;
+    }
+
+    public void connectToAccessPoint(String ipAddress)
+    {
+        try
+        {
+            PHAccessPoint chosenAP = this.mAccessPoints.get(ipAddress);
+            this.phHueSDK.connect(chosenAP);
+        }
+        catch(PHHueException phe)
+        {
+            // Already connected to AP
+            PHBridge bridge = this.phHueSDK.getSelectedBridge();
+            Log.d(TAG, "Bridge found via exception: " + Boolean.toString(bridge != null));
+        }
     }
 
     @Override
@@ -104,13 +123,17 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onAccessPointsFound(List<PHAccessPoint> list)
     {
-        Log.d(TAG, "Found Hue access points");
+        mAccessPoints = new HashMap<>();
         for(PHAccessPoint ap : list)
         {
-            this.broadcaster.setAction(HueBroadcaster.HUE_AP_FOUND);
-            this.broadcaster.broadcast();
-            Log.d(TAG, "Found Hue AP @ IP " + ap.getIpAddress());
+            mAccessPoints.put(ap.getIpAddress(), ap);
         }
+
+        ArrayList<String> ipAddresses = new ArrayList<>(mAccessPoints.keySet());
+
+        Intent intent = new Intent(HueService.HUE_AP_FOUND);
+        intent.putStringArrayListExtra(INTENT_EXTRA_ACCESSPOINTS_IP, ipAddresses);
+        this.sendBroadcast(intent);
         this.currentServiceState = HueService.STATE_IDLE;
     }
 
@@ -120,8 +143,8 @@ public class HueService extends Service implements PHSDKListener
         if(errorCode == PHMessageType.BRIDGE_NOT_FOUND)
         {
             // Broadcast to listeners
-            broadcaster.setAction(HueBroadcaster.DISPLAY_NO_BRIDGE_STATE);
-            broadcaster.broadcast();
+            Intent intent = new Intent(HueService.DISPLAY_NO_BRIDGE_STATE);
+            this.sendBroadcast(intent);
         }
         Log.e(TAG, "Hue SDK error: " + errorMessage);
     }
