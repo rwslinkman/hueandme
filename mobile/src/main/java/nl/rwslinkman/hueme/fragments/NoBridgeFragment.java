@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 
@@ -23,7 +24,7 @@ import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;
 
-public class NoBridgeFragment extends Fragment implements View.OnClickListener
+public class NoBridgeFragment extends Fragment implements View.OnClickListener, HueIPAddressAdapter.OnConnectButtonListener
 {
     public static final String TAG = NoBridgeFragment.class.getSimpleName();
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
@@ -81,7 +82,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new HueIPAddressAdapter(new ArrayList<String>());
+        mAdapter = new HueIPAddressAdapter(new ArrayList<String>(), this);
         mRecyclerView.setAdapter(mAdapter);
 
     }
@@ -92,7 +93,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
             @Override
             public void run() {
                 // Insert new list of IP addresses
-                HueIPAddressAdapter adapter = new HueIPAddressAdapter(ipAddresses);
+                HueIPAddressAdapter adapter = new HueIPAddressAdapter(ipAddresses, NoBridgeFragment.this);
                 mRecyclerView.swapAdapter(adapter, true);
             }
         });
@@ -132,5 +133,11 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
             }
             activityView.displayNoBridgeState(true);
         }
+    }
+
+    @Override
+    public void onConnectClick(View connectButton, String ipAddress)
+    {
+        Toast.makeText(getActivity(), "Connect to " + ipAddress, Toast.LENGTH_SHORT).show();
     }
 }

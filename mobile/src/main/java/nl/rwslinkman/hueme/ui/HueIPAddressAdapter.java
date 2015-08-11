@@ -16,7 +16,13 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 {
     private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
     private static final int VIEW_TYPE_OBJECT_VIEW = 1;
+    private OnConnectButtonListener mConnectListener;
     private List<String> mDataset;
+
+    public interface OnConnectButtonListener
+    {
+        void onConnectClick(View connectButton, String ipAddress);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -40,8 +46,9 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    public HueIPAddressAdapter(List<String> accessPoints)
+    public HueIPAddressAdapter(List<String> accessPoints, OnConnectButtonListener listener)
     {
+        this.mConnectListener = listener;
         mDataset = accessPoints;
     }
 
@@ -66,8 +73,17 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else
             {
-                String accessPoint = mDataset.get(position);
+                final String accessPoint = mDataset.get(position);
                 vh.mIPaddressView.setText(accessPoint);
+                vh.mConnectButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        // Pass click to real listener and provide Hue IP address
+                        mConnectListener.onConnectClick(v, accessPoint);
+                    }
+                });
             }
         }
     }
