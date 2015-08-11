@@ -83,6 +83,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
         // specify an adapter (see also next example)
         mAdapter = new HueIPAddressAdapter(new ArrayList<String>());
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     private void onBridgeFound(final ArrayList<String> ipAddresses)

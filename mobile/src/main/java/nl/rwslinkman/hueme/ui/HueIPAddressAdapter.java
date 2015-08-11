@@ -7,63 +7,85 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.philips.lighting.hue.sdk.PHAccessPoint;
-
-import java.util.ArrayList;
 import java.util.List;
 
-import nl.rwslinkman.awesome.ButtonAwesome;
+import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.R;
 
-public class HueIPAddressAdapter extends RecyclerView.Adapter<HueIPAddressAdapter.ViewHolder>
+public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
+    private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
+    private static final int VIEW_TYPE_OBJECT_VIEW = 1;
     private List<String> mDataset;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
-        // each data item is just a string in this case
+        public TextAwesome mIconView;
         public TextView mIPaddressView;
         public Button mConnectButton;
-        public ViewHolder(View holderView)
+        private boolean mIsPlaceholder;
+
+        public ViewHolder(View holderView, boolean isPlaceholderView)
         {
             super(holderView);
+            this.mIsPlaceholder = isPlaceholderView;
+            mIconView = (TextAwesome) holderView.findViewById(R.id.item_ap_icon);
             mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
             mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
         }
+
+        public boolean isPlaceholderView()
+        {
+            return this.mIsPlaceholder;
+        }
     }
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public HueIPAddressAdapter(List<String> accessPoints)
     {
         mDataset = accessPoints;
     }
 
-    // Create new views (invoked by the layout manager)
     @Override
-    public HueIPAddressAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hue_ap, parent, false);
-        return new ViewHolder(v);
+        return new ViewHolder(v, mDataset.isEmpty());
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
     {
-        String accessPoint = mDataset.get(position);
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        holder.mIPaddressView.setText(accessPoint);
+        if (holder instanceof HueIPAddressAdapter.ViewHolder)
+        {
+            ViewHolder vh = (ViewHolder) holder;
+            if(vh.isPlaceholderView())
+            {
+                vh.mIconView.setText(R.string.fa_exclamation_circle);
+                vh.mIPaddressView.setText(R.string.item_ap_emptylist);
+                vh.mConnectButton.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                String accessPoint = mDataset.get(position);
+                vh.mIPaddressView.setText(accessPoint);
+            }
+        }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount()
     {
+        if(mDataset.isEmpty())
+        {
+            // Must return one because placeholder view counts as item
+            return 1;
+        }
         return mDataset.size();
+    }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        return (mDataset.isEmpty()) ? VIEW_TYPE_EMPTY_LIST_PLACEHOLDER : VIEW_TYPE_OBJECT_VIEW;
     }
 }
