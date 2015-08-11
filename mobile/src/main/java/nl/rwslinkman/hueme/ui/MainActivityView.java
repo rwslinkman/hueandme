@@ -1,4 +1,4 @@
-package nl.rwslinkman.hueme;
+package nl.rwslinkman.hueme.ui;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import nl.rwslinkman.awesome.DrawableAwesome;
+import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.fragments.NoBridgeFragment;
 

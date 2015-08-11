@@ -4,10 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import nl.rwslinkman.awesome.ButtonAwesome;
@@ -15,7 +17,7 @@ import nl.rwslinkman.hueme.R;
 
 public class HueIPAddressAdapter extends RecyclerView.Adapter<HueIPAddressAdapter.ViewHolder>
 {
-    private List<PHAccessPoint> mDataset;
+    private List<String> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -24,17 +26,17 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<HueIPAddressAdapte
     {
         // each data item is just a string in this case
         public TextView mIPaddressView;
-        public ButtonAwesome mConnectButton;
+        public Button mConnectButton;
         public ViewHolder(View holderView)
         {
             super(holderView);
             mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
-            mConnectButton = (ButtonAwesome) holderView.findViewById(R.id.item_ap_connect);
+            mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public HueIPAddressAdapter(List<PHAccessPoint> accessPoints)
+    public HueIPAddressAdapter(List<String> accessPoints)
     {
         mDataset = accessPoints;
     }
@@ -52,10 +54,10 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<HueIPAddressAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        PHAccessPoint accessPoint = mDataset.get(position);
+        String accessPoint = mDataset.get(position);
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.mIPaddressView.setText(accessPoint.getIpAddress());
+        holder.mIPaddressView.setText(accessPoint);
     }
 
     // Return the size of your dataset (invoked by the layout manager)

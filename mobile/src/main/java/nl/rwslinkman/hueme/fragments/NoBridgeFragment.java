@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ import java.util.ArrayList;
 
 import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
-import nl.rwslinkman.hueme.MainActivityView;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;
@@ -36,7 +35,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
             if(action.equals(HueService.HUE_AP_FOUND))
             {
                 ArrayList<String> apList = intent.getStringArrayListExtra(HueService.INTENT_EXTRA_ACCESSPOINTS_IP);
-                Log.d(TAG, "apList size: " + apList.size());
+                onBridgeFound(apList);
             }
         }
     };
@@ -82,8 +81,20 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new HueIPAddressAdapter(new ArrayList<PHAccessPoint>());
+        mAdapter = new HueIPAddressAdapter(new ArrayList<String>());
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void onBridgeFound(final ArrayList<String> ipAddresses)
+    {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Insert new list of IP addresses
+                HueIPAddressAdapter adapter = new HueIPAddressAdapter(ipAddresses);
+                mRecyclerView.swapAdapter(adapter, true);
+            }
+        });
     }
 
     private IntentFilter getScanningUpdatesFilters()

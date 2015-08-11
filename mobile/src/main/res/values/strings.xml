@@ -33,4 +33,5 @@
     <string name="nobridges_noneselected_text">Er is geen bridge verbonden</string>
     <string name="nobridges_startscan_text">Zoek bridges</string>
     <string name="scanning_text_scanning">Zoeken naar Hue bridges…</string>
+    <string name="item_ap_button_text">Verbinden</string>
 </resources>

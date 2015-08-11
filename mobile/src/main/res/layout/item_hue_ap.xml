@@ -1,19 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <nl.rwslinkman.awesome.TextAwesome
+        android:id="@+id/item_ap_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/item_ap_icon_marginleft"
+        android:layout_marginStart="@dimen/item_ap_icon_marginleft"
+        android:gravity="center_vertical"
+        android:text="@string/fa_lightbulb_o"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/item_ap_icon_size"/>
+
     <TextView
         android:id="@+id/item_ap_ipaddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hue AP"/>
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/item_ap_icon"
+        android:layout_toRightOf="@id/item_ap_icon"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/item_ap_address_marginleft"
+        android:layout_marginStart="@dimen/item_ap_address_marginleft"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/item_ap_address_textsize"/>
 
-    <nl.rwslinkman.awesome.ButtonAwesome
+    <Button
         android:id="@+id/item_ap_connect"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/item_ap_button_marginright"
+        android:layout_marginRight="@dimen/item_ap_button_marginright"
+        android:text="@string/item_ap_button_text"
+        android:backgroundTint="@color/rwslinkman_blue_light"/>
 
-</LinearLayout>
+</RelativeLayout>

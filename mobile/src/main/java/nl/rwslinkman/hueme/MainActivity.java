@@ -20,6 +20,7 @@ import nl.rwslinkman.hueme.fragments.LightsFragment;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener
