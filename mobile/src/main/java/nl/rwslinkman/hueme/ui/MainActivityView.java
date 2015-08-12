@@ -7,13 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.fragments.NoBridgeFragment;
 
@@ -26,7 +27,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mStateBulbView;
     private TextView mStateMessageView;
-    private Menu mNavigationMenu;
     private NavigationView mNavigationView;
 
     public MainActivityView(MainActivity parent)
@@ -98,6 +98,17 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         this.switchFragment(LoadingFragment.newInstance());
     }
 
+    public void displayConnectedState()
+    {
+        Log.d(TAG, "Switch to connected state");
+
+        this.switchFragment(GroupsFragment.newInstance());
+        // TODO: Display normal navigation menu
+        // TODO: Display normal navigation header
+        // TODO: Confirm HueService state is connected state
+        // TODO: Switch to groups fragment
+    }
+
     private void switchFragment(Fragment fragmentToDisplay)
     {
         // update the main content by replacing fragments
@@ -112,11 +123,5 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
         return true;
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        this.mNavigationMenu = menu;
-        return true; // false = hide, true = display
     }
 }

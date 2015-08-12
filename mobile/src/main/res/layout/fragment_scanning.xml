@@ -62,4 +62,17 @@
         android:layout_alignParentBottom="true"
         android:background="@color/rwslinkman_blue_dark"/>
 
+    <Button
+        android:id="@+id/scanning_btn_successcontinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/scanning_btnsuccess_marginbottom"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@string/scanning_btn_successcontinue"
+        android:background="@color/rwslinkman_blue_dark"
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
+
 </RelativeLayout>

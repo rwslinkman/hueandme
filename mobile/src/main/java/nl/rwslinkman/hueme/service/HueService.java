@@ -14,6 +14,7 @@ import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 
 import java.util.ArrayList;
@@ -41,13 +42,16 @@ public class HueService extends Service implements PHSDKListener
     public static final String SCANNING_STARTED = "ap.scanning.started";
     public static final String HUE_AP_FOUND = "hue.ap.found";
     public static final String HUE_AP_REQUIRES_PUSHLINK = "ap.requires.pushlink";
+    public static final String HUE_AP_NOTRESPONDING = "hue.ap.notresponding";
+    public static final String HUE_HEARTBEAT_UPDATE = "hue.heartbeat.update";
+    public static final String BRIDGE_CONNECTED = "hue.bridge.connected";
     public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
     public static final String INTENT_EXTRA_PUSHLINK_IP = "hueservice.extra.pushlink.ip";
     private static final String AP_USERNAME = "hue-and-me-app";
-
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
+    private HueSharedPreferences prefs;
     private Map<String,PHAccessPoint> mAccessPoints;
     private int currentServiceState;
 
@@ -62,15 +66,26 @@ public class HueService extends Service implements PHSDKListener
         PHNotificationManager phNotificationManager = phHueSDK.getNotificationManager();
         phNotificationManager.registerSDKListener(this);
 
-        PHBridge phHueBridge = phHueSDK.getSelectedBridge();
-        if(phHueBridge == null)
+        prefs = HueSharedPreferences.getInstance(getApplicationContext());
+        String lastIpAddress   = prefs.getLastConnectedIPAddress();
+        String lastUsername    = prefs.getUsername();
+
+        // Automatically try to connect to the last connected IP Address.  For multiple bridge support a different implementation is required.
+        if (lastIpAddress !=null && !lastIpAddress.equals(""))
         {
-            // No bridges found
-            this.startScanning();
+            PHAccessPoint lastAccessPoint = new PHAccessPoint();
+            lastAccessPoint.setIpAddress(lastIpAddress);
+            lastAccessPoint.setUsername(lastUsername);
+
+            if (!phHueSDK.isAccessPointConnected(lastAccessPoint))
+            {
+                phHueSDK.connect(lastAccessPoint);
+                this.currentServiceState = STATE_CONNECTING;
+            }
         }
         else
-        {
-            phHueSDK.enableHeartbeat(phHueBridge, PHHueSDK.HB_INTERVAL);
+        {  // First time use, so perform a bridge search.
+            this.startScanning();
         }
         return mBinder;
     }
@@ -102,7 +117,19 @@ public class HueService extends Service implements PHSDKListener
         {
             // Already connected to AP
             PHBridge bridge = this.phHueSDK.getSelectedBridge();
+            this.currentServiceState = HueService.STATE_CONNECTED;
             Log.d(TAG, "Bridge found via exception: " + Boolean.toString(bridge != null));
+        }
+    }
+
+    public void startPushlink(String ipAddress)
+    {
+        this.currentServiceState = HueService.STATE_CONNECTING;
+
+        PHAccessPoint accessPoint = mAccessPoints.get(ipAddress);
+        if(accessPoint != null)
+        {
+            this.phHueSDK.startPushlinkAuthentication(accessPoint);
         }
     }
 
@@ -115,7 +142,15 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onBridgeConnected(PHBridge phBridge)
     {
-        Log.d(TAG, "Hue bridge connected");
+        Log.d(TAG, "Bridge connected");
+        this.phHueSDK.setSelectedBridge(phBridge);
+        this.phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
+        phHueSDK.getLastHeartbeat().put(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
+        prefs.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
+        prefs.setUsername(AP_USERNAME);
+
+        Intent intent = new Intent(HueService.BRIDGE_CONNECTED);
+        this.sendBroadcast(intent);
         this.currentServiceState = HueService.STATE_CONNECTED;
     }
 
@@ -149,36 +184,62 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onError(int errorCode, String errorMessage)
     {
-        if(errorCode == PHMessageType.BRIDGE_NOT_FOUND)
+        Intent intent = new Intent();
+        switch (errorCode)
         {
-            // Broadcast to listeners
-            Intent intent = new Intent(HueService.DISPLAY_NO_BRIDGE_STATE);
-            this.sendBroadcast(intent);
+            case PHMessageType.BRIDGE_NOT_FOUND:
+                // Broadcast to listeners
+                intent.setAction(HueService.DISPLAY_NO_BRIDGE_STATE);
+                this.sendBroadcast(intent);
+                break;
+            case PHHueError.BRIDGE_NOT_RESPONDING:
+                // Broadcast message
+                intent.setAction(HueService.HUE_AP_NOTRESPONDING);
+                this.sendBroadcast(intent);
+                break;
+            default:
+                Log.e(TAG, "Hue SDK error: " + errorMessage);
+                break;
         }
-        Log.e(TAG, "Hue SDK error: " + errorMessage);
+
     }
 
     @Override
     public void onConnectionResumed(PHBridge phBridge)
     {
-        Log.d(TAG, "Connection resumed with Hue bridge");
+        Log.d(TAG, "Connection resumed with Hue bridge (heartbeat)");
+        phHueSDK.setSelectedBridge(phBridge);
+        String resoucheIPaddress = phBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+        phHueSDK.getLastHeartbeat().put(resoucheIPaddress,  System.currentTimeMillis());
+        for (int i = 0; i < phHueSDK.getDisconnectedAccessPoint().size(); i++)
+        {
+            if (phHueSDK.getDisconnectedAccessPoint().get(i).getIpAddress().equals(resoucheIPaddress))
+            {
+                phHueSDK.getDisconnectedAccessPoint().remove(i);
+            }
+        }
+
+        Intent intent = new Intent(HueService.HUE_HEARTBEAT_UPDATE);
+        this.sendBroadcast(intent);
     }
 
     @Override
     public void onConnectionLost(PHAccessPoint phAccessPoint)
     {
         Log.d(TAG, "Connection to Hue access point lost");
+        if (!phHueSDK.getDisconnectedAccessPoint().contains(phAccessPoint))
+        {
+            phHueSDK.getDisconnectedAccessPoint().add(phAccessPoint);
+        }
     }
 
     @Override
-    public void onParsingErrors(List<PHHueParsingError> list)
+    public void onParsingErrors(List<PHHueParsingError> parsingErrorsList)
     {
-        Log.d(TAG, "Hue has parsing errors: " + Integer.toString(list.size()) + " problems");
-    }
-
-    public boolean isBridgeConnected()
-    {
-        return this.phHueSDK.getSelectedBridge() != null;
+        for (PHHueParsingError parsingError: parsingErrorsList)
+        {
+            Log.e(TAG, "ParsingError: " + parsingError.getMessage());
+        }
     }
 
     public class LocalBinder extends Binder

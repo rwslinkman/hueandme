@@ -29,4 +29,5 @@
     <dimen name="item_ap_icon_marginleft">12dp</dimen>
     <dimen name="scanning_warning_size">110sp</dimen>
     <dimen name="scanning_warning_margintop">30dp</dimen>
+    <dimen name="scanning_btnsuccess_marginbottom">16dp</dimen>
 </resources>

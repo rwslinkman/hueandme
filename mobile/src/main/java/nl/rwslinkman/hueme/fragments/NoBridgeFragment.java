@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,15 +37,21 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if(action.equals(HueService.HUE_AP_FOUND))
+            switch (action)
             {
-                ArrayList<String> apList = intent.getStringArrayListExtra(HueService.INTENT_EXTRA_ACCESSPOINTS_IP);
-                onBridgeFound(apList);
-            }
-            else if(action.equals(HueService.HUE_AP_REQUIRES_PUSHLINK))
-            {
-                String ipAddress = intent.getStringExtra(HueService.INTENT_EXTRA_PUSHLINK_IP);
-                onPushlinkRequired(ipAddress);
+                case HueService.HUE_AP_FOUND:
+                    ArrayList<String> apList = intent.getStringArrayListExtra(HueService.INTENT_EXTRA_ACCESSPOINTS_IP);
+                    onBridgeFound(apList);
+                    break;
+                case HueService.HUE_AP_REQUIRES_PUSHLINK:
+                    String ipAddress = intent.getStringExtra(HueService.INTENT_EXTRA_PUSHLINK_IP);
+                    onPushlinkRequired(ipAddress);
+                    break;
+                case HueService.HUE_AP_NOTRESPONDING:
+                    onConnectionError();
+                    break;
+                case HueService.BRIDGE_CONNECTED:
+                    onConnectionSuccess();
             }
         }
     };
@@ -102,6 +110,17 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
                 // Insert new list of IP addresses
                 HueIPAddressAdapter adapter = new HueIPAddressAdapter(ipAddresses, NoBridgeFragment.this);
                 mRecyclerView.swapAdapter(adapter, true);
+
+                CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+                progressView.setVisibility(View.INVISIBLE);
+
+                TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
+                warningView.setVisibility(View.VISIBLE);
+                warningView.setText(getString(R.string.fa_lightbulb_o));
+                warningView.setTextColor(getResources().getColor(R.color.rwslinkman_blue_light));
+
+                TextView messageView = (TextView) mRootView.findViewById(R.id.scanning_text_view);
+                messageView.setText(getString(R.string.scanning_text_bridgesfound));
             }
         });
     }
@@ -119,7 +138,36 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         TextView scanningText = (TextView) mRootView.findViewById(R.id.scanning_text_view);
         scanningText.setText(getString(R.string.scanning_text_authrequired));
 
+        HueService service = ((HueMe)getActivity().getApplication()).getHueService();
+        service.startPushlink(ipAddress);
+
         Toast.makeText(getActivity(), getString(R.string.nobridges_instruction_presspushlink), Toast.LENGTH_SHORT).show();
+    }
+
+    private void onConnectionSuccess()
+    {
+        mRecyclerView.setVisibility(View.GONE);
+
+        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+        progressView.setVisibility(View.INVISIBLE);
+
+        TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
+        warningView.setVisibility(View.VISIBLE);
+        warningView.setText(getString(R.string.fa_lightbulb_o));
+        warningView.setTextColor(getResources().getColor(R.color.rwslinkman_blue_dark));
+
+        TextView messageView = (TextView) mRootView.findViewById(R.id.scanning_text_view);
+        messageView.setText(getString(R.string.scanning_text_success));
+
+        Button continueButton = (Button) mRootView.findViewById(R.id.scanning_btn_successcontinue);
+        continueButton.setVisibility(View.VISIBLE);
+        continueButton.setOnClickListener(this);
+    }
+
+    private void onConnectionError()
+    {
+        // TODO:
+        Log.d(TAG, "onConnectionError");
     }
 
     private IntentFilter getScanningUpdatesFilters()
@@ -128,6 +176,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         intentFilter.addAction(HueService.SCANNING_STARTED);
         intentFilter.addAction(HueService.HUE_AP_FOUND);
         intentFilter.addAction(HueService.HUE_AP_REQUIRES_PUSHLINK);
+        intentFilter.addAction(HueService.BRIDGE_CONNECTED);
         return intentFilter;
     }
 
@@ -154,8 +203,14 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
             if(service != null)
             {
                 service.registerReceiver(hueUpdateReceiver, this.getScanningUpdatesFilters());
+                service.startScanning();
             }
             activityView.displayNoBridgeState(true);
+        }
+        else if(v.getId() == R.id.scanning_btn_successcontinue)
+        {
+            MainActivityView activityView = ((MainActivity)getActivity()).getView();
+            activityView.displayConnectedState();
         }
     }
 
