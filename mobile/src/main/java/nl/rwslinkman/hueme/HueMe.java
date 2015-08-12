@@ -5,13 +5,12 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.rwslinkman.hueme.hueservice.HueService;
-import nl.rwslinkman.hueme.hueservice.HueServiceStateListener;
+import nl.rwslinkman.hueme.service.HueService;
+import nl.rwslinkman.hueme.service.HueServiceStateListener;
 
 /**
  * class HueMe

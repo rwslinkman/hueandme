@@ -27,4 +27,15 @@
     <string name="navitem_lights">Lampen</string>
     <string name="navitem_info">Info</string>
     <string name="navitem_starting">Thank you for your patience</string>
+    <string name="navheader_state_searching_for_bridges">Zoeken naar bridges…</string>
+    <string name="navitem_nobridge">Er zijn nog geen bridges verbonden</string>
+    <string name="navheader_state_no_bridges_connected">Geen bridges verbonden</string>
+    <string name="nobridges_noneselected_text">Er is geen bridge verbonden</string>
+    <string name="nobridges_startscan_text">Zoek bridges</string>
+    <string name="scanning_text_scanning">Zoeken naar Hue bridges…</string>
+    <string name="item_ap_button_text">Verbinden</string>
+    <string name="item_ap_emptylist">Nog geen bridges gevonden</string>
+    <string name="scanning_text_connecting">Verbinden met Hue bridge…</string>
+    <string name="scanning_text_authrequired">Configuratie mislukt</string>
+    <string name="nobridges_instruction_presspushlink">Druk op de knop op uw bridge en verbind opnieuw</string>
 </resources>

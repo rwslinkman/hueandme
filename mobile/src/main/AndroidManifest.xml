@@ -26,7 +26,7 @@
 
         <!-- custom Hue service -->
         <service
-            android:name=".hueservice.HueService"
+            android:name=".service.HueService"
             android:enabled="true"
             android:exported="false" >
         </service>

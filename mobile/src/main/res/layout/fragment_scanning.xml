@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/scanning_topview_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin">
+
+        <nl.rwslinkman.awesome.TextAwesome
+            android:id="@+id/scanning_warning_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/scanning_warning_margintop"
+            android:text="@string/fa_exclamation_triangle"
+            android:textSize="@dimen/scanning_warning_size"
+            android:visibility="invisible"/>
+
+        <com.github.rahatarmanahmed.cpv.CircularProgressView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/scanning_spinner_view"
+            android:layout_width="@dimen/scanning_spinner_width"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/scanning_spinner_margintop"
+            app:cpv_animAutostart="true"
+            app:cpv_indeterminate="true"
+            app:cpv_thickness="@dimen/scanning_spinner_thickness"
+            app:cpv_color="@color/rwslinkman_blue_light"/>
+
+        <TextView
+            android:id="@+id/scanning_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/scanning_spinner_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/scanning_text_margintop"
+            android:textColor="@color/rwslinkman_blue_dark"
+            android:textSize="@dimen/loading_text_textsize"
+            android:text="@string/scanning_text_scanning"/>
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/scanning_list_bridges"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/scanning_topview_holder"
+        android:layout_marginTop="@dimen/scanning_listbridges_marginTop"
+        android:layout_alignParentBottom="true"
+        android:background="@color/rwslinkman_blue_dark"/>
+
+</RelativeLayout>
