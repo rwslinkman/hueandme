@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -17,9 +16,9 @@ import java.util.List;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
+import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
-import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 import nl.rwslinkman.hueme.ui.MainActivityView;
 
 
@@ -62,13 +61,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         mFragmentsList.add(InfoFragment.newInstance());
 
         mView.displayLoadingState();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        super.onCreateOptionsMenu(menu);
-        return mView.onCreateOptionsMenu(menu);
     }
 
     @Override

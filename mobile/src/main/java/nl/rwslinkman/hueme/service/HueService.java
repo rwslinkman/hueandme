@@ -14,6 +14,7 @@ import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 
 import java.util.ArrayList;
@@ -41,10 +42,11 @@ public class HueService extends Service implements PHSDKListener
     public static final String SCANNING_STARTED = "ap.scanning.started";
     public static final String HUE_AP_FOUND = "hue.ap.found";
     public static final String HUE_AP_REQUIRES_PUSHLINK = "ap.requires.pushlink";
+    public static final String HUE_AP_NOTRESPONDING = "hue.ap.notresponding";
+    public static final String BRIDGE_CONNECTED = "hue.bridge.connected";
     public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
     public static final String INTENT_EXTRA_PUSHLINK_IP = "hueservice.extra.pushlink.ip";
     private static final String AP_USERNAME = "hue-and-me-app";
-
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
@@ -106,6 +108,17 @@ public class HueService extends Service implements PHSDKListener
         }
     }
 
+    public void startPushlink(String ipAddress)
+    {
+        this.currentServiceState = HueService.STATE_CONNECTING;
+
+        PHAccessPoint accessPoint = mAccessPoints.get(ipAddress);
+        if(accessPoint != null)
+        {
+            this.phHueSDK.startPushlinkAuthentication(accessPoint);
+        }
+    }
+
     @Override
     public void onCacheUpdated(List<Integer> list, PHBridge phBridge)
     {
@@ -115,7 +128,11 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onBridgeConnected(PHBridge phBridge)
     {
-        Log.d(TAG, "Hue bridge connected");
+        this.phHueSDK.setSelectedBridge(phBridge);
+        this.phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
+
+        Intent intent = new Intent(HueService.BRIDGE_CONNECTED);
+        this.sendBroadcast(intent);
         this.currentServiceState = HueService.STATE_CONNECTED;
     }
 
@@ -149,13 +166,24 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onError(int errorCode, String errorMessage)
     {
-        if(errorCode == PHMessageType.BRIDGE_NOT_FOUND)
+        Intent intent = new Intent();
+        switch (errorCode)
         {
-            // Broadcast to listeners
-            Intent intent = new Intent(HueService.DISPLAY_NO_BRIDGE_STATE);
-            this.sendBroadcast(intent);
+            case PHMessageType.BRIDGE_NOT_FOUND:
+                // Broadcast to listeners
+                intent.setAction(HueService.DISPLAY_NO_BRIDGE_STATE);
+                this.sendBroadcast(intent);
+                break;
+            case PHHueError.BRIDGE_NOT_RESPONDING:
+                // Broadcast message
+                intent.setAction(HueService.HUE_AP_NOTRESPONDING);
+                this.sendBroadcast(intent);
+                break;
+            default:
+                Log.e(TAG, "Hue SDK error: " + errorMessage);
+                break;
         }
-        Log.e(TAG, "Hue SDK error: " + errorMessage);
+
     }
 
     @Override
