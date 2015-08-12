@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
                 // TODO: Display "NoBridgeFragment"
                 Log.d(TAG, "No bridge found, received via broadcast");
             }
+            else if(action.equals(HueService.HUE_HEARTBEAT_UPDATE))
+            {
+                Log.d(TAG, "Heartbeat in activity");
+                mView.displayConnectedState();
+                HueService service = app.getHueService();
+                service.unregisterReceiver(this);
+            }
         }
     };
 
@@ -72,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         if(!app.isServiceReady())
         {
             app.subscribeHueServiceState(this);
-
         }
         else
         {
@@ -95,14 +101,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
-        if(!service.isBridgeConnected())
+        if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
-            mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+            mView.displayConnectedState();
         }
-        else
+        else if(service.getCurrentServiceState() == HueService.STATE_SCANNING)
         {
-            // TODO: Display "bridge connected" state
-            Log.d(TAG, "Bridge is connected, display in MainActivityView");
+            mView.displayNoBridgeState(false);
         }
     }
 
@@ -116,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HueService.DISPLAY_NO_BRIDGE_STATE);
+        intentFilter.addAction(HueService.HUE_HEARTBEAT_UPDATE);
         return intentFilter;
     }
 
