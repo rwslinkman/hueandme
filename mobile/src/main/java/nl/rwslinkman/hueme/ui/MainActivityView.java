@@ -14,6 +14,7 @@ import android.widget.TextView;
 import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.fragments.NoBridgeFragment;
 
@@ -101,7 +102,9 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     {
         Log.d(TAG, "Switch to connected state");
 
-        // TODO: Display normal menu
+        this.switchFragment(GroupsFragment.newInstance());
+        // TODO: Display normal navigation menu
+        // TODO: Display normal navigation header
         // TODO: Confirm HueService state is connected state
         // TODO: Switch to groups fragment
     }

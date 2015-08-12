@@ -131,6 +131,8 @@ public class HueService extends Service implements PHSDKListener
         this.phHueSDK.setSelectedBridge(phBridge);
         this.phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
 
+        // TODO: Store bridge for future reference
+
         Intent intent = new Intent(HueService.BRIDGE_CONNECTED);
         this.sendBroadcast(intent);
         this.currentServiceState = HueService.STATE_CONNECTED;
@@ -189,7 +191,7 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onConnectionResumed(PHBridge phBridge)
     {
-        Log.d(TAG, "Connection resumed with Hue bridge");
+        Log.d(TAG, "Connection resumed with Hue bridge (heartbeat)");
     }
 
     @Override
