@@ -35,4 +35,7 @@
     <string name="scanning_text_scanning">Zoeken naar Hue bridges…</string>
     <string name="item_ap_button_text">Verbinden</string>
     <string name="item_ap_emptylist">Nog geen bridges gevonden</string>
+    <string name="scanning_text_connecting">Verbinden met Hue bridge…</string>
+    <string name="scanning_text_authrequired">Configuratie mislukt</string>
+    <string name="nobridges_instruction_presspushlink">Druk op de knop op uw bridge en verbind opnieuw</string>
 </resources>

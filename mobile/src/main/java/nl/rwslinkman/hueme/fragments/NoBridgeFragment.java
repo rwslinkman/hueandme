@@ -11,18 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.philips.lighting.hue.sdk.PHAccessPoint;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import java.util.ArrayList;
 
+import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
-import nl.rwslinkman.hueme.ui.MainActivityView;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
 public class NoBridgeFragment extends Fragment implements View.OnClickListener, HueIPAddressAdapter.OnConnectButtonListener
 {
@@ -37,6 +39,11 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
             {
                 ArrayList<String> apList = intent.getStringArrayListExtra(HueService.INTENT_EXTRA_ACCESSPOINTS_IP);
                 onBridgeFound(apList);
+            }
+            else if(action.equals(HueService.HUE_AP_REQUIRES_PUSHLINK))
+            {
+                String ipAddress = intent.getStringExtra(HueService.INTENT_EXTRA_PUSHLINK_IP);
+                onPushlinkRequired(ipAddress);
             }
         }
     };
@@ -99,11 +106,28 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         });
     }
 
+    private void onPushlinkRequired(String ipAddress)
+    {
+        // Hide spinner view
+        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+        progressView.setVisibility(View.INVISIBLE);
+        // Show warning icon
+        TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
+        warningView.setVisibility(View.VISIBLE);
+
+        // Change text to match state
+        TextView scanningText = (TextView) mRootView.findViewById(R.id.scanning_text_view);
+        scanningText.setText(getString(R.string.scanning_text_authrequired));
+
+        Toast.makeText(getActivity(), getString(R.string.nobridges_instruction_presspushlink), Toast.LENGTH_SHORT).show();
+    }
+
     private IntentFilter getScanningUpdatesFilters()
     {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HueService.SCANNING_STARTED);
         intentFilter.addAction(HueService.HUE_AP_FOUND);
+        intentFilter.addAction(HueService.HUE_AP_REQUIRES_PUSHLINK);
         return intentFilter;
     }
 
@@ -138,6 +162,21 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onConnectClick(View connectButton, String ipAddress)
     {
-        Toast.makeText(getActivity(), "Connect to " + ipAddress, Toast.LENGTH_SHORT).show();
+        // Show spinner view
+        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+        progressView.setVisibility(View.VISIBLE);
+        // Hide warning icon
+        TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
+        warningView.setVisibility(View.GONE);
+        // Change text to match state
+        TextView scanningText = (TextView) mRootView.findViewById(R.id.scanning_text_view);
+        scanningText.setText(getString(R.string.scanning_text_connecting));
+
+        HueMe app = (HueMe) getActivity().getApplication();
+        HueService service = app.getHueService();
+        if(service.getCurrentServiceState() != HueService.STATE_SCANNING)
+        {
+            service.connectToAccessPoint(ipAddress);
+        }
     }
 }

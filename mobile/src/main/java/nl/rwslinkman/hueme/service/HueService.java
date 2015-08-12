@@ -40,7 +40,11 @@ public class HueService extends Service implements PHSDKListener
     public static final String DISPLAY_NO_BRIDGE_STATE = "display.no.bridge.state";
     public static final String SCANNING_STARTED = "ap.scanning.started";
     public static final String HUE_AP_FOUND = "hue.ap.found";
+    public static final String HUE_AP_REQUIRES_PUSHLINK = "ap.requires.pushlink";
     public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
+    public static final String INTENT_EXTRA_PUSHLINK_IP = "hueservice.extra.pushlink.ip";
+    private static final String AP_USERNAME = "hue-and-me-app";
+
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
@@ -88,6 +92,7 @@ public class HueService extends Service implements PHSDKListener
 
     public void connectToAccessPoint(String ipAddress)
     {
+        this.currentServiceState = HueService.STATE_CONNECTING;
         try
         {
             PHAccessPoint chosenAP = this.mAccessPoints.get(ipAddress);
@@ -117,7 +122,10 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onAuthenticationRequired(PHAccessPoint phAccessPoint)
     {
-        Log.d(TAG, "Hue bridge requires pushlink");
+        this.currentServiceState = HueService.STATE_IDLE;
+        Intent intent = new Intent(HueService.HUE_AP_REQUIRES_PUSHLINK);
+        intent.putExtra(HueService.INTENT_EXTRA_PUSHLINK_IP, phAccessPoint.getIpAddress());
+        this.sendBroadcast(intent);
     }
 
     @Override
@@ -126,6 +134,7 @@ public class HueService extends Service implements PHSDKListener
         mAccessPoints = new HashMap<>();
         for(PHAccessPoint ap : list)
         {
+            ap.setUsername(HueService.AP_USERNAME);
             mAccessPoints.put(ap.getIpAddress(), ap);
         }
 

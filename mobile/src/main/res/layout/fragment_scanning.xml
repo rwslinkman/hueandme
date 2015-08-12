@@ -17,6 +17,16 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin">
 
+        <nl.rwslinkman.awesome.TextAwesome
+            android:id="@+id/scanning_warning_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/scanning_warning_margintop"
+            android:text="@string/fa_exclamation_triangle"
+            android:textSize="@dimen/scanning_warning_size"
+            android:visibility="invisible"/>
+
         <com.github.rahatarmanahmed.cpv.CircularProgressView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/scanning_spinner_view"
