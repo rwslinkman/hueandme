@@ -242,6 +242,11 @@ public class HueService extends Service implements PHSDKListener
         }
     }
 
+    public PHBridge getBridge()
+    {
+        return this.phHueSDK.getSelectedBridge();
+    }
+
     public class LocalBinder extends Binder
     {
         public HueService getService()

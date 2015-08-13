@@ -3,9 +3,12 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.philips.lighting.model.PHBridge;
 
 import nl.rwslinkman.hueme.R;
 
@@ -14,11 +17,17 @@ import nl.rwslinkman.hueme.R;
  */
 public class GroupsFragment extends Fragment
 {
+    private static final String TAG = GroupsFragment.class.getSimpleName();
+    private PHBridge mActiveBridge;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_groups, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_groups, container, false);
+        String name = this.mActiveBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
+        Log.e(TAG, "Groupsfragment created to display: " + name);
+        return rootView;
     }
 
 
@@ -33,5 +42,10 @@ public class GroupsFragment extends Fragment
     public String getFragmentName()
     {
         return getString(R.string.fragments_groups);
+    }
+
+    public void setActiveBridge(PHBridge activeBridge)
+    {
+        this.mActiveBridge = activeBridge;
     }
 }

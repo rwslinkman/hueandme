@@ -210,7 +210,8 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         else if(v.getId() == R.id.scanning_btn_successcontinue)
         {
             MainActivityView activityView = ((MainActivity)getActivity()).getView();
-            activityView.displayConnectedState();
+            HueService service = ((HueMe)getActivity().getApplication()).getHueService();
+            activityView.displayConnectedState(service.getBridge());
         }
     }
 

@@ -9,14 +9,19 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
+import com.philips.lighting.model.PHBridge;
+
 import nl.rwslinkman.awesome.DrawableAwesome;
+import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.fragments.NoBridgeFragment;
+import nl.rwslinkman.hueme.service.HueService;
 
 public class MainActivityView implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -98,15 +103,24 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         this.switchFragment(LoadingFragment.newInstance());
     }
 
-    public void displayConnectedState()
+    public void displayConnectedState(PHBridge bridge)
     {
         Log.d(TAG, "Switch to connected state");
+        // Set Header state to "scanning"
+        DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
+        stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
+        stateBulbBuilder.setColor(mActivity.getResources().getColor(R.color.rwslinkman_blue_dark));
+        mStateBulbView.setImageDrawable(stateBulbBuilder.build());
 
-        this.switchFragment(GroupsFragment.newInstance());
-        // TODO: Display normal navigation menu
-        // TODO: Display normal navigation header
-        // TODO: Confirm HueService state is connected state
-        // TODO: Switch to groups fragment
+        mStateMessageView.setText(mActivity.getString(R.string.header_statemessage_connected));
+
+        mNavigationView.getMenu().clear();
+        mNavigationView.inflateMenu(R.menu.navmenu_default);
+        mNavigationView.setVisibility(View.VISIBLE);
+
+        GroupsFragment fragment = GroupsFragment.newInstance();
+        fragment.setActiveBridge(bridge);
+        this.switchFragment(fragment);
     }
 
     private void switchFragment(Fragment fragmentToDisplay)
@@ -122,6 +136,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
+        Log.d(TAG, "Selected menu item: " + menuItem.getTitle());
         return true;
     }
 }

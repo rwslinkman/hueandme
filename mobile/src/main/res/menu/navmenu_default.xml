@@ -9,20 +9,17 @@
             android:id="@+id/navitem_groups"
             android:checked="true"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/navitem_groups"
-            android:visible="false" />
+            android:title="@string/navitem_groups" />
 
         <item
             android:id="@+id/navitem_lights"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/navitem_lights"
-            android:visible="false" />
+            android:title="@string/navitem_lights" />
 
         <item
             android:id="@+id/navitem_info"
             android:icon="@mipmap/ic_launcher"
-            android:title="@string/navitem_info"
-            android:visible="false" />
+            android:title="@string/navitem_info" />
 
     </group>
 </menu>

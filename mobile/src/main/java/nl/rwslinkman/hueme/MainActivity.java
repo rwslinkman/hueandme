@@ -21,7 +21,9 @@ import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.ui.MainActivityView;
 
-
+/**
+ * @author Rick Slinkman
+ */
 public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -40,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             else if(action.equals(HueService.HUE_HEARTBEAT_UPDATE))
             {
                 Log.d(TAG, "Heartbeat in activity");
-                mView.displayConnectedState();
                 HueService service = app.getHueService();
+                mView.displayConnectedState(service.getBridge());
                 service.unregisterReceiver(this);
             }
         }
@@ -103,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
 
         if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
-            mView.displayConnectedState();
+            mView.displayConnectedState(service.getBridge());
         }
         else if(service.getCurrentServiceState() == HueService.STATE_SCANNING)
         {
