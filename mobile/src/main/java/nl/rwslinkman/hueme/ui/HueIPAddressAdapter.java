@@ -19,33 +19,6 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private OnConnectButtonListener mConnectListener;
     private List<String> mDataset;
 
-    public interface OnConnectButtonListener
-    {
-        void onConnectClick(View connectButton, String ipAddress);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
-        public TextAwesome mIconView;
-        public TextView mIPaddressView;
-        public Button mConnectButton;
-        private boolean mIsPlaceholder;
-
-        public ViewHolder(View holderView, boolean isPlaceholderView)
-        {
-            super(holderView);
-            this.mIsPlaceholder = isPlaceholderView;
-            mIconView = (TextAwesome) holderView.findViewById(R.id.item_ap_icon);
-            mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
-            mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
-        }
-
-        public boolean isPlaceholderView()
-        {
-            return this.mIsPlaceholder;
-        }
-    }
-
     public HueIPAddressAdapter(List<String> accessPoints, OnConnectButtonListener listener)
     {
         this.mConnectListener = listener;
@@ -103,5 +76,32 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position)
     {
         return (mDataset.isEmpty()) ? VIEW_TYPE_EMPTY_LIST_PLACEHOLDER : VIEW_TYPE_OBJECT_VIEW;
+    }
+
+    public interface OnConnectButtonListener
+    {
+        void onConnectClick(View connectButton, String ipAddress);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder
+    {
+        public TextAwesome mIconView;
+        public TextView mIPaddressView;
+        public Button mConnectButton;
+        private boolean mIsPlaceholder;
+
+        public ViewHolder(View holderView, boolean isPlaceholderView)
+        {
+            super(holderView);
+            this.mIsPlaceholder = isPlaceholderView;
+            mIconView = (TextAwesome) holderView.findViewById(R.id.item_ap_icon);
+            mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
+            mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
+        }
+
+        public boolean isPlaceholderView()
+        {
+            return this.mIsPlaceholder;
+        }
     }
 }

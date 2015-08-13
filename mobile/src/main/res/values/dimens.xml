@@ -30,4 +30,6 @@
     <dimen name="scanning_warning_size">110sp</dimen>
     <dimen name="scanning_warning_margintop">30dp</dimen>
     <dimen name="scanning_btnsuccess_marginbottom">16dp</dimen>
+    <dimen name="groups_title_margintop">16dp</dimen>
+    <dimen name="groups_title_textsize">30sp</dimen>
 </resources>
