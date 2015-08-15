@@ -24,7 +24,7 @@ import nl.rwslinkman.hueme.ui.MainActivityView;
 /**
  * @author Rick Slinkman
  */
-public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener
+public class MainActivity extends AppCompatActivity implements HueServiceStateListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -43,13 +43,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             {
                 Log.d(TAG, "Heartbeat in activity");
                 HueService service = app.getHueService();
-                mView.displayConnectedState(service.getBridge());
                 service.unregisterReceiver(this);
+                mView.displayConnectedState();
             }
         }
     };
-
-    private List<Fragment> mFragmentsList;
     private HueMe app;
     private MainActivityView mView;
 
@@ -62,12 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
 
         this.mView = new MainActivityView(this);
         this.mView.create();
-
-        // Init menu
-        mFragmentsList = new ArrayList<>();
-        mFragmentsList.add(LightsFragment.newInstance());
-        mFragmentsList.add(GroupsFragment.newInstance());
-        mFragmentsList.add(InfoFragment.newInstance());
 
         mView.displayLoadingState();
     }
@@ -89,15 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     }
 
     @Override
-    public void onNavigationDrawerItemSelected(int position)
-    {
-        // update the main content by replacing fragments
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-        Fragment selectedFragment = mFragmentsList.get(position);
-        Log.d(TAG, selectedFragment.getClass().getSimpleName());
-    }
-
-    @Override
     public void onHueServiceReady()
     {
         HueService service = app.getHueService();
@@ -105,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
 
         if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
-            mView.displayConnectedState(service.getBridge());
+            mView.displayConnectedState();
         }
         else if(service.getCurrentServiceState() == HueService.STATE_SCANNING)
         {

@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.philips.lighting.model.PHBridge;
@@ -19,6 +18,8 @@ import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
+import nl.rwslinkman.hueme.fragments.InfoFragment;
+import nl.rwslinkman.hueme.fragments.LightsFragment;
 import nl.rwslinkman.hueme.fragments.LoadingFragment;
 import nl.rwslinkman.hueme.fragments.NoBridgeFragment;
 import nl.rwslinkman.hueme.service.HueService;
@@ -28,7 +29,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     public static final String TAG = MainActivityView.class.getSimpleName();
     private static final int NAVHEADER_STATE_BULB_SIZE = 15; // unit of measure unclear
     private MainActivity mActivity;
-    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
     private FloatingActionButton mStateBulbView;
     private TextView mStateMessageView;
@@ -42,7 +42,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     public void create()
     {
         // Init Toolbar
-        mToolbar = (Toolbar) mActivity.findViewById(R.id.toolbar_actionbar);
+        Toolbar mToolbar = (Toolbar) mActivity.findViewById(R.id.toolbar_actionbar);
         mActivity.setSupportActionBar(mToolbar);
 
         // Init NavigationDrawer
@@ -103,9 +103,8 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         this.switchFragment(LoadingFragment.newInstance());
     }
 
-    public void displayConnectedState(PHBridge bridge)
+    public void displayConnectedState()
     {
-        Log.d(TAG, "Switch to connected state");
         // Set Header state to "scanning"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
@@ -116,7 +115,16 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.navmenu_default);
-        mNavigationView.setVisibility(View.VISIBLE);
+        mNavigationView.setNavigationItemSelectedListener(this);
+
+        this.displayGroups();
+    }
+
+
+    public void displayGroups()
+    {
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+        PHBridge bridge = service.getBridge();
 
         GroupsFragment fragment = GroupsFragment.newInstance();
         fragment.setActiveBridge(bridge);
@@ -131,12 +139,47 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
                 .beginTransaction()
                 .replace(R.id.container, fragmentToDisplay)
                 .commit();
+
+        if(mDrawerLayout.isDrawerOpen(mNavigationView))
+        {
+            mDrawerLayout.closeDrawer(mNavigationView);
+        }
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem)
     {
-        Log.d(TAG, "Selected menu item: " + menuItem.getTitle());
-        return true;
+        switch(menuItem.getItemId())
+        {
+            case R.id.navitem_groups:
+                this.displayGroups();
+                break;
+            case R.id.navitem_info:
+                this.displayInfo();
+                break;
+            case R.id.navitem_lights:
+                this.displayLights();
+        }
+
+        // Set the menu correctly
+        menuItem.setCheckable(true);
+        menuItem.setChecked(true);
+        return false;
+    }
+
+    private void displayInfo()
+    {
+        InfoFragment fragment = InfoFragment.newInstance();
+        this.switchFragment(fragment);
+    }
+
+    private void displayLights()
+    {
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+        PHBridge bridge = service.getBridge();
+
+        LightsFragment fragment = LightsFragment.newInstance();
+        fragment.setActiveBridge(bridge);
+        this.switchFragment(fragment);
     }
 }
