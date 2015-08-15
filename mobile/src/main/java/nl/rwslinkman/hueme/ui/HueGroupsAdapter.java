@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.philips.lighting.model.PHGroup;
@@ -38,11 +37,14 @@ public class HueGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ViewHolder vh = (ViewHolder) holder;
             if(vh.isPlaceholderView())
             {
-                // Set values to public Views in vh
+                vh.mIconView.setText(R.string.fa_exclamation_circle);
+                vh.mGroupNameView.setText(R.string.groups_item_nonefound);
             }
             else
             {
                 final PHGroup group = mDataset.get(position);
+                vh.mIconView.setText(R.string.fa_lightbulb_o);
+
             }
         }
     }
@@ -50,18 +52,22 @@ public class HueGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public int getItemCount()
     {
-        return 0;
+        return mDataset.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder
     {
         private boolean mIsPlaceholder;
+        public TextAwesome mIconView;
+        public TextView mGroupNameView;
 
         public ViewHolder(View holderView, boolean isPlaceholderView)
         {
             super(holderView);
             this.mIsPlaceholder = isPlaceholderView;
             // do some findViewById magic
+            this.mIconView = (TextAwesome) holderView.findViewById(R.id.groups_item_icon);
+            this.mGroupNameView = (TextView) holderView.findViewById(R.id.groups_item_name);
         }
 
         public boolean isPlaceholderView()

@@ -35,24 +35,16 @@ public class GroupsFragment extends Fragment
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_groups, container, false);
 
-        // TODO: Create recycler view
         List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
+        HueGroupsAdapter adapter = new HueGroupsAdapter(hueGroups);
 
-        Log.d(TAG, "Display " + Integer.toString(hueGroups.size()) + " groups");
-
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.groups_list_View);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.groups_list_view);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        // specify an adapter (see also next example)
-        HueGroupsAdapter adapter = new HueGroupsAdapter(hueGroups);
         mRecyclerView.setAdapter(adapter);
 
-        String name = this.mActiveBridge.getResourceCache().getBridgeConfiguration().getIpAddress() ;
-        Log.e(TAG, "Groupsfragment created to display: " + name);
         return rootView;
     }
-
 
     public static GroupsFragment newInstance()
     {
@@ -60,11 +52,6 @@ public class GroupsFragment extends Fragment
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public String getFragmentName()
-    {
-        return getString(R.string.fragments_groups);
     }
 
     public void setActiveBridge(PHBridge activeBridge)
