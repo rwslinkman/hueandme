@@ -21,8 +21,10 @@ import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.ui.MainActivityView;
 
-
-public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks, HueServiceStateListener
+/**
+ * @author Rick Slinkman
+ */
+public class MainActivity extends AppCompatActivity implements HueServiceStateListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -40,14 +42,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             else if(action.equals(HueService.HUE_HEARTBEAT_UPDATE))
             {
                 Log.d(TAG, "Heartbeat in activity");
-                mView.displayConnectedState();
                 HueService service = app.getHueService();
                 service.unregisterReceiver(this);
+                mView.displayConnectedState();
             }
         }
     };
-
-    private List<Fragment> mFragmentsList;
     private HueMe app;
     private MainActivityView mView;
 
@@ -60,12 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
 
         this.mView = new MainActivityView(this);
         this.mView.create();
-
-        // Init menu
-        mFragmentsList = new ArrayList<>();
-        mFragmentsList.add(LightsFragment.newInstance());
-        mFragmentsList.add(GroupsFragment.newInstance());
-        mFragmentsList.add(InfoFragment.newInstance());
 
         mView.displayLoadingState();
     }
@@ -84,15 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         {
             this.onHueServiceReady();
         }
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position)
-    {
-        // update the main content by replacing fragments
-        Toast.makeText(this, "Menu item selected -> " + position, Toast.LENGTH_SHORT).show();
-        Fragment selectedFragment = mFragmentsList.get(position);
-        Log.d(TAG, selectedFragment.getClass().getSimpleName());
     }
 
     @Override

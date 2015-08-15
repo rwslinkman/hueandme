@@ -58,8 +58,6 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
     private boolean mIsScanningForBridges;
     private View mRootView;
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager mLayoutManager;
-    private HueIPAddressAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -92,12 +90,10 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
     {
         mRecyclerView = (RecyclerView) mRootView.findViewById(R.id.scanning_list_bridges);
         mRecyclerView.setHasFixedSize(true);
-
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         // specify an adapter (see also next example)
-        mAdapter = new HueIPAddressAdapter(new ArrayList<String>(), this);
+        HueIPAddressAdapter mAdapter = new HueIPAddressAdapter(new ArrayList<String>(), this);
         mRecyclerView.setAdapter(mAdapter);
 
     }

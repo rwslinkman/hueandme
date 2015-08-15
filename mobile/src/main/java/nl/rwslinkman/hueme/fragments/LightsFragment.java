@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.philips.lighting.model.PHBridge;
+
 import nl.rwslinkman.hueme.R;
 
 /**
@@ -14,6 +16,8 @@ import nl.rwslinkman.hueme.R;
  */
 public class LightsFragment extends Fragment
 {
+    private PHBridge mActiveBridge;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -27,5 +31,9 @@ public class LightsFragment extends Fragment
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void setActiveBridge(PHBridge activeBridge) {
+        this.mActiveBridge = activeBridge;
     }
 }

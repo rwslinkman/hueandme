@@ -41,4 +41,6 @@
     <string name="scanning_text_bridgesfound">Deze Hue bridges zijn gevonden</string>
     <string name="scanning_text_success">Het verbinden is gelukt!</string>
     <string name="scanning_btn_successcontinue">Ga verder</string>
+    <string name="header_statemessage_connected">Verbonden met Hue</string>
+    <string name="groups_title_text">Groepen</string>
 </resources>

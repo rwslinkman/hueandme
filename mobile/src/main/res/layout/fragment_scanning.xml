@@ -60,7 +60,8 @@
         android:layout_below="@id/scanning_topview_holder"
         android:layout_marginTop="@dimen/scanning_listbridges_marginTop"
         android:layout_alignParentBottom="true"
-        android:background="@color/rwslinkman_blue_dark"/>
+        android:background="@color/rwslinkman_blue_dark"
+        android:fastScrollEnabled="false"/>
 
     <Button
         android:id="@+id/scanning_btn_successcontinue"
