@@ -44,7 +44,7 @@ public class HueGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             {
                 final PHGroup group = mDataset.get(position);
                 vh.mIconView.setText(R.string.fa_lightbulb_o);
-
+                vh.mGroupNameView.setText(group.getName());
             }
         }
     }

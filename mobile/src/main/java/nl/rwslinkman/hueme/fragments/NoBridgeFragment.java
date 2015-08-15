@@ -64,6 +64,12 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
     {
         int rootViewToInflate = (mIsScanningForBridges) ? R.layout.fragment_scanning : R.layout.fragment_nobridges;
         this.mRootView = inflater.inflate(rootViewToInflate, container, false);
+        return mRootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         if(mIsScanningForBridges)
         {
@@ -78,7 +84,6 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         {
             this.createNotScanningView();
         }
-        return mRootView;
     }
 
     private void createNotScanningView()
@@ -100,6 +105,10 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
 
     private void onBridgeFound(final ArrayList<String> ipAddresses)
     {
+        if(getActivity() == null)
+        {
+            return;
+        }
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -142,22 +151,31 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
 
     private void onConnectionSuccess()
     {
-        mRecyclerView.setVisibility(View.GONE);
+        if(getActivity() == null)
+        {
+            return;
+        }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mRecyclerView.setVisibility(View.GONE);
 
-        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
-        progressView.setVisibility(View.INVISIBLE);
+                CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+                progressView.setVisibility(View.INVISIBLE);
 
-        TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
-        warningView.setVisibility(View.VISIBLE);
-        warningView.setText(getString(R.string.fa_lightbulb_o));
-        warningView.setTextColor(getResources().getColor(R.color.rwslinkman_blue_dark));
+                TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
+                warningView.setVisibility(View.VISIBLE);
+                warningView.setText(getString(R.string.fa_lightbulb_o));
+                warningView.setTextColor(getResources().getColor(R.color.rwslinkman_blue_dark));
 
-        TextView messageView = (TextView) mRootView.findViewById(R.id.scanning_text_view);
-        messageView.setText(getString(R.string.scanning_text_success));
+                TextView messageView = (TextView) mRootView.findViewById(R.id.scanning_text_view);
+                messageView.setText(getString(R.string.scanning_text_success));
 
-        Button continueButton = (Button) mRootView.findViewById(R.id.scanning_btn_successcontinue);
-        continueButton.setVisibility(View.VISIBLE);
-        continueButton.setOnClickListener(this);
+                Button continueButton = (Button) mRootView.findViewById(R.id.scanning_btn_successcontinue);
+                continueButton.setVisibility(View.VISIBLE);
+                continueButton.setOnClickListener(NoBridgeFragment.this);
+            }
+        });
     }
 
     private void onConnectionError()
