@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHGroup;
@@ -66,6 +67,6 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         PHGroup group = (PHGroup) parent.getItemAtPosition(position);
-        Log.d("Item click", group.getName());
+        Toast.makeText(getActivity(), "Item " + group.getName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
 }

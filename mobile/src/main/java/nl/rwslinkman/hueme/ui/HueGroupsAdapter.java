@@ -18,8 +18,6 @@ import nl.rwslinkman.hueme.R;
 
 public class HueGroupsAdapter extends ArrayAdapter<PHGroup>
 {
-    private List<PHGroup> mDataset;
-
     public HueGroupsAdapter(Context context, List<PHGroup> groups)
     {
         super(context, 0, groups);
@@ -28,15 +26,14 @@ public class HueGroupsAdapter extends ArrayAdapter<PHGroup>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        // Get the data item for this position
+        // Gather and assemble item view
         PHGroup group = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
         {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.hue_groups_item, parent, false);
         }
 
-        // do some findViewById magic
+        // Insert data into item view
         TextAwesome mIconView = (TextAwesome) convertView.findViewById(R.id.groups_item_icon);
         TextView mGroupNameView = (TextView) convertView.findViewById(R.id.groups_item_name);
 
@@ -45,5 +42,4 @@ public class HueGroupsAdapter extends ArrayAdapter<PHGroup>
 
         return convertView;
     }
-
 }
