@@ -1,9 +1,12 @@
 package nl.rwslinkman.hueme.ui;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.philips.lighting.model.PHGroup;
@@ -13,66 +16,34 @@ import java.util.List;
 import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.R;
 
-public class HueGroupsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class HueGroupsAdapter extends ArrayAdapter<PHGroup>
 {
     private List<PHGroup> mDataset;
 
-    public HueGroupsAdapter(List<PHGroup> accessPoints)
+    public HueGroupsAdapter(Context context, List<PHGroup> groups)
     {
-        mDataset = accessPoints;
+        super(context, 0, groups);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+    public View getView(int position, View convertView, ViewGroup parent)
     {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.hue_groups_item, parent, false);
-        return new ViewHolder(v, mDataset.isEmpty());
-    }
-
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position)
-    {
-        if (holder instanceof HueGroupsAdapter.ViewHolder)
+        // Get the data item for this position
+        PHGroup group = getItem(position);
+        // Check if an existing view is being reused, otherwise inflate the view
+        if (convertView == null)
         {
-            ViewHolder vh = (ViewHolder) holder;
-            if(vh.isPlaceholderView())
-            {
-                vh.mIconView.setText(R.string.fa_exclamation_circle);
-                vh.mGroupNameView.setText(R.string.groups_item_nonefound);
-            }
-            else
-            {
-                final PHGroup group = mDataset.get(position);
-                vh.mIconView.setText(R.string.fa_lightbulb_o);
-                vh.mGroupNameView.setText(group.getName());
-            }
-        }
-    }
-
-    @Override
-    public int getItemCount()
-    {
-        return mDataset.size();
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
-        private boolean mIsPlaceholder;
-        public TextAwesome mIconView;
-        public TextView mGroupNameView;
-
-        public ViewHolder(View holderView, boolean isPlaceholderView)
-        {
-            super(holderView);
-            this.mIsPlaceholder = isPlaceholderView;
-            // do some findViewById magic
-            this.mIconView = (TextAwesome) holderView.findViewById(R.id.groups_item_icon);
-            this.mGroupNameView = (TextView) holderView.findViewById(R.id.groups_item_name);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.hue_groups_item, parent, false);
         }
 
-        public boolean isPlaceholderView()
-        {
-            return this.mIsPlaceholder;
-        }
+        // do some findViewById magic
+        TextAwesome mIconView = (TextAwesome) convertView.findViewById(R.id.groups_item_icon);
+        TextView mGroupNameView = (TextView) convertView.findViewById(R.id.groups_item_name);
+
+        mIconView.setText(R.string.fa_lightbulb_o);
+        mGroupNameView.setText(group.getName());
+
+        return convertView;
     }
+
 }

@@ -191,7 +191,6 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onError(int errorCode, String errorMessage)
     {
-        Log.e(TAG, "Error in Philips SDK: " + errorMessage);
         Intent intent = new Intent();
         switch (errorCode)
         {

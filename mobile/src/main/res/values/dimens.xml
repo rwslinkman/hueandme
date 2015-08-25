@@ -36,6 +36,7 @@
     <dimen name="groupsitem_icon_marginleft">16dp</dimen>
     <dimen name="groupsitem_icon_size">35sp</dimen>
     <dimen name="groupsitem_name_textsize">28sp</dimen>
+    <dimen name="groups_empty_textsize">24sp</dimen>
     <dimen name="groups_subtitle_textsize">20sp</dimen>
     <dimen name="connecting_spinner_width">100dp</dimen>
     <dimen name="connecting_spinner_thickness">6dp</dimen>
