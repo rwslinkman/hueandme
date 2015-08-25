@@ -4,12 +4,6 @@
     tools:context="nl.rwslinkman.hueme.fragments.GroupsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
     android:background="@android:color/white">
 
     <TextView
@@ -17,17 +11,76 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:text="@string/groups_title_text"
         android:textSize="@dimen/groups_title_textsize"
         android:textColor="@color/rwslinkman_blue_dark" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/groups_list_View"
+    <TextView
+        android:id="@+id/groups_subtitle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groups_title_view"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/groups_subtitle_text"
+        android:textSize="@dimen/groups_subtitle_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <ListView
+        android:id="@+id/groups_list_view"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/groups_title_view"
+        android:layout_below="@id/groups_subtitle_view"
         android:layout_alignParentBottom="true"
-        android:fastScrollEnabled="false"/>
+        android:layout_marginTop="@dimen/groups_list_margintop"
+        android:fastScrollEnabled="false"
+        android:focusable="true"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="2dp" />
+
+    <RelativeLayout
+        android:id="@+id/groups_emptyview"
+        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groups_subtitle_view"
+        android:layout_marginTop="@dimen/groups_list_margintop">
+
+        <nl.rwslinkman.awesome.TextAwesome
+            android:id="@+id/groups_item_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/groupsitem_icon_marginleft"
+            android:layout_marginStart="@dimen/groupsitem_icon_marginleft"
+            android:gravity="center_vertical"
+            android:text="@string/fa_exclamation_circle"
+            android:textColor="@color/rwslinkman_blue_light"
+            android:textSize="@dimen/groupsitem_icon_size"/>
+
+        <TextView
+            android:id="@+id/groups_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/groups_item_icon"
+            android:layout_toRightOf="@id/groups_item_icon"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/item_ap_address_marginleft"
+            android:layout_marginStart="@dimen/item_ap_address_marginleft"
+            android:textColor="@color/rwslinkman_blue_dark"
+            android:textSize="@dimen/groups_empty_textsize"
+            android:text="@string/groups_text_nogroupsfound"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

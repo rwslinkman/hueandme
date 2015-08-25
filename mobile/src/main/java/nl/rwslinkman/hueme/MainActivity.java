@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
                 service.unregisterReceiver(this);
                 mView.displayConnectedState();
             }
+            else if(action.equals(HueService.HUE_AP_NOTRESPONDING))
+            {
+                HueService service = app.getHueService();
+                mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+            }
         }
     };
     private HueMe app;
@@ -55,9 +60,10 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Activity created");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
+        setContentView(R.layout.activity_main);
         this.mView = new MainActivityView(this);
         this.mView.create();
 
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     protected void onResume()
     {
+        Log.d(TAG, "Activity resumed");
         super.onResume();
 
         app = (HueMe) getApplication();
@@ -83,9 +90,11 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     public void onHueServiceReady()
     {
+        Log.d(TAG, "Hue service ready");
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
+        Log.d(TAG, String.valueOf(service.getCurrentServiceState()));
         if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
             mView.displayConnectedState();
@@ -93,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         else if(service.getCurrentServiceState() == HueService.STATE_SCANNING)
         {
             mView.displayNoBridgeState(false);
+        }
+        else if(service.getCurrentServiceState() == HueService.STATE_CONNECTING)
+        {
+            service.registerReceiver(hueUpdateReceiver, this.getConnectionUpdatesFilter());
+            mView.displayConnectingState();
         }
     }
 
@@ -107,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HueService.DISPLAY_NO_BRIDGE_STATE);
         intentFilter.addAction(HueService.HUE_HEARTBEAT_UPDATE);
+        return intentFilter;
+    }
+
+    private IntentFilter getConnectionUpdatesFilter()
+    {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HueService.HUE_AP_NOTRESPONDING);
         return intentFilter;
     }
 

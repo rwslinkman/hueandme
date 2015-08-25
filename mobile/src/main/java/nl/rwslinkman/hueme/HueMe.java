@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class HueMe extends Application
         @Override
         public void onServiceConnected(ComponentName name, IBinder service)
         {
+            Log.d(TAG, "Service connected");
             hueService = ((HueService.LocalBinder) service).getService();
             for(HueServiceStateListener subscriber : subscribers)
             {

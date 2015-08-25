@@ -43,4 +43,8 @@
     <string name="scanning_btn_successcontinue">Ga verder</string>
     <string name="header_statemessage_connected">Verbonden met Hue</string>
     <string name="groups_title_text">Groepen</string>
+    <string name="groups_item_nonefound">Er zijn geen bestaande groepen</string>
+    <string name="groups_subtitle_text">Alle groepen in Philips Hue</string>
+    <string name="philips_hue_connecting">Philips Hue probeert te verbinden</string>
+    <string name="groups_text_nogroupsfound">Geen groepen gevonden</string>
 </resources>

@@ -71,16 +71,22 @@ public class HueService extends Service implements PHSDKListener
         String lastUsername    = prefs.getUsername();
 
         // Automatically try to connect to the last connected IP Address.  For multiple bridge support a different implementation is required.
-        if (lastIpAddress !=null && !lastIpAddress.equals(""))
+        if (lastIpAddress != null && !lastIpAddress.equals(""))
         {
+            Log.d(TAG, "Service loading stored AP");
             PHAccessPoint lastAccessPoint = new PHAccessPoint();
             lastAccessPoint.setIpAddress(lastIpAddress);
             lastAccessPoint.setUsername(lastUsername);
 
             if (!phHueSDK.isAccessPointConnected(lastAccessPoint))
             {
+                Log.d(TAG, "Connecting to stored accesspoint");
                 phHueSDK.connect(lastAccessPoint);
                 this.currentServiceState = STATE_CONNECTING;
+            }
+            else
+            {
+                Log.d(TAG, "AP is connected");
             }
         }
         else
@@ -125,6 +131,7 @@ public class HueService extends Service implements PHSDKListener
     public void startPushlink(String ipAddress)
     {
         this.currentServiceState = HueService.STATE_CONNECTING;
+        Log.d(TAG, "Start pushlink");
 
         PHAccessPoint accessPoint = mAccessPoints.get(ipAddress);
         if(accessPoint != null)
@@ -236,6 +243,7 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onParsingErrors(List<PHHueParsingError> parsingErrorsList)
     {
+        Log.e(TAG, "Parsing errors in Philips SDK");
         for (PHHueParsingError parsingError: parsingErrorsList)
         {
             Log.e(TAG, "ParsingError: " + parsingError.getMessage());

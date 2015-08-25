@@ -17,6 +17,7 @@ import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.fragments.ConnectingFragment;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
@@ -67,6 +68,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayNoBridgeState(boolean isScanning)
     {
+        Log.d(TAG, "Displaying no bridge state");
         int stateMessage = (isScanning) ? R.string.navheader_state_searching_for_bridges : R.string.navheader_state_no_bridges_connected;
         int stateColor = (isScanning) ? R.color.navheader_statebulb_disabled : R.color.android_red;
 
@@ -89,6 +91,8 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayLoadingState()
     {
+        Log.d(TAG, "Displaying loading state");
+
         // Set header state to "loading"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
@@ -105,6 +109,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayConnectedState()
     {
+        Log.d(TAG, "Displaying connected state");
         // Set Header state to "scanning"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
@@ -123,6 +128,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayGroups()
     {
+        Log.d(TAG, "Displaying groups");
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
@@ -169,17 +175,30 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void displayInfo()
     {
+        Log.d(TAG, "Displaying info");
         InfoFragment fragment = InfoFragment.newInstance();
         this.switchFragment(fragment);
     }
 
     private void displayLights()
     {
+        Log.d(TAG, "Displaying lights");
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
         LightsFragment fragment = LightsFragment.newInstance();
         fragment.setActiveBridge(bridge);
+        this.switchFragment(fragment);
+    }
+
+    public void displayConnectingState()
+    {
+        Log.d(TAG, "Displaying connecting");
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+//        String ipAddress = service.getBridge().getResourceCache().getBridgeConfiguration().getIpAddress();
+
+        ConnectingFragment fragment = ConnectingFragment.newInstance();
+//        fragment.setConnectingIP(ipAddress);
         this.switchFragment(fragment);
     }
 }

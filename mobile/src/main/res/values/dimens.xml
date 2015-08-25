@@ -31,5 +31,15 @@
     <dimen name="scanning_warning_margintop">30dp</dimen>
     <dimen name="scanning_btnsuccess_marginbottom">16dp</dimen>
     <dimen name="groups_title_margintop">16dp</dimen>
-    <dimen name="groups_title_textsize">30sp</dimen>
+    <dimen name="groups_title_textsize">45sp</dimen>
+    <dimen name="groups_list_margintop">16dp</dimen>
+    <dimen name="groupsitem_icon_marginleft">16dp</dimen>
+    <dimen name="groupsitem_icon_size">35sp</dimen>
+    <dimen name="groupsitem_name_textsize">28sp</dimen>
+    <dimen name="groups_empty_textsize">24sp</dimen>
+    <dimen name="groups_subtitle_textsize">20sp</dimen>
+    <dimen name="connecting_spinner_width">100dp</dimen>
+    <dimen name="connecting_spinner_thickness">6dp</dimen>
+    <dimen name="connecting_text_textsize">16dp</dimen>
+    <dimen name="connecting_text_margintop">18sp</dimen>
 </resources>
