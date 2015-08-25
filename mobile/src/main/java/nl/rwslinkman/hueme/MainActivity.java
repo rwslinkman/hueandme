@@ -34,22 +34,29 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if(action.equals(HueService.DISPLAY_NO_BRIDGE_STATE))
-            {
-                // TODO: Display "NoBridgeFragment"
-                Log.d(TAG, "No bridge found, received via broadcast");
-            }
-            else if(action.equals(HueService.HUE_HEARTBEAT_UPDATE))
-            {
-                Log.d(TAG, "Heartbeat in activity");
-                HueService service = app.getHueService();
-                service.unregisterReceiver(this);
-                mView.displayConnectedState();
-            }
-            else if(action.equals(HueService.HUE_AP_NOTRESPONDING))
-            {
-                HueService service = app.getHueService();
-                mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+            switch (action) {
+                case HueService.DISPLAY_NO_BRIDGE_STATE:
+                    // TODO: Display "NoBridgeFragment"
+                    Log.d(TAG, "No bridge found, received via broadcast");
+                    break;
+                case HueService.HUE_HEARTBEAT_UPDATE: {
+                    Log.d(TAG, "Heartbeat in activity");
+                    HueService service = app.getHueService();
+                    service.unregisterReceiver(this);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.displayConnectedState();
+                        }
+                    });
+                    break;
+                }
+                case HueService.HUE_AP_NOTRESPONDING: {
+                    HueService service = app.getHueService();
+                    mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+                    break;
+                }
             }
         }
     };

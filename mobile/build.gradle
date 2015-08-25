@@ -28,4 +28,5 @@ dependencies {
     compile files('libs/huesdkresources.jar')
     compile project(':awesome')
     compile 'com.github.rahatarmanahmed:circularprogressview:2.3.2'
+    compile 'com.larswerkman:HoloColorPicker:1.5'
 }

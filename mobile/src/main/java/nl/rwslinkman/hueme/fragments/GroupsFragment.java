@@ -17,8 +17,10 @@ import com.philips.lighting.model.PHGroup;
 
 import java.util.List;
 
+import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.ui.HueGroupsAdapter;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +68,10 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
+        MainActivityView activity = ((MainActivity) getActivity()).getView();
         PHGroup group = (PHGroup) parent.getItemAtPosition(position);
+
+        activity.displayGroupDetail(group);
         Toast.makeText(getActivity(), "Item " + group.getName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
 }
