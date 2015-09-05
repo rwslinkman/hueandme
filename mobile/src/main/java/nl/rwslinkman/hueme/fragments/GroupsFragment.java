@@ -72,6 +72,5 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
         PHGroup group = (PHGroup) parent.getItemAtPosition(position);
 
         activity.displayGroupDetail(group);
-        Toast.makeText(getActivity(), "Item " + group.getName() + " was clicked", Toast.LENGTH_SHORT).show();
     }
 }

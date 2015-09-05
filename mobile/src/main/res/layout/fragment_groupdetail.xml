@@ -1,12 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/picker"
+    <!-- Group name -->
+    <TextView
+        android:id="@+id/groupdetail_group_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/groupdetail_groupname_textsize"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="@dimen/groupdetail_groupname_margintop"
+        android:layout_marginStart="@dimen/groupdetail_groupname_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_groupname_marginside"
+        android:layout_marginBottom="@dimen/groupdetail_groupname_marginbottom"
+        android:textColor="@color/rwslinkman_blue_light"/>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/groupdetail_group_name"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+        android:background="@color/rwslinkman_blue_dark"/>
+
+    <!-- Colorpicker -->
+    <com.larswerkman.holocolorpicker.ColorPicker
+        android:id="@+id/groupdetail_colorpicker_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_group_name"
+        android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
+        android:layout_marginBottom="@dimen/groupdetail_colorpicker_marginbottom"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+        android:background="@color/rwslinkman_blue_dark"/>
+
+    <!-- "Switch on/off" -->
+    <TextView
+        android:id="@+id/groupdetail_onofftext_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
+        android:text="@string/groupdetail_onofftext_text"
+        android:textSize="@dimen/groupdetail_onofftext_textsize"
+        android:textColor="@color/rwslinkman_blue_light"/>
+
+    <!-- On/off switch -->
+    <Switch
+        android:id="@+id/groupdetail_onoffswitch_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
+        android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+
 
 </RelativeLayout>

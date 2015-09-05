@@ -3,7 +3,9 @@ package nl.rwslinkman.hueme.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import com.philips.lighting.hue.sdk.PHAccessPoint;
@@ -14,6 +16,7 @@ import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
 
@@ -44,6 +47,7 @@ public class HueService extends Service implements PHSDKListener
     public static final String HUE_AP_REQUIRES_PUSHLINK = "ap.requires.pushlink";
     public static final String HUE_AP_NOTRESPONDING = "hue.ap.notresponding";
     public static final String HUE_HEARTBEAT_UPDATE = "hue.heartbeat.update";
+    public static final String HUE_GROUPSTATE_UPDATE = "hue.groupstate.update";
     public static final String BRIDGE_CONNECTED = "hue.bridge.connected";
     public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
     public static final String INTENT_EXTRA_PUSHLINK_IP = "hueservice.extra.pushlink.ip";
@@ -141,9 +145,42 @@ public class HueService extends Service implements PHSDKListener
     }
 
     @Override
-    public void onCacheUpdated(List<Integer> list, PHBridge phBridge)
+    public void onCacheUpdated(final List<Integer> cacheNotificationsList, PHBridge phBridge)
     {
         Log.d(TAG, "Hue bridge cache updated");
+        if(!cacheNotificationsList.isEmpty())
+        {
+            if (Looper.myLooper() == null)
+            {
+                Looper.prepare();
+            }
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+
+                    HueService.this.analyzeCacheNotifications(cacheNotificationsList);
+                }
+            });
+        }
+    }
+
+    private void analyzeCacheNotifications(List<Integer> cacheNotificationsList)
+    {
+        for(int notification : cacheNotificationsList)
+        {
+            if(notification == PHMessageType.LIGHTS_CACHE_UPDATED)
+            {
+                Log.d(TAG, "LIGHTS ARE UPDATED!");
+            }
+            else if(notification == PHMessageType.GROUPS_CACHE_UPDATED)
+            {
+                Log.d(TAG, "GROUPS ARE UPDATED!");
+            }
+            else
+            {
+                Log.d(TAG, "Cache notification: " + notification);
+            }
+        }
     }
 
     @Override
@@ -151,11 +188,15 @@ public class HueService extends Service implements PHSDKListener
     {
         Log.d(TAG, "Bridge connected");
         this.phHueSDK.setSelectedBridge(phBridge);
+        // Handle heartbeat
         this.phHueSDK.enableHeartbeat(phBridge, PHHueSDK.HB_INTERVAL);
-        phHueSDK.getLastHeartbeat().put(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
-        prefs.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
-        prefs.setUsername(AP_USERNAME);
+        this.phHueSDK.getLastHeartbeat().put(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress(), System.currentTimeMillis());
+        // Store connection info
+        this.prefs.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
+        this.prefs.setUsername(AP_USERNAME);
+        // Subscribe to events
 
+        // Inform listeners
         Intent intent = new Intent(HueService.BRIDGE_CONNECTED);
         this.sendBroadcast(intent);
         this.currentServiceState = HueService.STATE_CONNECTED;
@@ -231,8 +272,7 @@ public class HueService extends Service implements PHSDKListener
     }
 
     @Override
-    public void onConnectionLost(PHAccessPoint phAccessPoint)
-    {
+    public void onConnectionLost(PHAccessPoint phAccessPoint) {
         Log.d(TAG, "Connection to Hue access point lost");
         if (!phHueSDK.getDisconnectedAccessPoint().contains(phAccessPoint))
         {
