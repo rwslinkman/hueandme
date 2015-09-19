@@ -1,13 +1,16 @@
 package nl.rwslinkman.hueme.service;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import com.philips.lighting.hue.listener.PHGroupListener;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
@@ -16,14 +19,18 @@ import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHBridgeResource;
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
+import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import nl.rwslinkman.hueme.R;
 
@@ -57,7 +64,16 @@ public class HueService extends Service implements PHSDKListener
     private PHHueSDK phHueSDK;
     private HueSharedPreferences prefs;
     private Map<String,PHAccessPoint> mAccessPoints;
+    private Set<BroadcastReceiver> mBroadcastReceivers;
     private int currentServiceState;
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+
+        this.mBroadcastReceivers = new HashSet<>();
+    }
 
     @Override
     public IBinder onBind(Intent intent)
@@ -154,9 +170,11 @@ public class HueService extends Service implements PHSDKListener
             {
                 Looper.prepare();
             }
-            new Handler().post(new Runnable() {
+            new Handler().post(new Runnable()
+            {
                 @Override
-                public void run() {
+                public void run()
+                {
 
                     HueService.this.analyzeCacheNotifications(cacheNotificationsList);
                 }
@@ -258,7 +276,7 @@ public class HueService extends Service implements PHSDKListener
         Log.d(TAG, "Connection resumed with Hue bridge (heartbeat)");
         phHueSDK.setSelectedBridge(phBridge);
         String resoucheIPaddress = phBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
-        phHueSDK.getLastHeartbeat().put(resoucheIPaddress,  System.currentTimeMillis());
+        phHueSDK.getLastHeartbeat().put(resoucheIPaddress, System.currentTimeMillis());
         for (int i = 0; i < phHueSDK.getDisconnectedAccessPoint().size(); i++)
         {
             if (phHueSDK.getDisconnectedAccessPoint().get(i).getIpAddress().equals(resoucheIPaddress))
@@ -316,6 +334,23 @@ public class HueService extends Service implements PHSDKListener
 
             phHueSDK.disconnect(bridge);
             super.onDestroy();
+        }
+    }
+
+    @Override
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter)
+    {
+        this.mBroadcastReceivers.add(receiver);
+        return super.registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receiver)
+    {
+        if(this.mBroadcastReceivers.contains(receiver))
+        {
+            this.mBroadcastReceivers.remove(receiver);
+            super.unregisterReceiver(receiver);
         }
     }
 }

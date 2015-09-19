@@ -48,4 +48,7 @@
     <string name="philips_hue_connecting">Philips Hue probeert te verbinden</string>
     <string name="groups_text_nogroupsfound">Geen groepen gevonden</string>
     <string name="groupdetail_onofftext_text">In-/uitschakelen</string>
+    <string name="title_activity_group_detail">GroupDetailActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

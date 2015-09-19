@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHLight;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +30,8 @@ import nl.rwslinkman.hueme.ui.MainActivityView;
 public class MainActivity extends AppCompatActivity implements HueServiceStateListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUESTCODE_DETAIL_GROUP = 1;
+    private static final int REQUESTCODE_DETAIL_LIGHT = 2;
 
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
     {
@@ -95,6 +100,26 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == REQUESTCODE_DETAIL_GROUP)
+        {
+            Log.d(TAG, "Returned from GroupDetailActivity");
+            //
+            HueService service = app.getHueService();
+            service.registerReceiver(hueUpdateReceiver, getDisplayUpdatesFilter());
+        }
+        else if(requestCode == REQUESTCODE_DETAIL_LIGHT)
+        {
+            Log.d(TAG, "Returned from LightDetailActivity (todo)");
+        }
+        else
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onHueServiceReady()
     {
         Log.d(TAG, "Hue service ready");
@@ -142,4 +167,19 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     {
         return mView;
     }
+
+    public void startDetailActivity(PHGroup group)
+    {
+        Intent detailIntent = new Intent(this, GroupDetailActivity.class);
+        detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, group.getIdentifier());
+
+        app.getHueService().unregisterReceiver(hueUpdateReceiver);
+        this.startActivityForResult(detailIntent, REQUESTCODE_DETAIL_GROUP);
+    }
+
+    public void startDetailActivity(PHLight light)
+    {
+        // TODO: See method startDetailActivity(PHGruop group);
+    }
+
 }

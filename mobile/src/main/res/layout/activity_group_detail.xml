@@ -5,40 +5,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- Group name -->
-    <TextView
-        android:id="@+id/groupdetail_group_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/groupdetail_groupname_textsize"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="@dimen/groupdetail_groupname_margintop"
-        android:layout_marginStart="@dimen/groupdetail_groupname_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_groupname_marginside"
-        android:layout_marginBottom="@dimen/groupdetail_groupname_marginbottom"
-        android:textColor="@color/rwslinkman_blue_light"/>
-
-    <!-- Divider -->
-    <View
+    <!-- Top toolbar -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/groupdetail_toolbar_view"
+        style="@style/ToolBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/groupdetail_group_name"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
-        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
-        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
-        android:background="@color/rwslinkman_blue_dark"/>
+        android:layout_height="wrap_content"
+        android:background="@color/rwslinkman_blue_light"
+        android:minHeight="@dimen/abc_action_bar_default_height_material" />
 
     <!-- Colorpicker -->
     <com.larswerkman.holocolorpicker.ColorPicker
         android:id="@+id/groupdetail_colorpicker_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_group_name"
+        android:layout_below="@id/groupdetail_toolbar_view"
         android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
         android:layout_marginBottom="@dimen/groupdetail_colorpicker_marginbottom"
         android:layout_centerHorizontal="true" />
@@ -82,6 +63,5 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
         android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
-
 
 </RelativeLayout>

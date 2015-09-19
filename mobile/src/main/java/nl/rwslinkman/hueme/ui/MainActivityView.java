@@ -12,14 +12,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHGroup;
 
 import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.ConnectingFragment;
-import nl.rwslinkman.hueme.fragments.GroupDetailFragment;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
 import nl.rwslinkman.hueme.fragments.LightsFragment;
@@ -45,13 +43,13 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     public void create()
     {
         // Init Toolbar
-        Toolbar mToolbar = (Toolbar) mActivity.findViewById(R.id.toolbar_actionbar);
-        mActivity.setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.groupdetail_toolbar_view);
+        mActivity.setSupportActionBar(toolbar);
 
         // Init NavigationDrawer
         mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                mActivity,  mDrawerLayout, mToolbar,
+                mActivity,  mDrawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close
         );
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -198,14 +196,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         Log.d(TAG, "Displaying connecting");
 
         ConnectingFragment fragment = ConnectingFragment.newInstance();
-        this.switchFragment(fragment);
-    }
-
-    public void displayGroupDetail(PHGroup group)
-    {
-        Log.d(TAG, "Display group detail for group " + group.getName());
-        GroupDetailFragment fragment = GroupDetailFragment.newInstance();
-        fragment.setActiveGroup(group);
         this.switchFragment(fragment);
     }
 }
