@@ -161,8 +161,6 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onCacheUpdated(final List<Integer> cacheNotificationsList, PHBridge phBridge)
     {
-        Log.d(TAG, "Hue bridge cache updated");
-
         performOnBackgroundThread(new Runnable()
         {
             @Override
@@ -187,6 +185,10 @@ public class HueService extends Service implements PHSDKListener
                     {
                         Intent intent = new Intent(HueService.HUE_GROUPS_STATE_UPDATE);
                         HueService.this.sendBroadcast(intent);
+                    }
+                    else if(notification == PHMessageType.BRIDGE_CONFIGURATION_CACHE_UPDATED)
+                    {
+                        // TODO:
                     }
                     else
                     {

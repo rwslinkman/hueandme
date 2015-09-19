@@ -6,6 +6,7 @@ import android.widget.Switch;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
 import nl.rwslinkman.hueme.GroupDetailActivity;
@@ -80,11 +81,15 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        // Create light state
-        PHLightState state = new PHLightState();
-        state.setOn(isChecked);
+        if(buttonView.getId() == R.id.groupdetail_onoffswitch_view)
+        {
+            // Create light state
+            PHLightState state = new PHLightState();
+            state.setOn(isChecked);
+            state.setEffectMode(PHLight.PHLightEffectMode.EFFECT_NONE);
 
-        mActivity.updateGroupState(state);
+            mActivity.updateGroupState(state);
+        }
     }
 
     @Override

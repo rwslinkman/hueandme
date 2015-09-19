@@ -51,4 +51,5 @@
     <string name="title_activity_group_detail">GroupDetailActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="groupdetail_colorlooptext_text">Colorloop</string>
 </resources>

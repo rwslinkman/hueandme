@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/groupdetail_divider_1"
         android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+        android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
@@ -59,6 +60,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/groupdetail_divider_1"
+        android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
+        android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+
+    <!-- Divider -->
+    <View
+        android:id="@+id/groupdetail_divider_2"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/groupdetail_onofftext_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+        android:background="@color/rwslinkman_blue_dark"/>
+
+    <!-- "Colorloop" -->
+    <TextView
+        android:id="@+id/groupdetail_colorlooptext_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_divider_2"
+        android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+        android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
+        android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
+        android:text="@string/groupdetail_colorlooptext_text"
+        android:textSize="@dimen/groupdetail_onofftext_textsize"
+        android:textColor="@color/rwslinkman_blue_light"/>
+
+    <!-- On/off switch -->
+    <Switch
+        android:id="@+id/groupdetail_colorloopswitch_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_divider_2"
         android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
