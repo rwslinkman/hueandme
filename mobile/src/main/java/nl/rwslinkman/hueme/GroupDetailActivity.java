@@ -55,13 +55,8 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_detail);
 
-        // Init Toolbar
+        // Init views
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.groupdetail_toolbar_view);
-        this.setSupportActionBar(toolbar);
-        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        this.getSupportActionBar().setHomeButtonEnabled(true);
-
-        // Init other views
         this.mColorPickerView = (ColorPicker) this.findViewById(R.id.groupdetail_colorpicker_view);
         this.mOnOffSwitch = (Switch) this.findViewById(R.id.groupdetail_onoffswitch_view);
 
@@ -73,11 +68,21 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
 
             PHBridge bridge = ((HueMe) getApplication()).getHueService().getBridge();
             mActiveGroup = bridge.getResourceCache().getGroups().get(groupIdentifier);
+            bridge.updateGroup(mActiveGroup, this);
 
             toolbar.setTitle(mActiveGroup.getName());
 
             showGroupView();
         }
+        else
+        {
+            Log.e(TAG, "Intent is null, no group received");
+            Log.e(TAG, "Is there a group? " + Boolean.toString(this.mActiveGroup != null));
+        }
+
+        this.setSupportActionBar(toolbar);
+        this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        this.getSupportActionBar().setHomeButtonEnabled(true);
     }
 
     private void showGroupView()
@@ -170,31 +175,31 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
     @Override
     public void onColorSelected(int selectedColor)
     {
-        Log.d(TAG, "Color selected " + Integer.toString(selectedColor));
+        Log.e(TAG, "Color selected " + Integer.toString(selectedColor));
     }
 
     @Override
     public void onCreated(PHGroup phGroup)
     {
-        Log.d(TAG, "PHGroup.onCreated: " + phGroup.getIdentifier());
+        Log.e(TAG, "PHGroup.onCreated: " + phGroup.getIdentifier());
     }
 
     @Override
     public void onReceivingGroupDetails(PHGroup phGroup)
     {
-        Log.d(TAG, "PHGroup.onReceivingGroupDetails: " + phGroup.getIdentifier());
+        Log.e(TAG, "PHGroup.onReceivingGroupDetails: " + phGroup.getIdentifier());
     }
 
     @Override
     public void onReceivingAllGroups(List<PHBridgeResource> list)
     {
-        Log.d(TAG, "PHGroup.onReceivingAllGroups");
+        Log.e(TAG, "PHGroup.onReceivingAllGroups");
     }
 
     @Override
     public void onSuccess()
     {
-        Log.d(TAG, "PHGroup.onSuccess");
+        Log.e(TAG, "PHGroup.onSuccess");
     }
 
     @Override
