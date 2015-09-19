@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.CompoundButton;
-import android.widget.RelativeLayout;
 import android.widget.Switch;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
@@ -18,12 +17,13 @@ import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHBridgeResource;
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHHueError;
-import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
 import java.util.List;
 import java.util.Map;
 
+import nl.rwslinkman.hueme.helper.PhilipsHSB;
+import nl.rwslinkman.hueme.helper.HueColorConverter;
 import nl.rwslinkman.hueme.service.HueService;
 
 public class GroupDetailActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, ColorPicker.OnColorSelectedListener, PHGroupListener
@@ -45,6 +45,7 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
             }
         }
     };
+    private HueMe mApp;
     private Switch mOnOffSwitch;
     private ColorPicker mColorPickerView;
     private PHGroup mActiveGroup;
@@ -54,6 +55,8 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_detail);
+
+        this.mApp = (HueMe) getApplication();
 
         // Init views
         Toolbar toolbar = (Toolbar) this.findViewById(R.id.groupdetail_toolbar_view);
@@ -66,13 +69,14 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
         {
             String groupIdentifier = intent.getStringExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER);
 
-            PHBridge bridge = ((HueMe) getApplication()).getHueService().getBridge();
+            PHBridge bridge = mApp.getHueService().getBridge();
             mActiveGroup = bridge.getResourceCache().getGroups().get(groupIdentifier);
             bridge.updateGroup(mActiveGroup, this);
 
             toolbar.setTitle(mActiveGroup.getName());
 
-            showGroupView();
+            PHLightState groupState = this.getRepLightState();
+            showGroupView(groupState);
         }
         else
         {
@@ -80,26 +84,41 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
             Log.e(TAG, "Is there a group? " + Boolean.toString(this.mActiveGroup != null));
         }
 
+        // Set Toolbar to be ActionBar
         this.setSupportActionBar(toolbar);
         this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getSupportActionBar().setHomeButtonEnabled(true);
     }
 
-    private void showGroupView()
+    private void showGroupView(final PHLightState state)
     {
-        HueService service = ((HueMe) this.getApplication()).getHueService();
-        PHBridge bridge = service.getBridge();
+        runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                int color = HueColorConverter.convertStateToColor(state);
 
+                mOnOffSwitch.setChecked(state.isOn());
+                mColorPickerView.setColor(color);
+                mColorPickerView.setOldCenterColor(color);
+                mColorPickerView.setNewCenterColor(color);
+            }
+        });
+    }
+
+    private PHLightState getRepLightState()
+    {
+        HueService service = mApp.getHueService();
+        PHBridge bridge = service.getBridge();
 
         List<String> lightsInGroup = mActiveGroup.getLightIdentifiers();
         if(!lightsInGroup.isEmpty())
         {
             String repLightID = lightsInGroup.get(0);
-            PHLight repLight = bridge.getResourceCache().getLights().get(repLightID);
-
-            PHLightState state = repLight.getLastKnownLightState();
-            mOnOffSwitch.setChecked(state.isOn());
+            return bridge.getResourceCache().getLights().get(repLightID).getLastKnownLightState();
         }
+        return null;
     }
 
     @Override
@@ -107,13 +126,9 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
     {
         super.onResume();
 
-        HueMe app = (HueMe) this.getApplication();
-        HueService service = app.getHueService();
+        HueService service = mApp.getHueService();
 
         service.registerReceiver(groupUpdateReceiver, this.getGroupUpdatesIntentFilter());
-
-        PHBridge bridge = service.getBridge();
-        mOnOffSwitch.setChecked(this.isGroupOn(bridge));
 
         // TODO: Subscribe to group status
         this.mOnOffSwitch.setOnCheckedChangeListener(this);
@@ -128,29 +143,11 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
         return intentFilter;
     }
 
-    private boolean isGroupOn(PHBridge bridge)
-    {
-        boolean isOn = true;
-        Map<String, PHLight> lights = bridge.getResourceCache().getLights();
-        for(String str : mActiveGroup.getLightIdentifiers())
-        {
-            PHLight light = lights.get(str);
-            PHLightState state = light.getLastKnownLightState();
-            isOn |= state.isOn();
-        }
-        return isOn;
-    }
-
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        // Debug info
-        String onState = (isChecked) ? "on" : "off";
-        Log.d(TAG, "Group was turned " + onState);
-
         // Obtain service
-        HueMe app = (HueMe) this.getApplication();
-        HueService service = app.getHueService();
+        HueService service = mApp.getHueService();
 
         // Create light state
         PHLightState state = new PHLightState();
@@ -164,18 +161,29 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
     @Override
     public void onPause()
     {
-        HueMe app = (HueMe) this.getApplication();
-        HueService service = app.getHueService();
-
-        service.unregisterReceiver(groupUpdateReceiver);
-
         super.onPause();
+        HueService service = mApp.getHueService();
+        service.unregisterReceiver(groupUpdateReceiver);
     }
 
     @Override
     public void onColorSelected(int selectedColor)
     {
-        Log.e(TAG, "Color selected " + Integer.toString(selectedColor));
+        PhilipsHSB color = HueColorConverter.convertColorToHSB(selectedColor);
+
+        // Obtain service
+        HueService service = mApp.getHueService();
+
+        // Create light state
+        PHLightState state = new PHLightState();
+        state.setOn(true);
+        state.setHue(color.getHue());
+        state.setBrightness(color.getBrightness());
+        state.setSaturation(color.getSaturation());
+
+        // Perform magic
+        PHBridge bridge = service.getBridge();
+        bridge.setLightStateForGroup(mActiveGroup.getIdentifier(), state, this);
     }
 
     @Override
@@ -200,6 +208,14 @@ public class GroupDetailActivity extends AppCompatActivity implements CompoundBu
     public void onSuccess()
     {
         Log.e(TAG, "PHGroup.onSuccess");
+
+        // Update mActiveGruop
+        Map<String, PHGroup> groups = mApp.getHueService().getBridge().getResourceCache().getGroups();
+        mActiveGroup = groups.get(mActiveGroup.getIdentifier());
+
+        // Show new state
+        PHLightState updatedGroupState = this.getRepLightState();
+        this.showGroupView(updatedGroupState);
     }
 
     @Override

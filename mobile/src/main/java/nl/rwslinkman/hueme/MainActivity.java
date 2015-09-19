@@ -5,21 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import nl.rwslinkman.hueme.fragments.GroupsFragment;
-import nl.rwslinkman.hueme.fragments.InfoFragment;
-import nl.rwslinkman.hueme.fragments.LightsFragment;
-import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.ui.MainActivityView;
@@ -72,20 +63,17 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Activity created");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         this.mView = new MainActivityView(this);
         this.mView.create();
-
-        mView.displayLoadingState();
+        this.mView.displayLoadingState();
     }
 
     @Override
     protected void onResume()
     {
-        Log.d(TAG, "Activity resumed");
         super.onResume();
 
         app = (HueMe) getApplication();
@@ -122,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     public void onHueServiceReady()
     {
-        Log.d(TAG, "Hue service ready");
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
