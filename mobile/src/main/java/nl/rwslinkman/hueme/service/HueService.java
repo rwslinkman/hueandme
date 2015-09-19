@@ -5,12 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
-import com.philips.lighting.hue.listener.PHGroupListener;
 import com.philips.lighting.hue.sdk.PHAccessPoint;
 import com.philips.lighting.hue.sdk.PHBridgeSearchManager;
 import com.philips.lighting.hue.sdk.PHHueSDK;
@@ -19,11 +16,8 @@ import com.philips.lighting.hue.sdk.PHNotificationManager;
 import com.philips.lighting.hue.sdk.PHSDKListener;
 import com.philips.lighting.hue.sdk.exception.PHHueException;
 import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHBridgeResource;
-import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHHueError;
 import com.philips.lighting.model.PHHueParsingError;
-import com.philips.lighting.model.PHLightState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,12 +47,16 @@ public class HueService extends Service implements PHSDKListener
     public static final String HUE_AP_FOUND = "hue.ap.found";
     public static final String HUE_AP_REQUIRES_PUSHLINK = "ap.requires.pushlink";
     public static final String HUE_AP_NOTRESPONDING = "hue.ap.notresponding";
+    public static final String HUE_POSSIBLE_STATE_UPDATE = "hue.possible.state.update";
+    public static final String HUE_GROUPS_STATE_UPDATE = "hue.groups.state.update";
+    public static final String HUE_LIGHTS_STATE_UPDATE= "hue.lights.state.update";
     public static final String HUE_HEARTBEAT_UPDATE = "hue.heartbeat.update";
-    public static final String HUE_GROUPSTATE_UPDATE = "hue.groupstate.update";
     public static final String BRIDGE_CONNECTED = "hue.bridge.connected";
     public static final String INTENT_EXTRA_ACCESSPOINTS_IP = "hueservice.extra.accesspoints.ip";
     public static final String INTENT_EXTRA_PUSHLINK_IP = "hueservice.extra.pushlink.ip";
     private static final String AP_USERNAME = "hue-and-me-app";
+
+
     // Class variables
     private final IBinder mBinder = new LocalBinder();
     private PHHueSDK phHueSDK;
@@ -164,41 +162,39 @@ public class HueService extends Service implements PHSDKListener
     public void onCacheUpdated(final List<Integer> cacheNotificationsList, PHBridge phBridge)
     {
         Log.d(TAG, "Hue bridge cache updated");
-        if(!cacheNotificationsList.isEmpty())
+
+        performOnBackgroundThread(new Runnable()
         {
-            if (Looper.myLooper() == null)
+            @Override
+            public void run()
             {
-                Looper.prepare();
-            }
-            new Handler().post(new Runnable()
-            {
-                @Override
-                public void run()
+                if(cacheNotificationsList.isEmpty())
                 {
-
-                    HueService.this.analyzeCacheNotifications(cacheNotificationsList);
+                    // Send broadcast
+                    Intent intent = new Intent(HueService.HUE_POSSIBLE_STATE_UPDATE);
+                    HueService.this.sendBroadcast(intent);
+                    return;
                 }
-            });
-        }
-    }
 
-    private void analyzeCacheNotifications(List<Integer> cacheNotificationsList)
-    {
-        for(int notification : cacheNotificationsList)
-        {
-            if(notification == PHMessageType.LIGHTS_CACHE_UPDATED)
-            {
-                Log.d(TAG, "LIGHTS ARE UPDATED!");
+                for (int notification : cacheNotificationsList)
+                {
+                    if (notification == PHMessageType.LIGHTS_CACHE_UPDATED)
+                    {
+                        Intent intent = new Intent(HueService.HUE_LIGHTS_STATE_UPDATE);
+                        HueService.this.sendBroadcast(intent);
+                    }
+                    else if (notification == PHMessageType.GROUPS_CACHE_UPDATED)
+                    {
+                        Intent intent = new Intent(HueService.HUE_GROUPS_STATE_UPDATE);
+                        HueService.this.sendBroadcast(intent);
+                    }
+                    else
+                    {
+                        Log.d(TAG, "Cache notification: " + notification);
+                    }
+                }
             }
-            else if(notification == PHMessageType.GROUPS_CACHE_UPDATED)
-            {
-                Log.d(TAG, "GROUPS ARE UPDATED!");
-            }
-            else
-            {
-                Log.d(TAG, "Cache notification: " + notification);
-            }
-        }
+        });
     }
 
     @Override
@@ -212,7 +208,6 @@ public class HueService extends Service implements PHSDKListener
         // Store connection info
         this.prefs.setLastConnectedIPAddress(phBridge.getResourceCache().getBridgeConfiguration().getIpAddress());
         this.prefs.setUsername(AP_USERNAME);
-        // Subscribe to events
 
         // Inform listeners
         Intent intent = new Intent(HueService.BRIDGE_CONNECTED);
@@ -273,7 +268,6 @@ public class HueService extends Service implements PHSDKListener
     @Override
     public void onConnectionResumed(PHBridge phBridge)
     {
-        Log.d(TAG, "Connection resumed with Hue bridge (heartbeat)");
         phHueSDK.setSelectedBridge(phBridge);
         String resoucheIPaddress = phBridge.getResourceCache().getBridgeConfiguration().getIpAddress();
         phHueSDK.getLastHeartbeat().put(resoucheIPaddress, System.currentTimeMillis());
@@ -290,7 +284,8 @@ public class HueService extends Service implements PHSDKListener
     }
 
     @Override
-    public void onConnectionLost(PHAccessPoint phAccessPoint) {
+    public void onConnectionLost(PHAccessPoint phAccessPoint)
+    {
         Log.d(TAG, "Connection to Hue access point lost");
         if (!phHueSDK.getDisconnectedAccessPoint().contains(phAccessPoint))
         {
@@ -352,5 +347,20 @@ public class HueService extends Service implements PHSDKListener
             this.mBroadcastReceivers.remove(receiver);
             super.unregisterReceiver(receiver);
         }
+    }
+
+    public static Thread performOnBackgroundThread(final Runnable runnable) {
+        final Thread t = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    runnable.run();
+                } finally {
+
+                }
+            }
+        };
+        t.start();
+        return t;
     }
 }

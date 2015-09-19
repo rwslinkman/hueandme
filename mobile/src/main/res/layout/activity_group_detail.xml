@@ -26,6 +26,7 @@
 
     <!-- Divider -->
     <View
+        android:id="@+id/groupdetail_divider_1"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_below="@id/groupdetail_colorpicker_view"
@@ -42,7 +43,7 @@
         android:id="@+id/groupdetail_onofftext_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_below="@id/groupdetail_divider_1"
         android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -57,7 +58,7 @@
         android:id="@+id/groupdetail_onoffswitch_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_below="@id/groupdetail_divider_1"
         android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

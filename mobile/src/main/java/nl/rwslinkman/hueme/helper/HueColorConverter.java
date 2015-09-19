@@ -9,9 +9,9 @@ import com.philips.lighting.model.PHLightState;
  */
 public class HueColorConverter
 {
-    private static final double hueConversionValue =  182.0416666666667;
-    private static final float satConversionValue =  254;
-    private static final float briConversionValue =  254;
+    public static final double hueConversionValue =  182.0416666666667;
+    public static final float satConversionValue =  254;
+    public static final float briConversionValue =  254;
 
     public static int convertStateToColor(PHLightState state)
     {
@@ -19,7 +19,7 @@ public class HueColorConverter
         float[] hsv = new float[3];
         hsv[0] = (float) (state.getHue() / hueConversionValue);
         hsv[1] = state.getSaturation() / satConversionValue;
-        hsv[2] = state.getBrightness() / 254;
+        hsv[2] = state.getBrightness() / briConversionValue;
         //
         return Color.HSVToColor(hsv);
     }
@@ -32,7 +32,7 @@ public class HueColorConverter
         float hue = (float) (hsv[0] * hueConversionValue);
         float sat = hsv[1] * satConversionValue;
         float bri = hsv[2] * briConversionValue;
-        //
+
         return new PhilipsHSB(Math.round(hue), Math.round(sat), Math.round(bri));
     }
 }
