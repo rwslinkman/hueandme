@@ -162,9 +162,19 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
     }
 
     @Override
-    public void onStateUpdate(Map<String, String> map, List<PHHueError> list)
+    public void onStateUpdate(Map<String, String> successAttribute, List<PHHueError> errorAttribute)
     {
-        Log.d(TAG, "onStateUpdate");
+        for(Map.Entry<String, String> entry : successAttribute.entrySet())
+        {
+            // TODO:
+            // key = changed parameter
+            // key = new value
+        }
+
+        for(PHHueError error : errorAttribute)
+        {
+            // TODO: ?
+        }
     }
 
     public void updateGroupState(PHLightState state)

@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
     <!-- Top toolbar -->
     <android.support.v7.widget.Toolbar
@@ -21,15 +22,24 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/groupdetail_toolbar_view"
         android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
-        android:layout_marginBottom="@dimen/groupdetail_colorpicker_marginbottom"
         android:layout_centerHorizontal="true" />
+
+    <nl.rwslinkman.hueme.ui.DimmerBar
+        android:id="@+id/groupdetail_dimmer_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/groupdetail_colorpicker_view"
+
+        android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
+        android:layout_marginBottom="@dimen/groupdetail_dimmer_marginbottom"
+        android:layout_centerHorizontal="true"/>
 
     <!-- Divider -->
     <View
         android:id="@+id/groupdetail_divider_1"
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_below="@id/groupdetail_dimmer_view"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_marginStart="@dimen/groupdetail_divider_marginside"

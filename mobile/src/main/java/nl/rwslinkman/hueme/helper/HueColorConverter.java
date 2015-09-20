@@ -35,4 +35,20 @@ public class HueColorConverter
 
         return new PhilipsHSB(Math.round(hue), Math.round(sat), Math.round(bri));
     }
+
+    public static PhilipsHSB convertStateToHSB(PHLightState state)
+    {
+        return new PhilipsHSB(state.getHue(), state.getSaturation(), state.getBrightness());
+    }
+
+    public static int convertHSBtoInt(PhilipsHSB hsb)
+    {
+        // Convert state to integer Color
+        float[] hsv = new float[3];
+        hsv[0] = (float) (hsb.getHue() / hueConversionValue);
+        hsv[1] = hsb.getSaturation() / satConversionValue;
+        hsv[2] = hsb.getBrightness() / briConversionValue;
+        //
+        return Color.HSVToColor(hsv);
+    }
 }

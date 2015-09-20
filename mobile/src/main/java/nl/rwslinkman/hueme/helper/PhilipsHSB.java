@@ -5,9 +5,9 @@ package nl.rwslinkman.hueme.helper;
  */
 public class PhilipsHSB
 {
-    private final int mHue;
-    private final int mSaturation;
-    private final int mBrightness;
+    private int mHue;
+    private int mSaturation;
+    private int mBrightness;
 
     public PhilipsHSB(int hue, int sat, int bri)
     {
@@ -29,6 +29,21 @@ public class PhilipsHSB
     public int getBrightness()
     {
         return mBrightness;
+    }
+
+    public void setHue(int mHue)
+    {
+        this.mHue = mHue;
+    }
+
+    public void setSaturation(int mSaturation)
+    {
+        this.mSaturation = mSaturation;
+    }
+
+    public void setBrightness(int mBrightness)
+    {
+        this.mBrightness = mBrightness;
     }
 
     @Override

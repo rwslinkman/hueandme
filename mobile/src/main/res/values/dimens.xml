@@ -49,6 +49,7 @@
     <dimen name="groupdetail_divider_marginside">12dp</dimen>
     <dimen name="groupdetail_colorpicker_margintop">6dp</dimen>
     <dimen name="groupdetail_colorpicker_marginbottom">6dp</dimen>
+    <dimen name="groupdetail_dimmer_marginbottom">6dp</dimen>
     <dimen name="groupdetail_onofftext_margintop">6dp</dimen>
     <dimen name="groupdetail_onofftext_marginside">12dp</dimen>
     <dimen name="groupdetail_onofftext_textsize">24sp</dimen>
