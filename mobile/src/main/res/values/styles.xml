@@ -9,6 +9,11 @@
         <item name="colorControlHighlight">@color/rwslinkman_blue_light</item>
     </style>
 
+    <style name="EditTextTheme" parent="AppTheme">
+        <item name="colorControlActivated">@color/rwslinkman_blue_dark</item>
+        <item name="colorControlHighlight">@color/rwslinkman_blue_dark</item>
+    </style>
+
     <style name="ToolBarStyle" parent="">
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>

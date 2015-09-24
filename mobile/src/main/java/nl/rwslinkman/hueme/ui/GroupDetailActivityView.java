@@ -97,6 +97,8 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
 
                 // On/Off switch
                 mOnOffSwitch.setChecked(state.isOn());
+                // Colorloop
+                mColorloopSwitch.setChecked(state.getEffectMode() == PHLight.PHLightEffectMode.EFFECT_COLORLOOP);
                 // ColorPicker
                 mColorPickerView.setColor(color);
                 mColorPickerView.setOldCenterColor(color);
