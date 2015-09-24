@@ -29,4 +29,5 @@ dependencies {
     compile project(':awesome')
     compile 'com.github.rahatarmanahmed:circularprogressview:2.3.2'
     compile 'com.larswerkman:HoloColorPicker:1.5'
+    compile 'me.drakeet.materialdialog:library:1.2.2'
 }

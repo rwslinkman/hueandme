@@ -14,6 +14,7 @@ import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.helper.HueColorConverter;
@@ -187,15 +188,58 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
     @Override
     public void onClick(View v)
     {
-        if(v.getId() == this.mChangeNameButton.getId())
+        if (v.getId() == this.mChangeNameButton.getId())
         {
+            // Change group name
             String newGroupName = this.mNameEditView.getText().toString();
+            if (newGroupName.isEmpty())
+            {
+                String message = this.mActivity.getString(R.string.groupdetail_changename_error_emptyname);
+                Toast.makeText(this.mActivity, message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Submit name change
             this.mActivity.changeGroupName(newGroupName);
+            this.setAllViewsEnabled(false);
         }
-        else if(v.getId() == this.mDeleteGroupButton.getId())
+        else if (v.getId() == this.mDeleteGroupButton.getId())
         {
-            // TODO: Ask "are you sure"?
-            Toast.makeText(this.mActivity, "Delete group", Toast.LENGTH_SHORT).show();
+            showDeleteGroupDialog();
         }
+    }
+
+    private void showDeleteGroupDialog()
+    {
+        String title = mActivity.getString(R.string.groupdetail_deletegroup_confirm_title);
+        String message = mActivity.getString(R.string.groupdetail_deletegroup_confirm_message);
+        String ok = mActivity.getString(R.string.groupdetail_deletegroup_confirm_ok);
+        String cancel = mActivity.getString(R.string.groupdetail_deletegroup_confirm_cancel);
+
+        final MaterialDialog mMaterialDialog = new MaterialDialog(this.mActivity)
+                .setTitle(title)
+                .setMessage(message);
+        mMaterialDialog
+                .setPositiveButton(ok, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mActivity.deleteActiveGroupPermanently();
+                        mMaterialDialog.dismiss();
+                        GroupDetailActivityView.this.setAllViewsEnabled(false);
+                        Log.d(TAG, "Delete group");
+                    }
+                })
+                .setNegativeButton(cancel, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        mMaterialDialog.dismiss();
+                    }
+                });
+
+        mMaterialDialog.show();
     }
 }

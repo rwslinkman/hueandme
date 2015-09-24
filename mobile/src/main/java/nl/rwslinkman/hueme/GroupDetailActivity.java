@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.philips.lighting.hue.listener.PHGroupListener;
 import com.philips.lighting.model.PHBridge;
@@ -145,8 +144,6 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
     @Override
     public void onSuccess()
     {
-        Log.e(TAG, "PHGroup.onSuccess");
-
         // Update mActiveGruop
         Map<String, PHGroup> groups = mApp.getHueService().getBridge().getResourceCache().getGroups();
         mActiveGroup = groups.get(mActiveGroup.getIdentifier());
@@ -189,12 +186,23 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
 
     public void changeGroupName(String newGroupName)
     {
+        mActiveGroup.setName(newGroupName);
+
         // Obtain service
         HueService service = mApp.getHueService();
         // Perform magic
         PHBridge bridge = service.getBridge();
-        // TODO:
+        bridge.updateGroup(mActiveGroup, this);
+    }
 
-        Toast.makeText(this, "Change name to '" + newGroupName + "'", Toast.LENGTH_SHORT).show();
+    public void deleteActiveGroupPermanently()
+    {
+        // Obtain service
+        HueService service = mApp.getHueService();
+        // Perform magic
+        PHBridge bridge = service.getBridge();
+//        bridge.deleteGroup(mActiveGroup.getIdentifier(), this);
+
+        this.finish();
     }
 }

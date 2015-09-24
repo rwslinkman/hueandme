@@ -157,8 +157,6 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
 
     public void startDetailActivity(PHGroup group)
     {
-        Log.d(TAG, "Swichting to GroupDetailActivity");
-
         Intent detailIntent = new Intent(this, GroupDetailActivity.class);
         detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, group.getIdentifier());
 
@@ -169,6 +167,6 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     public void startDetailActivity(PHLight light)
     {
         Log.d(TAG, "Switching to LightDetailActivity (todo)");
-        // TODO: See method startDetailActivity(PHGruop group);
+        // TODO: See method startDetailActivity(PHGroup group);
     }
 }
