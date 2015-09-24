@@ -5,18 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHLight;
 
-import nl.rwslinkman.hueme.fragments.GroupsFragment;
-import nl.rwslinkman.hueme.fragments.InfoFragment;
-import nl.rwslinkman.hueme.fragments.LightsFragment;
-import nl.rwslinkman.hueme.navigation.NavigationDrawerCallbacks;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.ui.MainActivityView;
@@ -27,6 +21,8 @@ import nl.rwslinkman.hueme.ui.MainActivityView;
 public class MainActivity extends AppCompatActivity implements HueServiceStateListener
 {
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUESTCODE_DETAIL_GROUP = 1;
+    private static final int REQUESTCODE_DETAIL_LIGHT = 2;
 
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
     {
@@ -34,22 +30,29 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
-            if(action.equals(HueService.DISPLAY_NO_BRIDGE_STATE))
-            {
-                // TODO: Display "NoBridgeFragment"
-                Log.d(TAG, "No bridge found, received via broadcast");
-            }
-            else if(action.equals(HueService.HUE_HEARTBEAT_UPDATE))
-            {
-                Log.d(TAG, "Heartbeat in activity");
-                HueService service = app.getHueService();
-                service.unregisterReceiver(this);
-                mView.displayConnectedState();
-            }
-            else if(action.equals(HueService.HUE_AP_NOTRESPONDING))
-            {
-                HueService service = app.getHueService();
-                mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+            switch (action) {
+                case HueService.DISPLAY_NO_BRIDGE_STATE:
+                    // TODO: Display "NoBridgeFragment"
+                    Log.d(TAG, "No bridge found, received via broadcast");
+                    break;
+                case HueService.HUE_HEARTBEAT_UPDATE: {
+                    Log.d(TAG, "Heartbeat in activity");
+                    HueService service = app.getHueService();
+                    service.unregisterReceiver(this);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.displayConnectedState();
+                        }
+                    });
+                    break;
+                }
+                case HueService.HUE_AP_NOTRESPONDING: {
+                    HueService service = app.getHueService();
+                    mView.displayNoBridgeState(service.getCurrentServiceState() == HueService.STATE_SCANNING);
+                    break;
+                }
             }
         }
     };
@@ -60,20 +63,17 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Activity created");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         this.mView = new MainActivityView(this);
         this.mView.create();
-
-        mView.displayLoadingState();
+        this.mView.displayLoadingState();
     }
 
     @Override
     protected void onResume()
     {
-        Log.d(TAG, "Activity resumed");
         super.onResume();
 
         app = (HueMe) getApplication();
@@ -88,9 +88,28 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == REQUESTCODE_DETAIL_GROUP)
+        {
+            Log.d(TAG, "Returned from GroupDetailActivity");
+            //
+            HueService service = app.getHueService();
+            service.registerReceiver(hueUpdateReceiver, getDisplayUpdatesFilter());
+        }
+        else if(requestCode == REQUESTCODE_DETAIL_LIGHT)
+        {
+            Log.d(TAG, "Returned from LightDetailActivity (todo)");
+        }
+        else
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
     public void onHueServiceReady()
     {
-        Log.d(TAG, "Hue service ready");
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
@@ -134,5 +153,20 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     public MainActivityView getView()
     {
         return mView;
+    }
+
+    public void startDetailActivity(PHGroup group)
+    {
+        Intent detailIntent = new Intent(this, GroupDetailActivity.class);
+        detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, group.getIdentifier());
+
+        app.getHueService().unregisterReceiver(hueUpdateReceiver);
+        this.startActivityForResult(detailIntent, REQUESTCODE_DETAIL_GROUP);
+    }
+
+    public void startDetailActivity(PHLight light)
+    {
+        Log.d(TAG, "Switching to LightDetailActivity (todo)");
+        // TODO: See method startDetailActivity(PHGroup group);
     }
 }

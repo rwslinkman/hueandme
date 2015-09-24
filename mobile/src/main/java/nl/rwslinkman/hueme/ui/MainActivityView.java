@@ -43,13 +43,13 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     public void create()
     {
         // Init Toolbar
-        Toolbar mToolbar = (Toolbar) mActivity.findViewById(R.id.toolbar_actionbar);
-        mActivity.setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) mActivity.findViewById(R.id.groupdetail_toolbar_view);
+        mActivity.setSupportActionBar(toolbar);
 
         // Init NavigationDrawer
         mDrawerLayout = (DrawerLayout) mActivity.findViewById(R.id.drawer);
         ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(
-                mActivity,  mDrawerLayout, mToolbar,
+                mActivity,  mDrawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close
         );
         mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -68,7 +68,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayNoBridgeState(boolean isScanning)
     {
-        Log.d(TAG, "Displaying no bridge state");
         int stateMessage = (isScanning) ? R.string.navheader_state_searching_for_bridges : R.string.navheader_state_no_bridges_connected;
         int stateColor = (isScanning) ? R.color.navheader_statebulb_disabled : R.color.android_red;
 
@@ -91,8 +90,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayLoadingState()
     {
-        Log.d(TAG, "Displaying loading state");
-
         // Set header state to "loading"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
@@ -109,7 +106,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayConnectedState()
     {
-        Log.d(TAG, "Displaying connected state");
         // Set Header state to "scanning"
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
@@ -128,7 +124,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayGroups()
     {
-        Log.d(TAG, "Displaying groups");
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
@@ -175,14 +170,12 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void displayInfo()
     {
-        Log.d(TAG, "Displaying info");
         InfoFragment fragment = InfoFragment.newInstance();
         this.switchFragment(fragment);
     }
 
     private void displayLights()
     {
-        Log.d(TAG, "Displaying lights");
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
@@ -193,12 +186,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayConnectingState()
     {
-        Log.d(TAG, "Displaying connecting");
-        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
-//        String ipAddress = service.getBridge().getResourceCache().getBridgeConfiguration().getIpAddress();
-
         ConnectingFragment fragment = ConnectingFragment.newInstance();
-//        fragment.setConnectingIP(ipAddress);
         this.switchFragment(fragment);
     }
 }

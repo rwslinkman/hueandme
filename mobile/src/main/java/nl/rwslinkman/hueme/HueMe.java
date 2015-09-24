@@ -1,14 +1,18 @@
 package nl.rwslinkman.hueme;
 
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
@@ -69,7 +73,10 @@ public class HueMe extends Application
 
     public void unsubscribeHueServiceState(HueServiceStateListener listener)
     {
-        this.subscribers.remove(listener);
+        if(this.subscribers.contains(listener))
+        {
+            this.subscribers.remove(listener);
+        }
     }
 
     public boolean isServiceReady()

@@ -47,4 +47,16 @@
     <string name="groups_subtitle_text">Alle groepen in Philips Hue</string>
     <string name="philips_hue_connecting">Philips Hue probeert te verbinden</string>
     <string name="groups_text_nogroupsfound">Geen groepen gevonden</string>
+    <string name="groupdetail_onofftext_text">In-/uitschakelen</string>
+    <string name="title_activity_group_detail">GroupDetailActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="groupdetail_colorlooptext_text">Colorloop</string>
+    <string name="groupdetail_changenamebutton_text">Wijzig</string>
+    <string name="groupdetail_deletegroupbutton_text">Verwijder groep uit Hue</string>
+    <string name="groupdetail_changename_error_emptyname">Vul een groepsnaam in</string>
+    <string name="groupdetail_deletegroup_confirm_title">Groep verwijderen</string>
+    <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden</string>
+    <string name="groupdetail_deletegroup_confirm_ok">Bevestigen</string>
+    <string name="groupdetail_deletegroup_confirm_cancel">Annuleren</string>
 </resources>
