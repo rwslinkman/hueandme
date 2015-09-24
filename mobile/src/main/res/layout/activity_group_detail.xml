@@ -15,107 +15,186 @@
         android:background="@color/rwslinkman_blue_light"
         android:minHeight="@dimen/abc_action_bar_default_height_material" />
 
-    <!-- Colorpicker -->
-    <com.larswerkman.holocolorpicker.ColorPicker
-        android:id="@+id/groupdetail_colorpicker_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_toolbar_view"
-        android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
-        android:layout_centerHorizontal="true" />
-
-    <nl.rwslinkman.hueme.ui.DimmerBar
-        android:id="@+id/groupdetail_dimmer_view"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_colorpicker_view"
+        android:layout_height="match_parent"
+        android:layout_below="@id/groupdetail_toolbar_view">
 
-        android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
-        android:layout_marginBottom="@dimen/groupdetail_dimmer_marginbottom"
-        android:layout_centerHorizontal="true"/>
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent">
 
-    <!-- Divider -->
-    <View
-        android:id="@+id/groupdetail_divider_1"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/groupdetail_dimmer_view"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
-        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
-        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
-        android:background="@color/rwslinkman_blue_dark"/>
+            <!-- Colorpicker -->
+            <com.larswerkman.holocolorpicker.ColorPicker
+                android:id="@+id/groupdetail_colorpicker_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"/>
 
-    <!-- "Switch on/off" -->
-    <TextView
-        android:id="@+id/groupdetail_onofftext_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_divider_1"
-        android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
-        android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
-        android:text="@string/groupdetail_onofftext_text"
-        android:textSize="@dimen/groupdetail_onofftext_textsize"
-        android:textColor="@color/rwslinkman_blue_light"/>
+            <nl.rwslinkman.hueme.ui.DimmerBar
+                android:id="@+id/groupdetail_dimmer_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_colorpicker_view"
 
-    <!-- On/off switch -->
-    <Switch
-        android:id="@+id/groupdetail_onoffswitch_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_divider_1"
-        android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
-        android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+                android:layout_marginTop="@dimen/groupdetail_colorpicker_margintop"
+                android:layout_marginBottom="@dimen/groupdetail_dimmer_marginbottom"
+                android:layout_centerHorizontal="true"/>
 
-    <!-- Divider -->
-    <View
-        android:id="@+id/groupdetail_divider_2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/groupdetail_onofftext_view"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="@dimen/groupdetail_divider_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
-        android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
-        android:layout_marginRight="@dimen/groupdetail_divider_marginside"
-        android:background="@color/rwslinkman_blue_dark"/>
+            <!-- Divider -->
+            <View
+                android:id="@+id/groupdetail_divider_1"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/groupdetail_dimmer_view"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+                android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+                android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+                android:background="@color/rwslinkman_blue_dark"/>
 
-    <!-- "Colorloop" -->
-    <TextView
-        android:id="@+id/groupdetail_colorlooptext_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_divider_2"
-        android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
-        android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
-        android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
-        android:text="@string/groupdetail_colorlooptext_text"
-        android:textSize="@dimen/groupdetail_onofftext_textsize"
-        android:textColor="@color/rwslinkman_blue_light"/>
+            <!-- "Switch on/off" -->
+            <TextView
+                android:id="@+id/groupdetail_onofftext_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_1"
+                android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+                android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
+                android:text="@string/groupdetail_onofftext_text"
+                android:textSize="@dimen/groupdetail_onofftext_textsize"
+                android:textColor="@color/rwslinkman_blue_light"/>
 
-    <!-- On/off switch -->
-    <Switch
-        android:id="@+id/groupdetail_colorloopswitch_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/groupdetail_divider_2"
-        android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
-        android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+            <!-- On/off switch -->
+            <Switch
+                android:id="@+id/groupdetail_onoffswitch_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_1"
+                android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
+                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+
+            <!-- Divider -->
+            <View
+                android:id="@+id/groupdetail_divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/groupdetail_onofftext_view"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+                android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+                android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+                android:background="@color/rwslinkman_blue_dark"/>
+
+            <!-- "Colorloop" -->
+            <TextView
+                android:id="@+id/groupdetail_colorlooptext_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_2"
+                android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+                android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/groupdetail_onofftext_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_onofftext_marginside"
+                android:text="@string/groupdetail_colorlooptext_text"
+                android:textSize="@dimen/groupdetail_onofftext_textsize"
+                android:textColor="@color/rwslinkman_blue_light"/>
+
+            <!-- On/off switch -->
+            <Switch
+                android:id="@+id/groupdetail_colorloopswitch_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_2"
+                android:layout_marginTop="@dimen/groupdetail_onoffswitch_margintop"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
+                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+
+            <!-- Divider -->
+            <View
+                android:id="@+id/groupdetail_divider_3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/groupdetail_colorlooptext_view"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_marginStart="@dimen/groupdetail_divider_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_divider_marginside"
+                android:layout_marginEnd="@dimen/groupdetail_divider_marginside"
+                android:layout_marginRight="@dimen/groupdetail_divider_marginside"
+                android:background="@color/rwslinkman_blue_dark"/>
+
+            <!-- Helper view -->
+            <View
+                android:id="@+id/fakeView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_below="@id/groupdetail_divider_3"
+                android:layout_centerHorizontal="true"/>
+
+            <!-- EditText to change group name -->
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/groupdetail_groupname_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_3"
+                android:layout_marginTop="@dimen/groupdetail_onofftext_margintop"
+                android:layout_marginBottom="@dimen/groupdetail_onoffswitch_margintop"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignEnd="@+id/fakeView"
+                android:layout_alignRight="@id/fakeView"
+                android:layout_marginStart="@dimen/groupdetail_groupnamefield_marginside"
+                android:layout_marginLeft="@dimen/groupdetail_groupnamefield_marginside"
+                android:textSize="@dimen/groupdetail_nameeditview_textsize"
+                android:textColor="@color/rwslinkman_blue_light"/>
+
+            <!-- "Change" button - change group name -->
+            <Button
+                android:id="@+id/groupdetail_changename_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_divider_3"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/groupdetail_changenamebutton_margintop"
+                android:background="@color/rwslinkman_blue_dark"
+                android:text="@string/groupdetail_changenamebutton_text"
+                android:textColor="@android:color/white"/>
+
+            <!-- "Delete group from Hue" button -->
+            <Button
+                android:id="@+id/groupdetail_deletegroup_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/groupdetail_groupname_edittext"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:background="@android:color/darker_gray"
+                android:text="@string/groupdetail_deletegroupbutton_text"
+                android:textColor="@android:color/black"/>
+
+        </RelativeLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

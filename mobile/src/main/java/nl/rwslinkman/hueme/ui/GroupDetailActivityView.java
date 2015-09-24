@@ -1,9 +1,13 @@
 package nl.rwslinkman.hueme.ui;
 
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.philips.lighting.model.PHGroup;
@@ -18,7 +22,7 @@ import nl.rwslinkman.hueme.helper.PhilipsHSB;
 /**
  * @author Rick Slinkman
  */
-public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeListener, ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener
+public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeListener, ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener, View.OnClickListener
 {
     public static final String TAG = GroupDetailActivityView.class.getSimpleName();
     private Toolbar mToolbar;
@@ -27,6 +31,9 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
     private Switch mColorloopSwitch;
     private ColorPicker mColorPickerView;
     private DimmerBar mDimmerView;
+    private AppCompatEditText mNameEditView;
+    private Button mChangeNameButton;
+    private Button mDeleteGroupButton;
 
     public GroupDetailActivityView(GroupDetailActivity activity)
     {
@@ -38,17 +45,19 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
         this.mDimmerView = (DimmerBar) this.mActivity.findViewById(R.id.groupdetail_dimmer_view);
         this.mOnOffSwitch = (Switch) this.mActivity.findViewById(R.id.groupdetail_onoffswitch_view);
         this.mColorloopSwitch = (Switch) this.mActivity.findViewById(R.id.groupdetail_colorloopswitch_view);
+        this.mNameEditView = (AppCompatEditText) this.mActivity.findViewById(R.id.groupdetail_groupname_edittext);
+        this.mChangeNameButton = (Button) this.mActivity.findViewById(R.id.groupdetail_changename_button);
+        this.mDeleteGroupButton = (Button) this.mActivity.findViewById(R.id.groupdetail_deletegroup_button);
     }
 
     public void createView(PHGroup group)
     {
         if(group != null)
         {
-            mToolbar.setTitle(group.getName());
-
             PHLightState groupState = this.mActivity.getGroupState();
-            showGroupView(groupState);
+            showGroupView(groupState, group.getName());
         }
+
         // Set Toolbar to be ActionBar
         this.mActivity.setSupportActionBar(mToolbar);
         this.mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -64,11 +73,18 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
         this.mColorloopSwitch.setOnCheckedChangeListener(this);
         this.mColorPickerView.setOnColorSelectedListener(this);
         this.mDimmerView.setOnDimmerValueSelectedListener(this);
+        this.mChangeNameButton.setOnClickListener(this);
+        this.mDeleteGroupButton.setOnClickListener(this);
     }
 
 
-    public void showGroupView(final PHLightState state)
+    public void showGroupView(final PHLightState state, final String groupName)
     {
+        if(state == null || groupName == null || groupName.isEmpty())
+        {
+            throw new NullPointerException("Both parameters must be suppplied");
+        }
+
         mActivity.runOnUiThread(new Runnable()
         {
             @Override
@@ -76,12 +92,16 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
             {
                 int color = HueColorConverter.convertStateToColor(state);
 
+                mToolbar.setTitle(groupName);
+
                 // On/Off switch
                 mOnOffSwitch.setChecked(state.isOn());
                 // ColorPicker
                 mColorPickerView.setColor(color);
                 mColorPickerView.setOldCenterColor(color);
                 mColorPickerView.setNewCenterColor(color);
+                // Group name edit
+                mNameEditView.setText(groupName);
 
                 setAllViewsEnabled(true);
             }
@@ -154,11 +174,26 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
         this.mColorPickerView.setEnabled(enabled);
         this.mDimmerView.setEnabled(enabled);
         this.mOnOffSwitch.setEnabled(enabled);
+        this.mChangeNameButton.setEnabled(enabled);
+        this.mDeleteGroupButton.setEnabled(enabled);
     }
 
     private void updateGroupState(PHLightState state)
     {
         mActivity.updateGroupState(state);
         setAllViewsEnabled(false);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        if(v.getId() == this.mChangeNameButton.getId())
+        {
+            Toast.makeText(this.mActivity, "Change name", Toast.LENGTH_SHORT).show();
+        }
+        else if(v.getId() == this.mDeleteGroupButton.getId())
+        {
+            Toast.makeText(this.mActivity, "Delete group", Toast.LENGTH_SHORT).show();
+        }
     }
 }

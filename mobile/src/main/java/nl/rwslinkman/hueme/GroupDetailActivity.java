@@ -40,7 +40,7 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
                     mActiveGroup = bridge.getResourceCache().getGroups().get(groupIdentifier);
 
                     PHLightState groupState = GroupDetailActivity.this.getGroupState();
-                    mView.showGroupView(groupState);
+                    mView.showGroupView(groupState, mActiveGroup.getName());
                     break;
                 default:
                     break;
@@ -152,7 +152,7 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
 
         // Show new state
         PHLightState updatedGroupState = this.getGroupState();
-        this.mView.showGroupView(updatedGroupState);
+        this.mView.showGroupView(updatedGroupState, mActiveGroup.getName());
     }
 
     @Override

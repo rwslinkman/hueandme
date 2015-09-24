@@ -52,4 +52,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="groupdetail_colorlooptext_text">Colorloop</string>
+    <string name="groupdetail_changenamebutton_text">Wijzig</string>
+    <string name="groupdetail_deletegroupbutton_text">Verwijder groep uit Hue</string>
 </resources>
