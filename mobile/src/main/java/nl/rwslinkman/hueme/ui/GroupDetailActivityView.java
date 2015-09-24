@@ -189,10 +189,12 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
     {
         if(v.getId() == this.mChangeNameButton.getId())
         {
-            Toast.makeText(this.mActivity, "Change name", Toast.LENGTH_SHORT).show();
+            String newGroupName = this.mNameEditView.getText().toString();
+            this.mActivity.changeGroupName(newGroupName);
         }
         else if(v.getId() == this.mDeleteGroupButton.getId())
         {
+            // TODO: Ask "are you sure"?
             Toast.makeText(this.mActivity, "Delete group", Toast.LENGTH_SHORT).show();
         }
     }

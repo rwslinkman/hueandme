@@ -30,7 +30,7 @@
             android:parentActivityName=".MainActivity"
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="stateHidden">
-            
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="nl.rwslinkman.hueme.MainActivity" />
