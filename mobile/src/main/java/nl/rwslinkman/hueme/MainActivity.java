@@ -113,16 +113,13 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbarmenu_groups, menu);
-        return super.onCreateOptionsMenu(menu);
+        return mView.handleOptionsMenu(inflater, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
-        Log.d(TAG, item.getTitle().toString());
-
-        return super.onOptionsItemSelected(item);
+        return mView.onMenuItemClick(item);
     }
 
     @Override

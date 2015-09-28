@@ -1,47 +1,53 @@
 package nl.rwslinkman.hueme.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHGroup;
 
 import java.util.List;
 
-import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.ui.HueGroupsAdapter;
-import nl.rwslinkman.hueme.ui.MainActivityView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends AbstractFragment implements AdapterView.OnItemClickListener
+public class GroupsFragment extends AbstractActionMenuFragment implements AdapterView.OnItemClickListener
 {
     public static final String TAG = GroupsFragment.class.getSimpleName();
     private PHBridge mActiveBridge;
 
     @Override
-    public int getLayoutResource()
+    public int getMenuResource()
     {
-        return R.layout.fragment_groups;
+        return R.menu.toolbarmenu_groups;
     }
 
     @Override
-    public FragmentMarker getFragmentMarker()
+    public boolean handleMenuItemClick(MenuItem item)
     {
-        return FragmentMarker.Groups;
+        if(item.getItemId() == R.id.groups_add_action)
+        {
+            Log.d(TAG, "Groups ADD clicked");
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getLayoutResource()
+    {
+        return R.layout.fragment_groups;
     }
 
     @Override

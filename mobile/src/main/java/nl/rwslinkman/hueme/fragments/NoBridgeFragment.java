@@ -66,12 +66,6 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
     }
 
     @Override
-    public FragmentMarker getFragmentMarker()
-    {
-        return FragmentMarker.NoBridge;
-    }
-
-    @Override
     public void createFragment(View rootView)
     {
         this.mRootView = rootView;
@@ -214,6 +208,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
         NoBridgeFragment fragment = new NoBridgeFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 

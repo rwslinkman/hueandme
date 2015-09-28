@@ -19,15 +19,9 @@ public class ConnectingFragment extends AbstractFragment
     }
 
     @Override
-    public FragmentMarker getFragmentMarker()
-    {
-        return FragmentMarker.Connecting;
-    }
-
-    @Override
     public void createFragment(View rootView)
     {
-        //
+        // No action
     }
 
     public static ConnectingFragment newInstance()
@@ -35,6 +29,7 @@ public class ConnectingFragment extends AbstractFragment
         ConnectingFragment fragment = new ConnectingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 }

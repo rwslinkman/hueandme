@@ -20,12 +20,6 @@ public class LoadingFragment extends AbstractFragment
     }
 
     @Override
-    public FragmentMarker getFragmentMarker()
-    {
-        return FragmentMarker.Loading;
-    }
-
-    @Override
     public void createFragment(View rootView)
     {
 //        CircularProgressView progressView = (CircularProgressView) rootView.findViewById(R.id.loading_spinner_view);
@@ -36,6 +30,7 @@ public class LoadingFragment extends AbstractFragment
         LoadingFragment fragment = new LoadingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 }

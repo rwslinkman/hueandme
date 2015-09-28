@@ -3,7 +3,9 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,9 +17,9 @@ import nl.rwslinkman.hueme.ui.MainActivityView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LightsFragment extends AbstractFragment
+public class LightsFragment extends AbstractActionMenuFragment
 {
-    private PHBridge mActiveBridge;
+    public static final String TAG = LightsFragment.class.getSimpleName();
 
     public static LightsFragment newInstance()
     {
@@ -28,20 +30,26 @@ public class LightsFragment extends AbstractFragment
         return fragment;
     }
 
-    public void setActiveBridge(PHBridge activeBridge) {
-        this.mActiveBridge = activeBridge;
+    @Override
+    public int getMenuResource()
+    {
+        return R.menu.toolbarmenu_lights;
+    }
+
+    @Override
+    public boolean handleMenuItemClick(MenuItem item)
+    {
+        if(item.getItemId() == R.id.lights_add_action)
+        {
+            Log.d(TAG, "Lights ADD clicked");
+        }
+        return false;
     }
 
     @Override
     public int getLayoutResource()
     {
         return R.layout.fragment_lights;
-    }
-
-    @Override
-    public FragmentMarker getFragmentMarker()
-    {
-        return FragmentMarker.Lights;
     }
 
     @Override

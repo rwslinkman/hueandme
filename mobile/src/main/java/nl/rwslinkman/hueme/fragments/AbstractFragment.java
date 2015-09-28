@@ -2,16 +2,18 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import nl.rwslinkman.hueme.ui.MainActivityView;
+import nl.rwslinkman.hueme.R;
 
 /**
- * Created by Rick on 27-9-2015.
+ * @author Rick Slinkman
  */
 public abstract class AbstractFragment extends Fragment
 {
@@ -36,7 +38,6 @@ public abstract class AbstractFragment extends Fragment
     }
 
     public abstract int getLayoutResource();
-    public abstract FragmentMarker getFragmentMarker();
     public abstract void createFragment(View rootView);
 
     @Override

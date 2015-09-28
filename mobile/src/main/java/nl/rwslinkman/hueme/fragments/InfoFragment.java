@@ -21,15 +21,9 @@ public class InfoFragment extends AbstractFragment
     }
 
     @Override
-    public FragmentMarker getFragmentMarker()
-    {
-        return FragmentMarker.Info;
-    }
-
-    @Override
     public void createFragment(View rootView)
     {
-        //
+        // No action
     }
 
     public static InfoFragment newInstance()

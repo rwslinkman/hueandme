@@ -7,6 +7,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.fragments.AbstractActionMenuFragment;
 import nl.rwslinkman.hueme.fragments.AbstractFragment;
 import nl.rwslinkman.hueme.fragments.ConnectingFragment;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
@@ -34,7 +37,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     private FloatingActionButton mStateBulbView;
     private TextView mStateMessageView;
     private NavigationView mNavigationView;
-    private AbstractFragment.FragmentMarker mCurrentFragment;
+    private AbstractFragment mCurrentFragment;
     private Toolbar mToolbar;
 
     public MainActivityView(MainActivity parent)
@@ -46,7 +49,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     {
         // Init Toolbar
         this.mToolbar = (Toolbar) mActivity.findViewById(R.id.mainactivity_toolbar_view);
-        mToolbar.inflateMenu(R.menu.toolbarmenu_groups);
         mToolbar.setOnMenuItemClickListener(this);
         mActivity.setSupportActionBar(mToolbar);
 
@@ -149,8 +151,8 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         {
             mDrawerLayout.closeDrawer(mNavigationView);
         }
-        this.mCurrentFragment = fragmentToDisplay.getFragmentMarker();
-        Log.d(TAG, "Has optionsMenu: " + Boolean.toString(fragmentToDisplay.hasOptionsMenu()));
+        this.mCurrentFragment = fragmentToDisplay;
+        this.mToolbar.getMenu().clear();
     }
 
     @Override
@@ -182,11 +184,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void displayLights()
     {
-        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
-        PHBridge bridge = service.getBridge();
-
         LightsFragment fragment = LightsFragment.newInstance();
-        fragment.setActiveBridge(bridge);
         this.switchFragment(fragment);
     }
 
@@ -199,7 +197,22 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     @Override
     public boolean onMenuItemClick(MenuItem item)
     {
-        Log.d(TAG, item.getTitle().toString());
+        if(this.mCurrentFragment.hasOptionsMenu())
+        {
+            return ((AbstractActionMenuFragment) this.mCurrentFragment).handleMenuItemClick(item);
+        }
+        return false;
+    }
+
+    public boolean handleOptionsMenu(MenuInflater inflater, Menu menu)
+    {
+        if(!this.mCurrentFragment.hasOptionsMenu())
+        {
+            return false;
+        }
+
+        int menuRes = ((AbstractActionMenuFragment) this.mCurrentFragment).getMenuResource();
+        inflater.inflate(menuRes, menu);
         return true;
     }
 }
