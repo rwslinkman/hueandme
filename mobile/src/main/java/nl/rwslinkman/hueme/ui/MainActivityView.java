@@ -215,4 +215,9 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         inflater.inflate(menuRes, menu);
         return true;
     }
+
+    public void displayAddGroup()
+    {
+        // TODO:
+    }
 }

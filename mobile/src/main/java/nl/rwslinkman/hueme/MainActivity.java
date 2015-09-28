@@ -128,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
 
-        Log.d(TAG, String.valueOf(service.getCurrentServiceState()));
         if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
             mView.displayConnectedState();

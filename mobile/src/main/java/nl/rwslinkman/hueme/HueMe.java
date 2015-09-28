@@ -1,18 +1,13 @@
 package nl.rwslinkman.hueme;
 
 import android.app.Application;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
@@ -23,7 +18,6 @@ import nl.rwslinkman.hueme.service.HueServiceStateListener;
  */
 public class HueMe extends Application
 {
-    public static final String TAG = HueMe.class.getSimpleName();
     private HueService hueService;
     private List<HueServiceStateListener> subscribers;
 
@@ -32,7 +26,6 @@ public class HueMe extends Application
         @Override
         public void onServiceConnected(ComponentName name, IBinder service)
         {
-            Log.d(TAG, "Service connected");
             hueService = ((HueService.LocalBinder) service).getService();
             for(HueServiceStateListener subscriber : subscribers)
             {

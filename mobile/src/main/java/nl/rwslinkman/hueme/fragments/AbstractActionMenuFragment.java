@@ -4,7 +4,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 /**
- * Created by Rick on 28-9-2015.
+ * @author Rick Slinkman
  */
 public abstract class AbstractActionMenuFragment extends AbstractFragment
 {

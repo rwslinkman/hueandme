@@ -38,7 +38,7 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Adapte
     {
         if(item.getItemId() == R.id.groups_add_action)
         {
-            Log.d(TAG, "Groups ADD clicked");
+            ((MainActivity)getActivity()).getView().displayAddGroup();
             return true;
         }
         return false;
