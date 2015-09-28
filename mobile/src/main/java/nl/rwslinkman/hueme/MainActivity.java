@@ -7,6 +7,9 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
@@ -33,10 +36,9 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
             switch (action) {
                 case HueService.DISPLAY_NO_BRIDGE_STATE:
                     // TODO: Display "NoBridgeFragment"
-                    Log.d(TAG, "No bridge found, received via broadcast");
+                    Log.e(TAG, "No bridge found, received via broadcast");
                     break;
                 case HueService.HUE_HEARTBEAT_UPDATE: {
-                    Log.d(TAG, "Heartbeat in activity");
                     HueService service = app.getHueService();
                     service.unregisterReceiver(this);
 
@@ -105,6 +107,22 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbarmenu_groups, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        Log.d(TAG, item.getTitle().toString());
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

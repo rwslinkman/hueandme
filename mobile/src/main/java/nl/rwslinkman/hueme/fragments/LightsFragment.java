@@ -10,30 +10,43 @@ import android.view.ViewGroup;
 import com.philips.lighting.model.PHBridge;
 
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LightsFragment extends Fragment
+public class LightsFragment extends AbstractFragment
 {
     private PHBridge mActiveBridge;
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lights, container, false);
-    }
 
     public static LightsFragment newInstance()
     {
         LightsFragment fragment = new LightsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(true);
         return fragment;
     }
 
     public void setActiveBridge(PHBridge activeBridge) {
         this.mActiveBridge = activeBridge;
+    }
+
+    @Override
+    public int getLayoutResource()
+    {
+        return R.layout.fragment_lights;
+    }
+
+    @Override
+    public FragmentMarker getFragmentMarker()
+    {
+        return FragmentMarker.Lights;
+    }
+
+    @Override
+    public void createFragment(View rootView)
+    {
+        //
     }
 }

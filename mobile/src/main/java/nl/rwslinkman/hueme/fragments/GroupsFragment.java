@@ -27,16 +27,26 @@ import nl.rwslinkman.hueme.ui.MainActivityView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment implements AdapterView.OnItemClickListener
+public class GroupsFragment extends AbstractFragment implements AdapterView.OnItemClickListener
 {
-    private static final String TAG = GroupsFragment.class.getSimpleName();
+    public static final String TAG = GroupsFragment.class.getSimpleName();
     private PHBridge mActiveBridge;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public int getLayoutResource()
     {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_groups, container, false);
+        return R.layout.fragment_groups;
+    }
+
+    @Override
+    public FragmentMarker getFragmentMarker()
+    {
+        return FragmentMarker.Groups;
+    }
+
+    @Override
+    public void createFragment(View rootView)
+    {
         RelativeLayout emptyView = (RelativeLayout) rootView.findViewById(R.id.groups_emptyview);
 
         List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
@@ -51,7 +61,6 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
             listView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
-        return rootView;
     }
 
     public static GroupsFragment newInstance()
@@ -59,6 +68,7 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
         GroupsFragment fragment = new GroupsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(true);
         return fragment;
     }
 
