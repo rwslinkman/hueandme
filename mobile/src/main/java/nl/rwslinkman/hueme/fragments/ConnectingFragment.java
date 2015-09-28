@@ -8,36 +8,28 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
-public class ConnectingFragment extends Fragment
+public class ConnectingFragment extends AbstractFragment
 {
-    private String mConnectingIP;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public int getLayoutResource()
     {
-        // Inflate the layout for this fragment
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_connecting, container, false);
-
-//        TextView ipAddressView = (TextView) rootView.findViewById(R.id.connecting_ipaddress_view);
-//        if(!mConnectingIP.isEmpty())
-//        {
-//            ipAddressView.setText(mConnectingIP);
-//        }
-
-        return rootView;
+        return R.layout.fragment_connecting;
     }
 
-    public void setConnectingIP(String ip)
+    @Override
+    public void createFragment(View rootView)
     {
-        this.mConnectingIP = ip;
+        // No action
     }
-
 
     public static ConnectingFragment newInstance()
     {
         ConnectingFragment fragment = new ConnectingFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 }

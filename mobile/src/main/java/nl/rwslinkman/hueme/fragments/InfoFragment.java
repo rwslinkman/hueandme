@@ -7,17 +7,23 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.ui.MainActivityView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class InfoFragment extends Fragment
+public class InfoFragment extends AbstractFragment
 {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public int getLayoutResource()
     {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_info, container, false);
+        return R.layout.fragment_info;
+    }
+
+    @Override
+    public void createFragment(View rootView)
+    {
+        // No action
     }
 
     public static InfoFragment newInstance()
@@ -25,6 +31,7 @@ public class InfoFragment extends Fragment
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 }

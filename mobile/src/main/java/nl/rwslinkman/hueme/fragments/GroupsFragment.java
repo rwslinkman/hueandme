@@ -1,42 +1,58 @@
 package nl.rwslinkman.hueme.fragments;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHGroup;
 
 import java.util.List;
 
-import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.ui.HueGroupsAdapter;
-import nl.rwslinkman.hueme.ui.MainActivityView;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends Fragment implements AdapterView.OnItemClickListener
+public class GroupsFragment extends AbstractActionMenuFragment implements AdapterView.OnItemClickListener
 {
-    private static final String TAG = GroupsFragment.class.getSimpleName();
+    public static final String TAG = GroupsFragment.class.getSimpleName();
     private PHBridge mActiveBridge;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public int getMenuResource()
     {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_groups, container, false);
+        return R.menu.toolbarmenu_groups;
+    }
+
+    @Override
+    public boolean handleMenuItemClick(MenuItem item)
+    {
+        if(item.getItemId() == R.id.groups_add_action)
+        {
+            ((MainActivity)getActivity()).getView().displayAddGroup();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int getLayoutResource()
+    {
+        return R.layout.fragment_groups;
+    }
+
+    @Override
+    public void createFragment(View rootView)
+    {
         RelativeLayout emptyView = (RelativeLayout) rootView.findViewById(R.id.groups_emptyview);
 
         List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
@@ -51,7 +67,6 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
             listView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
-        return rootView;
     }
 
     public static GroupsFragment newInstance()
@@ -59,6 +74,7 @@ public class GroupsFragment extends Fragment implements AdapterView.OnItemClickL
         GroupsFragment fragment = new GroupsFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(true);
         return fragment;
     }
 

@@ -28,7 +28,7 @@ import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;
 import nl.rwslinkman.hueme.ui.MainActivityView;
 
-public class NoBridgeFragment extends Fragment implements View.OnClickListener, HueIPAddressAdapter.OnConnectButtonListener
+public class NoBridgeFragment extends AbstractFragment implements View.OnClickListener, HueIPAddressAdapter.OnConnectButtonListener
 {
     public static final String TAG = NoBridgeFragment.class.getSimpleName();
     private final BroadcastReceiver hueUpdateReceiver = new BroadcastReceiver()
@@ -60,11 +60,15 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
     private RecyclerView mRecyclerView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    public int getLayoutResource()
     {
-        int rootViewToInflate = (mIsScanningForBridges) ? R.layout.fragment_scanning : R.layout.fragment_nobridges;
-        this.mRootView = inflater.inflate(rootViewToInflate, container, false);
-        return mRootView;
+        return (mIsScanningForBridges) ? R.layout.fragment_scanning : R.layout.fragment_nobridges;
+    }
+
+    @Override
+    public void createFragment(View rootView)
+    {
+        this.mRootView = rootView;
     }
 
     @Override
@@ -204,6 +208,7 @@ public class NoBridgeFragment extends Fragment implements View.OnClickListener, 
         NoBridgeFragment fragment = new NoBridgeFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setHasOptionsMenu(false);
         return fragment;
     }
 
