@@ -1,0 +1,42 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/addgroup_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/addgroup_title_text"
+        android:textSize="@dimen/addgroup_title_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <TextView
+        android:id="@+id/addgroup_subtitle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addgroup_title_view"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/addgroup_subtitle_text"
+        android:textSize="@dimen/addgroup_subtitle_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <!-- "Delete group from Hue" button -->
+    <Button
+        android:id="@+id/addgroup_save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/rwslinkman_blue_dark"
+        android:text="@string/addgroup_savebutton_text"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>

@@ -60,4 +60,7 @@
     <string name="groupdetail_deletegroup_confirm_ok">Bevestigen</string>
     <string name="groupdetail_deletegroup_confirm_cancel">Annuleren</string>
     <string name="toolbar_lights_add">Voeg toe</string>
+    <string name="addgroup_title_text">Nieuwe groep</string>
+    <string name="addgroup_subtitle_text">Kies lampen om een nieuwe groep te maken</string>
+    <string name="addgroup_savebutton_text">Opslaan</string>
 </resources>

@@ -58,4 +58,6 @@
     <dimen name="groupdetail_nameeditview_textsize">24sp</dimen>
     <dimen name="groupdetail_changenamebutton_margintop">9dp</dimen>
     <dimen name="groupdetail_groupnamefield_marginside">9dp</dimen>
+    <dimen name="addgroup_title_textsize">45sp</dimen>
+    <dimen name="addgroup_subtitle_textsize">20sp</dimen>
 </resources>

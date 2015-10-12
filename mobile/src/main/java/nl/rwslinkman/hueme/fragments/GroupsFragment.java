@@ -3,14 +3,12 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.philips.lighting.model.PHBridge;
 import com.philips.lighting.model.PHGroup;
 
 import java.util.List;
@@ -24,9 +22,6 @@ import nl.rwslinkman.hueme.ui.HueGroupsAdapter;
  */
 public class GroupsFragment extends AbstractActionMenuFragment implements AdapterView.OnItemClickListener
 {
-    public static final String TAG = GroupsFragment.class.getSimpleName();
-    private PHBridge mActiveBridge;
-
     @Override
     public int getMenuResource()
     {
@@ -73,14 +68,10 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Adapte
     {
         GroupsFragment fragment = new GroupsFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.Groups.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(true);
         return fragment;
-    }
-
-    public void setActiveBridge(PHBridge activeBridge)
-    {
-        this.mActiveBridge = activeBridge;
     }
 
     @Override

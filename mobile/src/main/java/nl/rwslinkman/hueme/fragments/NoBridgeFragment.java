@@ -207,6 +207,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
     {
         NoBridgeFragment fragment = new NoBridgeFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.NoBridge.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(false);
         return fragment;

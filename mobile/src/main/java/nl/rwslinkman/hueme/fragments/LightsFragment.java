@@ -25,6 +25,7 @@ public class LightsFragment extends AbstractActionMenuFragment
     {
         LightsFragment fragment = new LightsFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.Lights.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(true);
         return fragment;

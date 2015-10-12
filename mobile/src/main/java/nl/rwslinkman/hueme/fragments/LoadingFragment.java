@@ -29,6 +29,7 @@ public class LoadingFragment extends AbstractFragment
     {
         LoadingFragment fragment = new LoadingFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.Loading.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(false);
         return fragment;

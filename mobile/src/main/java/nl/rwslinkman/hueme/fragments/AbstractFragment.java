@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.philips.lighting.model.PHBridge;
+
 import nl.rwslinkman.hueme.R;
 
 /**
@@ -23,7 +25,9 @@ public abstract class AbstractFragment extends Fragment
         Groups(1),
         Lights(2),
         Info(3),
-        Loading(4), NoBridge(5);
+        Loading(4),
+        NoBridge(5),
+        AddGroup(6);
         private int value;
 
         FragmentMarker(int value) {
@@ -35,10 +39,23 @@ public abstract class AbstractFragment extends Fragment
         {
             return Integer.toString(this.value);
         }
+
+        public int getValue()
+        {
+            return value;
+        }
     }
+
+    public static final String EXTRA_FRAGMENT_MARKER = AbstractFragment.class.getName() + "extra_fragment_marker";
+    protected PHBridge mActiveBridge;
 
     public abstract int getLayoutResource();
     public abstract void createFragment(View rootView);
+
+    public final void setActiveBridge(PHBridge activeBridge)
+    {
+        this.mActiveBridge = activeBridge;
+    }
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
