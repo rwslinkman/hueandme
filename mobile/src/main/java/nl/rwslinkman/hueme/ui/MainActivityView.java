@@ -141,6 +141,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void switchFragment(AbstractFragment fragmentToDisplay)
     {
+        Log.d(TAG, "Switching to fragment " + fragmentToDisplay.getClass().getSimpleName());
         // update the main content by replacing fragments
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         fragmentManager

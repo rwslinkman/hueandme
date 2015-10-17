@@ -90,6 +90,14 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     }
 
     @Override
+    protected void onPause()
+    {
+        super.onPause();
+        HueService service = app.getHueService();
+        service.unregisterReceiver(hueUpdateReceiver);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == REQUESTCODE_DETAIL_GROUP)

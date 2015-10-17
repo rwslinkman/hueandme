@@ -38,9 +38,9 @@
     <dimen name="groupsitem_name_textsize">28sp</dimen>
     <dimen name="groups_empty_textsize">24sp</dimen>
     <dimen name="groups_subtitle_textsize">20sp</dimen>
-    <dimen name="connecting_spinner_width">100dp</dimen>
+    <dimen name="connecting_spinner_size">100dp</dimen>
     <dimen name="connecting_spinner_thickness">6dp</dimen>
-    <dimen name="connecting_text_textsize">16dp</dimen>
+    <dimen name="connecting_text_textsize">16sp</dimen>
     <dimen name="connecting_text_margintop">18sp</dimen>
     <dimen name="groupdetail_groupname_textsize">32sp</dimen>
     <dimen name="groupdetail_groupname_margintop">12dp</dimen>
@@ -60,4 +60,6 @@
     <dimen name="groupdetail_groupnamefield_marginside">9dp</dimen>
     <dimen name="addgroup_title_textsize">45sp</dimen>
     <dimen name="addgroup_subtitle_textsize">20sp</dimen>
+    <dimen name="addgroup_lightslist_margintop">12dp</dimen>
+
 </resources>

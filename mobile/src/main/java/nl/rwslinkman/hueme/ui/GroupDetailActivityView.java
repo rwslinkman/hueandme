@@ -6,15 +6,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Switch;
 import android.widget.Toast;
 
+import com.gc.materialdesign.views.ButtonFlat;
+import com.gc.materialdesign.views.Switch;
+import com.gc.materialdesign.widgets.Dialog;
 import com.larswerkman.holocolorpicker.ColorPicker;
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
-import me.drakeet.materialdialog.MaterialDialog;
 import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.helper.HueColorConverter;
@@ -23,7 +24,7 @@ import nl.rwslinkman.hueme.helper.PhilipsHSB;
 /**
  * @author Rick Slinkman
  */
-public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeListener, ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener, View.OnClickListener
+public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener, View.OnClickListener, Switch.OnCheckListener
 {
     public static final String TAG = GroupDetailActivityView.class.getSimpleName();
     private Toolbar mToolbar;
@@ -70,8 +71,8 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
     public void registerListeners()
     {
         // Register to UI changes
-        this.mOnOffSwitch.setOnCheckedChangeListener(this);
-        this.mColorloopSwitch.setOnCheckedChangeListener(this);
+        this.mOnOffSwitch.setOncheckListener(this);
+        this.mColorloopSwitch.setOncheckListener(this);
         this.mColorPickerView.setOnColorSelectedListener(this);
         this.mDimmerView.setOnDimmerValueSelectedListener(this);
         this.mChangeNameButton.setOnClickListener(this);
@@ -109,29 +110,6 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
                 setAllViewsEnabled(true);
             }
         });
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-    {
-        if(buttonView.getId() == R.id.groupdetail_onoffswitch_view)
-        {
-            // Create light state
-            PHLightState state = new PHLightState();
-            state.setOn(isChecked);
-            state.setEffectMode(PHLight.PHLightEffectMode.EFFECT_NONE);
-
-            updateGroupState(state);
-        }
-        else if(buttonView.getId() == R.id.groupdetail_colorloopswitch_view)
-        {
-            // Create light state
-            PHLightState state = new PHLightState();
-            PHLight.PHLightEffectMode mode = (isChecked) ? PHLight.PHLightEffectMode.EFFECT_COLORLOOP : PHLight.PHLightEffectMode.EFFECT_NONE;
-            state.setEffectMode(mode);
-
-            updateGroupState(state);
-        }
     }
 
     @Override
@@ -218,30 +196,56 @@ public class GroupDetailActivityView implements CompoundButton.OnCheckedChangeLi
         String ok = mActivity.getString(R.string.groupdetail_deletegroup_confirm_ok);
         String cancel = mActivity.getString(R.string.groupdetail_deletegroup_confirm_cancel);
 
-        final MaterialDialog mMaterialDialog = new MaterialDialog(this.mActivity)
-                .setTitle(title)
-                .setMessage(message);
-        mMaterialDialog
-                .setPositiveButton(ok, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mActivity.deleteActiveGroupPermanently();
-                        mMaterialDialog.dismiss();
-                        GroupDetailActivityView.this.setAllViewsEnabled(false);
-                        Log.d(TAG, "Delete group");
-                    }
-                })
-                .setNegativeButton(cancel, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        mMaterialDialog.dismiss();
-                    }
-                });
+        final Dialog dialog = new Dialog(this.mActivity, title, message);
+        dialog.show();
 
-        mMaterialDialog.show();
+        ButtonFlat acceptButton = dialog.getButtonAccept();
+        acceptButton.setText(ok);
+        acceptButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                mActivity.deleteActiveGroupPermanently();
+                dialog.dismiss();
+                GroupDetailActivityView.this.setAllViewsEnabled(false);
+            }
+        });
+
+        ButtonFlat cancelButton = dialog.getButtonCancel();
+        cancelButton.setText(cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    @Override
+    public void onCheck(Switch aSwitch, boolean isChecked)
+    {
+        if(aSwitch.getId() == R.id.groupdetail_onoffswitch_view)
+        {
+            // Create light state
+            PHLightState state = new PHLightState();
+            state.setOn(isChecked);
+            state.setEffectMode(PHLight.PHLightEffectMode.EFFECT_NONE);
+
+            updateGroupState(state);
+        }
+        else if(aSwitch.getId() == R.id.groupdetail_colorloopswitch_view)
+        {
+            // Create light state
+            PHLightState state = new PHLightState();
+            PHLight.PHLightEffectMode mode = (isChecked) ? PHLight.PHLightEffectMode.EFFECT_COLORLOOP : PHLight.PHLightEffectMode.EFFECT_NONE;
+            state.setEffectMode(mode);
+
+            updateGroupState(state);
+        }
     }
 }

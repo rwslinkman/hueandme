@@ -3,10 +3,19 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
+
+import com.philips.lighting.model.PHLight;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.ui.SelectableLightsAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +23,7 @@ import nl.rwslinkman.hueme.R;
 public class AddGroupFragment extends AbstractFragment implements View.OnClickListener
 {
     public static final String TAG = AddGroupFragment.class.getSimpleName();
+    private RecyclerView mLightsListRecycler;
 
     public AddGroupFragment()
     {
@@ -32,6 +42,8 @@ public class AddGroupFragment extends AbstractFragment implements View.OnClickLi
         // TODO: Obtain listview to populate with available lights
 
         rootView.findViewById(R.id.addgroup_save_button).setOnClickListener(this);
+
+        this.mLightsListRecycler = (RecyclerView) rootView.findViewById(R.id.addgroup_lights_list);
     }
 
     @Override
@@ -42,6 +54,14 @@ public class AddGroupFragment extends AbstractFragment implements View.OnClickLi
         if(this.mActiveBridge != null)
         {
             Log.d(TAG, "Populate list with lights");
+
+            // TODO: Get list of connected lights
+            List<PHLight> lightList = new ArrayList<>();
+
+            SelectableLightsAdapter adapter = new SelectableLightsAdapter(lightList);
+            mLightsListRecycler.setHasFixedSize(true);
+            mLightsListRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mLightsListRecycler.setAdapter(adapter);
         }
         else
         {

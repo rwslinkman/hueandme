@@ -56,7 +56,7 @@
     <string name="groupdetail_deletegroupbutton_text">Verwijder groep uit Hue</string>
     <string name="groupdetail_changename_error_emptyname">Vul een groepsnaam in</string>
     <string name="groupdetail_deletegroup_confirm_title">Groep verwijderen</string>
-    <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden</string>
+    <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden.</string>
     <string name="groupdetail_deletegroup_confirm_ok">Bevestigen</string>
     <string name="groupdetail_deletegroup_confirm_cancel">Annuleren</string>
     <string name="toolbar_lights_add">Voeg toe</string>

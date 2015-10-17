@@ -1,15 +1,9 @@
 package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import nl.rwslinkman.hueme.R;
-import nl.rwslinkman.hueme.ui.MainActivityView;
 
 public class LoadingFragment extends AbstractFragment
 {
@@ -22,7 +16,7 @@ public class LoadingFragment extends AbstractFragment
     @Override
     public void createFragment(View rootView)
     {
-//        CircularProgressView progressView = (CircularProgressView) rootView.findViewById(R.id.loading_spinner_view);
+        // This fragment does not require action with any UI components
     }
 
     public static LoadingFragment newInstance()

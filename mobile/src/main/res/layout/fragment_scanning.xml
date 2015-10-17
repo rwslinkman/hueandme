@@ -27,17 +27,13 @@
             android:textSize="@dimen/scanning_warning_size"
             android:visibility="invisible"/>
 
-        <com.github.rahatarmanahmed.cpv.CircularProgressView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
             android:id="@+id/scanning_spinner_view"
             android:layout_width="@dimen/scanning_spinner_width"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/scanning_spinner_width"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/scanning_spinner_margintop"
-            app:cpv_animAutostart="true"
-            app:cpv_indeterminate="true"
-            app:cpv_thickness="@dimen/scanning_spinner_thickness"
-            app:cpv_color="@color/rwslinkman_blue_light"/>
+            android:background="@color/rwslinkman_blue_light" />
 
         <TextView
             android:id="@+id/scanning_text_view"
