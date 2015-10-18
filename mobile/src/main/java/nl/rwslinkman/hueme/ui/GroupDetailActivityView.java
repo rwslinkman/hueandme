@@ -2,6 +2,7 @@ package nl.rwslinkman.hueme.ui;
 
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +20,7 @@ import com.philips.lighting.model.PHLightState;
 import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.helper.HueColorConverter;
+import nl.rwslinkman.hueme.helper.NoAttributes;
 import nl.rwslinkman.hueme.helper.PhilipsHSB;
 
 /**
@@ -191,39 +193,37 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
 
     private void showDeleteGroupDialog()
     {
+        // Prepare texts
         String title = mActivity.getString(R.string.groupdetail_deletegroup_confirm_title);
         String message = mActivity.getString(R.string.groupdetail_deletegroup_confirm_message);
         String ok = mActivity.getString(R.string.groupdetail_deletegroup_confirm_ok);
         String cancel = mActivity.getString(R.string.groupdetail_deletegroup_confirm_cancel);
 
+        // Create dialog
         final Dialog dialog = new Dialog(this.mActivity, title, message);
+
+        // Add cancel button (must be done before Dialog.show(); )
+        dialog.addCancelButton(cancel, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        // Show dialog
         dialog.show();
 
+        // Obtain acceptButton and modify it
         ButtonFlat acceptButton = dialog.getButtonAccept();
         acceptButton.setText(ok);
-        acceptButton.setOnClickListener(new View.OnClickListener()
-        {
+        acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mActivity.deleteActiveGroupPermanently();
                 dialog.dismiss();
                 GroupDetailActivityView.this.setAllViewsEnabled(false);
             }
         });
-
-        ButtonFlat cancelButton = dialog.getButtonCancel();
-        cancelButton.setText(cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
     }
 
     @Override

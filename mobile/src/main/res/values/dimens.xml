@@ -53,7 +53,7 @@
     <dimen name="groupdetail_onofftext_margintop">6dp</dimen>
     <dimen name="groupdetail_onofftext_marginside">12dp</dimen>
     <dimen name="groupdetail_onofftext_textsize">24sp</dimen>
-    <dimen name="groupdetail_onoffswitch_margintop">6dp</dimen>
+    <dimen name="groupdetail_onoffswitch_margintop">4dp</dimen>
     <dimen name="groupdetail_onoffswitch_marginside">12dp</dimen>
     <dimen name="groupdetail_nameeditview_textsize">24sp</dimen>
     <dimen name="groupdetail_changenamebutton_margintop">9dp</dimen>
