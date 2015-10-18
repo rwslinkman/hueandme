@@ -30,12 +30,30 @@ import nl.rwslinkman.hueme.ui.SelectableLightsAdapter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AddGroupFragment extends AbstractFragment implements View.OnClickListener, PHGroupListener {
+public class AddGroupFragment extends AbstractActionMenuFragment implements View.OnClickListener, PHGroupListener
+{
     public static final String TAG = AddGroupFragment.class.getSimpleName();
     private RecyclerView mLightsListRecycler;
     private Button saveButton;
     private SelectableLightsAdapter mSelectableLightsAdapter;
     private AppCompatEditText mGroupNameField;
+
+    @Override
+    public int getMenuResource()
+    {
+        return R.menu.toolbarmenu_addgroup;
+    }
+
+    @Override
+    public boolean handleMenuItemClick(MenuItem item)
+    {
+        if(item.getItemId() == R.id.addgroup_cancel_action)
+        {
+            MainActivityView view = ((MainActivity) getActivity()).getView();
+            view.displayGroups();
+        }
+        return false;
+    }
 
     @Override
     public int getLayoutResource()
@@ -85,7 +103,7 @@ public class AddGroupFragment extends AbstractFragment implements View.OnClickLi
         Bundle args = new Bundle();
         args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.AddGroup.getValue());
         fragment.setArguments(args);
-        fragment.setHasOptionsMenu(false);
+        fragment.setHasOptionsMenu(true);
         return fragment;
     }
 

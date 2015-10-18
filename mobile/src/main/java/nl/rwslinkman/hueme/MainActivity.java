@@ -34,11 +34,13 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         {
             String action = intent.getAction();
             switch (action) {
-                case HueService.DISPLAY_NO_BRIDGE_STATE:
+                case HueService.DISPLAY_NO_BRIDGE_STATE: {
                     // TODO: Display "NoBridgeFragment"
                     Log.e(TAG, "No bridge found, received via broadcast");
                     break;
+                }
                 case HueService.HUE_HEARTBEAT_UPDATE: {
+                    Log.i(TAG, "Hue heartbeat in MainActivity");
                     HueService service = app.getHueService();
                     service.unregisterReceiver(this);
 
@@ -93,8 +95,20 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     protected void onPause()
     {
         super.onPause();
+        this.unregisterServiceReceiver();
+    }
+
+    public void unregisterServiceReceiver()
+    {
         HueService service = app.getHueService();
         service.unregisterReceiver(hueUpdateReceiver);
+    }
+
+    public void registerServiceReceiver(IntentFilter updatesFilter)
+    {
+        //
+        HueService service = app.getHueService();
+        service.registerReceiver(hueUpdateReceiver, updatesFilter);
     }
 
     @Override
@@ -103,9 +117,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         if(requestCode == REQUESTCODE_DETAIL_GROUP)
         {
             Log.d(TAG, "Returned from GroupDetailActivity");
-            //
-            HueService service = app.getHueService();
-            service.registerReceiver(hueUpdateReceiver, getDisplayUpdatesFilter());
+            this.registerServiceReceiver(getDisplayUpdatesFilter());
         }
         else if(requestCode == REQUESTCODE_DETAIL_LIGHT)
         {
@@ -134,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     public void onHueServiceReady()
     {
         HueService service = app.getHueService();
-        service.registerReceiver(hueUpdateReceiver, this.getDisplayUpdatesFilter());
+        this.registerServiceReceiver(this.getDisplayUpdatesFilter());
 
         if(service.getCurrentServiceState() == HueService.STATE_CONNECTED)
         {
@@ -157,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         Log.d(TAG, "Hue service no longer available");
     }
 
-    private IntentFilter getDisplayUpdatesFilter()
+    public IntentFilter getDisplayUpdatesFilter()
     {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(HueService.DISPLAY_NO_BRIDGE_STATE);

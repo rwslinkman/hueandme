@@ -125,9 +125,9 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         mNavigationView.inflateMenu(R.menu.navmenu_default);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        // TODO: Investigate if I should check the NavigationView to determine the next method
         this.displayGroups();
     }
-
 
     public void displayGroups()
     {
@@ -220,6 +220,8 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayAddGroup()
     {
+        this.mActivity.unregisterServiceReceiver();
+
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
