@@ -61,5 +61,8 @@
     <dimen name="addgroup_title_textsize">45sp</dimen>
     <dimen name="addgroup_subtitle_textsize">20sp</dimen>
     <dimen name="addgroup_lightslist_margintop">12dp</dimen>
+    <dimen name="addgroup_groupnamefield_marginside">9dp</dimen>
+    <dimen name="addgroup_nameeditview_textsize">24sp</dimen>
+    <dimen name="addgroup_groupname_margintop">12dp</dimen>
 
 </resources>

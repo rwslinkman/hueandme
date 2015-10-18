@@ -1,29 +1,37 @@
 package nl.rwslinkman.hueme.ui;
 
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.gc.materialdesign.views.CheckBox;
 import com.philips.lighting.model.PHLight;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.helper.PlaceholderViewHolder;
 
 public class SelectableLightsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
     private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
     private static final int VIEW_TYPE_OBJECT_VIEW = 1;
-    private OnConnectButtonListener mConnectListener;
     private List<PHLight> mDataset;
+    private Resources mResources;
+    private Map<PHLight, Boolean> mSelectedMap;
 
-    public SelectableLightsAdapter(List<PHLight> lights)
+    public SelectableLightsAdapter(Resources res, List<PHLight> lights)
     {
-        mDataset = lights;
+        this.mResources = res;
+        this.mDataset = lights;
+        this.mSelectedMap = new HashMap<>();
     }
 
     @Override
@@ -38,27 +46,28 @@ public class SelectableLightsAdapter extends RecyclerView.Adapter<RecyclerView.V
     {
         if (holder instanceof SelectableLightsAdapter.ViewHolder)
         {
-//            ViewHolder vh = (ViewHolder) holder;
-//            if(vh.isPlaceholderView())
-//            {
-//                vh.mIconView.setText(R.string.fa_exclamation_circle);
-//                vh.mIPaddressView.setText(R.string.item_ap_emptylist);
-//                vh.mConnectButton.setVisibility(View.INVISIBLE);
-//            }
-//            else
-//            {
-//                final PHLight accessPoint = mDataset.get(position);
-//                vh.mIPaddressView.setText(accessPoint);
-//                vh.mConnectButton.setOnClickListener(new View.OnClickListener()
-//                {
-//                    @Override
-//                    public void onClick(View v)
-//                    {
-//                        // Pass click to real listener and provide Hue IP address
-//                        mConnectListener.onConnectClick(v, accessPoint);
-//                    }
-//                });
-//            }
+            final ViewHolder vh = (ViewHolder) holder;
+            if(vh.isPlaceholderView())
+            {
+                vh.mCheckboxView.setVisibility(View.GONE);
+                vh.mIndicatorBulbView.setTextColor(this.mResources.getColor(R.color.android_red));
+                vh.mLightNameView.setText(this.mResources.getString(R.string.adapter_lightsselectable_nolights));
+            }
+            else
+            {
+                final PHLight light = mDataset.get(position);
+                this.mSelectedMap.put(light, false);
+                vh.mCheckboxView.setOncheckListener(new CheckBox.OnCheckListener() {
+                    @Override
+                    public void onCheck(CheckBox checkBox, boolean isChecked) {
+                        int newIndicatorColor = (isChecked) ? R.color.rwslinkman_blue_light : android.R.color.darker_gray;
+                        vh.mIndicatorBulbView.setTextColor(mResources.getColor(newIndicatorColor));
+
+                        mSelectedMap.put(light, isChecked);
+                    }
+                });
+                vh.mLightNameView.setText(light.getName());
+            }
         }
     }
 
@@ -79,30 +88,34 @@ public class SelectableLightsAdapter extends RecyclerView.Adapter<RecyclerView.V
         return (mDataset.isEmpty()) ? VIEW_TYPE_EMPTY_LIST_PLACEHOLDER : VIEW_TYPE_OBJECT_VIEW;
     }
 
-    public interface OnConnectButtonListener
+    public List<PHLight> getSelectedLights()
     {
-        void onConnectClick(View connectButton, PHLight ipAddress);
+        List<PHLight> selectedLights = new ArrayList<>();
+        for (Map.Entry<PHLight, Boolean> entry :this.mSelectedMap.entrySet())
+        {
+            if(entry.getValue())
+            {
+                selectedLights.add(entry.getKey());
+            }
+        }
+        return selectedLights;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    public static class ViewHolder extends PlaceholderViewHolder
     {
-        public TextAwesome mIconView;
-        public TextView mIPaddressView;
-        public Button mConnectButton;
-        private boolean mIsPlaceholder;
+        public CheckBox mCheckboxView;
+        public TextAwesome mIndicatorBulbView;
+        public TextView mLightNameView;
+
 
         public ViewHolder(View holderView, boolean isPlaceholderView)
         {
-            super(holderView);
-            this.mIsPlaceholder = isPlaceholderView;
-            mIconView = (TextAwesome) holderView.findViewById(R.id.item_ap_icon);
-            mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
-            mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
-        }
+            super(holderView, isPlaceholderView);
 
-        public boolean isPlaceholderView()
-        {
-            return this.mIsPlaceholder;
+            // Items
+            this.mCheckboxView = (CheckBox) holderView.findViewById(R.id.item_lightselectable_checkbox);
+            this.mIndicatorBulbView = (TextAwesome) holderView.findViewById(R.id.item_lightselectable_indicator);
+            this.mLightNameView = (TextView) holderView.findViewById(R.id.item_lightselectable_name);
         }
     }
 }

@@ -2,11 +2,9 @@ package nl.rwslinkman.hueme.ui;
 
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.gc.materialdesign.views.ButtonFlat;
@@ -20,7 +18,6 @@ import com.philips.lighting.model.PHLightState;
 import nl.rwslinkman.hueme.GroupDetailActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.helper.HueColorConverter;
-import nl.rwslinkman.hueme.helper.NoAttributes;
 import nl.rwslinkman.hueme.helper.PhilipsHSB;
 
 /**
@@ -81,7 +78,6 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
         this.mDeleteGroupButton.setOnClickListener(this);
     }
 
-
     public void showGroupView(final PHLightState state, final String groupName)
     {
         if(state == null || groupName == null || groupName.isEmpty())
@@ -89,11 +85,9 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
             throw new NullPointerException("Both parameters must be suppplied");
         }
 
-        mActivity.runOnUiThread(new Runnable()
-        {
+        mActivity.runOnUiThread(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 int color = HueColorConverter.convertStateToColor(state);
 
                 mToolbar.setTitle(groupName);

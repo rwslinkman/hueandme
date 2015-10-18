@@ -11,6 +11,7 @@ import java.util.List;
 
 import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.helper.PlaceholderViewHolder;
 
 public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 {
@@ -83,25 +84,18 @@ public class HueIPAddressAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onConnectClick(View connectButton, String ipAddress);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
+    public static class ViewHolder extends PlaceholderViewHolder
     {
         public TextAwesome mIconView;
         public TextView mIPaddressView;
         public Button mConnectButton;
-        private boolean mIsPlaceholder;
 
         public ViewHolder(View holderView, boolean isPlaceholderView)
         {
-            super(holderView);
-            this.mIsPlaceholder = isPlaceholderView;
+            super(holderView, isPlaceholderView);
             mIconView = (TextAwesome) holderView.findViewById(R.id.item_ap_icon);
             mIPaddressView = (TextView) holderView.findViewById(R.id.item_ap_ipaddress);
             mConnectButton = (Button) holderView.findViewById(R.id.item_ap_connect);
-        }
-
-        public boolean isPlaceholderView()
-        {
-            return this.mIsPlaceholder;
         }
     }
 }
