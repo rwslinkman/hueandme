@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.gc.materialdesign.views.Switch;
 import com.philips.lighting.model.PHBridgeResource;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.R;
@@ -30,11 +32,11 @@ public class BridgeResourceSwitchAdapter<T extends PHBridgeResource> extends Rec
     private static final int VIEW_TYPE_EMPTY_LIST_PLACEHOLDER = 0;
     private static final int VIEW_TYPE_OBJECT_VIEW = 1;
     private final String mNoResourceAvailableText;
-    private List<T> mDataset;
+    private Map<T, Boolean> mDataset;
     private Resources mResources;
     private OnBridgeResourceItemEventListener mListener;
 
-    public BridgeResourceSwitchAdapter(Resources res, List<T> items, String noResourceText)
+    public BridgeResourceSwitchAdapter(Resources res, Map<T, Boolean> items, String noResourceText)
     {
         this.mResources = res;
         this.mDataset = items;
@@ -67,14 +69,16 @@ public class BridgeResourceSwitchAdapter<T extends PHBridgeResource> extends Rec
                 vh.mIndicatorBulbView.setTextColor(this.mResources.getColor(R.color.android_red));
                 vh.mLightNameView.setText(this.mNoResourceAvailableText);
                 vh.mOnOffSwitch.setVisibility(View.GONE);
-//                this.mResources.getString(R.string.adapter_lightsselectable_nolights)
             }
             else
             {
                 // This is a regular view
-                T resource = mDataset.get(position);
+                T resource = this.getItemByPosition(position);
+                boolean isItemOn = this.mDataset.get(resource);
+                // Populate item view with data
                 vh.mContainer.setTag(resource.getIdentifier());
                 vh.mLightNameView.setText(resource.getName());
+                vh.mOnOffSwitch.setChecked(isItemOn);
                 vh.mOnOffSwitch.setOncheckListener(this);
             }
         }
@@ -145,7 +149,7 @@ public class BridgeResourceSwitchAdapter<T extends PHBridgeResource> extends Rec
     private T getBridgeResourceByIdentifier(String identifier)
     {
         T clickedItem = null;
-        for(T item : this.mDataset)
+        for(T item : getDatasetKeysList())
         {
             if(identifier.equals(item.getIdentifier()))
             {
@@ -155,5 +159,15 @@ public class BridgeResourceSwitchAdapter<T extends PHBridgeResource> extends Rec
         }
         assert clickedItem != null;
         return clickedItem;
+    }
+
+    private T getItemByPosition(int position)
+    {
+        return getDatasetKeysList().get(position);
+    }
+
+    private List<T> getDatasetKeysList()
+    {
+        return new ArrayList<>(this.mDataset.keySet());
     }
 }

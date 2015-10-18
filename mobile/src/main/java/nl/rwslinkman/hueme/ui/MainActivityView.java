@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -141,7 +140,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void switchFragment(AbstractFragment fragmentToDisplay)
     {
-        Log.d(TAG, "Switching to fragment " + fragmentToDisplay.getClass().getSimpleName());
         // update the main content by replacing fragments
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         fragmentManager

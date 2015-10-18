@@ -9,12 +9,19 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHBridgeResourcesCache;
 import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.BridgeResourceSwitchAdapter;
 
 /**
@@ -37,8 +44,15 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
             List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
             String noGroupsText = this.getString(R.string.groups_nogroups_text);
 
+            Map<PHGroup, Boolean> hueStateGroups = new HashMap<>();
+            for(PHGroup group : hueGroups)
+            {
+                PHLightState groupState = this.getGroupState(group);
+                hueStateGroups.put(group, groupState.isOn());
+            }
+
             // Prepare adapter
-            this.mGroupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueGroups, noGroupsText);
+            this.mGroupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueStateGroups, noGroupsText);
             this.mGroupsAdapter.setOnBridgeResourceItemEventListener(this);
 
             // Insert adapter
@@ -50,6 +64,18 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
         {
             Log.e(TAG, "No bridge set :(");
         }
+    }
+
+    public PHLightState getGroupState(PHGroup group)
+    {
+        Map<String, PHLight> lights = this.mActiveBridge.getResourceCache().getLights();
+        List<String> lightsInGroup = group.getLightIdentifiers();
+        if (!lightsInGroup.isEmpty())
+        {
+            String repLightID = lightsInGroup.get(0);
+            return lights.get(repLightID).getLastKnownLightState();
+        }
+        return null;
     }
 
     @Override
@@ -100,7 +126,16 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
     @Override
     public void onBridgeResourceItemSwitchChanged(PHGroup clickedItem, boolean isChecked)
     {
-        String onoff = (isChecked) ? "ON" : "OFF";
-        Log.d(TAG, "Groups list item clicked: Turn " + onoff + " lights in " + clickedItem.getName());
+        if(this.mActiveBridge != null)
+        {
+            PHLightState state = new PHLightState();
+            state.setOn(isChecked);
+
+            this.mActiveBridge.setLightStateForGroup(clickedItem.getIdentifier(), state);
+        }
+        else
+        {
+            Log.e(TAG, "No bridge set :(");
+        }
     }
 }
