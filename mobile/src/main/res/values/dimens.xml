@@ -64,5 +64,6 @@
     <dimen name="addgroup_groupnamefield_marginside">9dp</dimen>
     <dimen name="addgroup_nameeditview_textsize">24sp</dimen>
     <dimen name="addgroup_groupname_margintop">12dp</dimen>
+    <dimen name="groupsitem_icon_marginvert">8dp</dimen>
 
 </resources>

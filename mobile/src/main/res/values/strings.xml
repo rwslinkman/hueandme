@@ -69,4 +69,6 @@
     <string name="addgroup_name_empty">U heeft geen groepsnaam opgegeven</string>
     <string name="addgroup_snackbar_success">Nieuwe groep aangemaakt!</string>
     <string name="addgroup_snackbar_undo">Undo</string>
+    <string name="groups_nogroups_text">Geen groepen in uw Hue netwerk</string>
+    <string name="toolbar_addgroup_cancel">Terug</string>
 </resources>

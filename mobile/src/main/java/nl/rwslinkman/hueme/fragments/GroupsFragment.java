@@ -3,25 +3,81 @@ package nl.rwslinkman.hueme.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 
+import com.philips.lighting.model.PHBridge;
+import com.philips.lighting.model.PHBridgeResourcesCache;
 import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHLight;
+import com.philips.lighting.model.PHLightState;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
-import nl.rwslinkman.hueme.ui.HueGroupsAdapter;
+import nl.rwslinkman.hueme.service.HueService;
+import nl.rwslinkman.hueme.ui.BridgeResourceSwitchAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends AbstractActionMenuFragment implements AdapterView.OnItemClickListener
+public class GroupsFragment extends AbstractActionMenuFragment implements BridgeResourceSwitchAdapter.OnBridgeResourceItemEventListener<PHGroup>
 {
+    public static final String TAG = GroupsFragment.class.getSimpleName();
+    private RecyclerView mGroupsListView;
+    private BridgeResourceSwitchAdapter<PHGroup> mGroupsAdapter;
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(this.mActiveBridge != null)
+        {
+            // Prepare data
+            List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
+            String noGroupsText = this.getString(R.string.groups_nogroups_text);
+
+            Map<PHGroup, Boolean> hueStateGroups = new HashMap<>();
+            for(PHGroup group : hueGroups)
+            {
+                PHLightState groupState = this.getGroupState(group);
+                hueStateGroups.put(group, groupState.isOn());
+            }
+
+            // Prepare adapter
+            this.mGroupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueStateGroups, noGroupsText);
+            this.mGroupsAdapter.setOnBridgeResourceItemEventListener(this);
+
+            // Insert adapter
+            mGroupsListView.setHasFixedSize(true);
+            mGroupsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mGroupsListView.setAdapter(mGroupsAdapter);
+        }
+        else
+        {
+            Log.e(TAG, "No bridge set :(");
+        }
+    }
+
+    public PHLightState getGroupState(PHGroup group)
+    {
+        Map<String, PHLight> lights = this.mActiveBridge.getResourceCache().getLights();
+        List<String> lightsInGroup = group.getLightIdentifiers();
+        if (!lightsInGroup.isEmpty())
+        {
+            String repLightID = lightsInGroup.get(0);
+            return lights.get(repLightID).getLastKnownLightState();
+        }
+        return null;
+    }
+
     @Override
     public int getMenuResource()
     {
@@ -48,20 +104,7 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Adapte
     @Override
     public void createFragment(View rootView)
     {
-        RelativeLayout emptyView = (RelativeLayout) rootView.findViewById(R.id.groups_emptyview);
-
-        List<PHGroup> hueGroups = this.mActiveBridge.getResourceCache().getAllGroups();
-        HueGroupsAdapter adapter = new HueGroupsAdapter(getActivity(), hueGroups);
-
-        ListView listView = (ListView) rootView.findViewById(R.id.groups_list_view);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(this);
-
-        if(hueGroups.isEmpty())
-        {
-            listView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
+        this.mGroupsListView = (RecyclerView) rootView.findViewById(R.id.groups_list_view);
     }
 
     public static GroupsFragment newInstance()
@@ -75,9 +118,24 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Adapte
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    public void onBridgeResourceItemClicked(PHGroup clickedItem)
     {
-        PHGroup group = (PHGroup) parent.getItemAtPosition(position);
-        ((MainActivity) getActivity()).startDetailActivity(group);
+        ((MainActivity) getActivity()).startDetailActivity(clickedItem);
+    }
+
+    @Override
+    public void onBridgeResourceItemSwitchChanged(PHGroup clickedItem, boolean isChecked)
+    {
+        if(this.mActiveBridge != null)
+        {
+            PHLightState state = new PHLightState();
+            state.setOn(isChecked);
+
+            this.mActiveBridge.setLightStateForGroup(clickedItem.getIdentifier(), state);
+        }
+        else
+        {
+            Log.e(TAG, "No bridge set :(");
+        }
     }
 }

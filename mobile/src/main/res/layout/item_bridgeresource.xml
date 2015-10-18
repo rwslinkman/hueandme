@@ -4,15 +4,19 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/activity_vertical_margin">
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/item_bridgeresource_container"
+    android:background="?android:attr/selectableItemBackground">
 
     <nl.rwslinkman.awesome.TextAwesome
-        android:id="@+id/groups_item_icon"
+        android:id="@+id/item_bridgeresource_icon"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/groupsitem_icon_marginvert"
+        android:layout_marginBottom="@dimen/groupsitem_icon_marginvert"
         android:layout_marginLeft="@dimen/groupsitem_icon_marginleft"
         android:layout_marginStart="@dimen/groupsitem_icon_marginleft"
         android:gravity="center_vertical"
@@ -21,11 +25,11 @@
         android:textSize="@dimen/groupsitem_icon_size"/>
 
     <TextView
-        android:id="@+id/groups_item_name"
+        android:id="@+id/item_bridgeresource_name"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toEndOf="@id/groups_item_icon"
-        android:layout_toRightOf="@id/groups_item_icon"
+        android:layout_toEndOf="@id/item_bridgeresource_icon"
+        android:layout_toRightOf="@id/item_bridgeresource_icon"
         android:layout_centerVertical="true"
         android:gravity="center_vertical"
         android:layout_marginLeft="@dimen/item_ap_address_marginleft"

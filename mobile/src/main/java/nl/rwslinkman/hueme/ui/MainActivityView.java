@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -125,9 +124,9 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         mNavigationView.inflateMenu(R.menu.navmenu_default);
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        // TODO: Investigate if I should check the NavigationView to determine the next method
         this.displayGroups();
     }
-
 
     public void displayGroups()
     {
@@ -141,7 +140,6 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void switchFragment(AbstractFragment fragmentToDisplay)
     {
-        Log.d(TAG, "Switching to fragment " + fragmentToDisplay.getClass().getSimpleName());
         // update the main content by replacing fragments
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         fragmentManager
@@ -220,6 +218,8 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayAddGroup()
     {
+        this.mActivity.unregisterServiceReceiver();
+
         HueService service = ((HueMe) mActivity.getApplication()).getHueService();
         PHBridge bridge = service.getBridge();
 
