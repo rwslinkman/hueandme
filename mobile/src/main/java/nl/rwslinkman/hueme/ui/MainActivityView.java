@@ -20,6 +20,7 @@ import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.AbstractActionMenuFragment;
 import nl.rwslinkman.hueme.fragments.AbstractFragment;
+import nl.rwslinkman.hueme.fragments.AddGroupFragment;
 import nl.rwslinkman.hueme.fragments.ConnectingFragment;
 import nl.rwslinkman.hueme.fragments.GroupsFragment;
 import nl.rwslinkman.hueme.fragments.InfoFragment;
@@ -140,6 +141,7 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void switchFragment(AbstractFragment fragmentToDisplay)
     {
+        Log.d(TAG, "Switching to fragment " + fragmentToDisplay.getClass().getSimpleName());
         // update the main content by replacing fragments
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         fragmentManager
@@ -218,6 +220,11 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     public void displayAddGroup()
     {
-        // TODO:
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+        PHBridge bridge = service.getBridge();
+
+        AddGroupFragment fragment = AddGroupFragment.newInstance();
+        fragment.setActiveBridge(bridge);
+        this.switchFragment(fragment);
     }
 }

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.philips.lighting.hue.listener.PHGroupListener;
 import com.philips.lighting.model.PHBridge;
@@ -25,6 +26,7 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
 {
     public static final String TAG = GroupDetailActivity.class.getSimpleName();
     public static final String EXTRA_GROUP_IDENTIFIER = "nl.rwslinkman.hueme.groupdetailactivity.extra.group_identifier";
+    private static final int RESULTCODE_GROUP_DELETED = 2203;
     private final BroadcastReceiver groupUpdateReceiver = new BroadcastReceiver()
     {
         @Override
@@ -201,8 +203,21 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
         HueService service = mApp.getHueService();
         // Perform magic
         PHBridge bridge = service.getBridge();
-//        bridge.deleteGroup(mActiveGroup.getIdentifier(), this);
+        bridge.deleteGroup(mActiveGroup.getIdentifier(), this);
 
+        this.setResult(RESULTCODE_GROUP_DELETED);
         this.finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == android.R.id.home)
+        {
+            this.setResult(RESULT_OK);
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

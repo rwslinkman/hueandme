@@ -76,7 +76,7 @@
                 android:textColor="@color/rwslinkman_blue_light"/>
 
             <!-- On/off switch -->
-            <Switch
+            <com.gc.materialdesign.views.Switch
                 android:id="@+id/groupdetail_onoffswitch_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,7 +85,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
-                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside"
+                android:background="@color/rwslinkman_blue_dark"/>
 
             <!-- Divider -->
             <View
@@ -118,7 +119,7 @@
                 android:textColor="@color/rwslinkman_blue_light"/>
 
             <!-- On/off switch -->
-            <Switch
+            <com.gc.materialdesign.views.Switch
                 android:id="@+id/groupdetail_colorloopswitch_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,7 +128,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginEnd="@dimen/groupdetail_onoffswitch_marginside"
-                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside" />
+                android:layout_marginRight="@dimen/groupdetail_onoffswitch_marginside"
+                android:background="@color/rwslinkman_blue_dark"/>
 
             <!-- Divider -->
             <View
@@ -167,7 +169,7 @@
                 android:layout_marginStart="@dimen/groupdetail_groupnamefield_marginside"
                 android:layout_marginLeft="@dimen/groupdetail_groupnamefield_marginside"
                 android:textSize="@dimen/groupdetail_nameeditview_textsize"
-                android:textColor="@color/rwslinkman_blue_light"/>
+                android:textColor="@color/rwslinkman_blue_dark"/>
 
             <!-- "Change" button - change group name -->
             <Button

@@ -1,0 +1,73 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/addgroup_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/addgroup_title_text"
+        android:textSize="@dimen/addgroup_title_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/addgroup_subtitle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addgroup_title_view"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/addgroup_subtitle_text"
+        android:textSize="@dimen/addgroup_subtitle_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <!-- Save button -->
+    <Button
+        android:id="@+id/addgroup_save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/rwslinkman_blue_dark"
+        android:text="@string/addgroup_savebutton_text"
+        android:textColor="@android:color/white"/>
+
+    <!-- EditText to enter group name -->
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/addgroup_groupname_edittext"
+        android:theme="@style/EditTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/addgroup_save_button"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/addgroup_groupname_margintop"
+        android:layout_marginStart="@dimen/addgroup_groupnamefield_marginside"
+        android:layout_marginLeft="@dimen/addgroup_groupnamefield_marginside"
+        android:layout_marginEnd="@dimen/addgroup_groupnamefield_marginside"
+        android:layout_marginRight="@dimen/addgroup_groupnamefield_marginside"
+        android:hint="@string/addgroup_groupname_hint"
+        android:textSize="@dimen/addgroup_nameeditview_textsize"
+        android:textColor="@color/rwslinkman_blue_dark"/>
+
+    <!-- List of selectable lights -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/addgroup_lights_list"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/addgroup_subtitle_view"
+        android:layout_marginTop="@dimen/addgroup_lightslist_margintop"
+        android:layout_above="@id/addgroup_groupname_edittext"
+        android:fastScrollEnabled="false"/>
+
+</RelativeLayout>

@@ -30,6 +30,7 @@ public class InfoFragment extends AbstractFragment
     {
         InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.Info.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(false);
         return fragment;

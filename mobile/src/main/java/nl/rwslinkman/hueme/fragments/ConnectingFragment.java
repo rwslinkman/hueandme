@@ -28,6 +28,7 @@ public class ConnectingFragment extends AbstractFragment
     {
         ConnectingFragment fragment = new ConnectingFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.Connecting.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(false);
         return fragment;

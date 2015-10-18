@@ -56,8 +56,17 @@
     <string name="groupdetail_deletegroupbutton_text">Verwijder groep uit Hue</string>
     <string name="groupdetail_changename_error_emptyname">Vul een groepsnaam in</string>
     <string name="groupdetail_deletegroup_confirm_title">Groep verwijderen</string>
-    <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden</string>
+    <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden.</string>
     <string name="groupdetail_deletegroup_confirm_ok">Bevestigen</string>
     <string name="groupdetail_deletegroup_confirm_cancel">Annuleren</string>
     <string name="toolbar_lights_add">Voeg toe</string>
+    <string name="addgroup_title_text">Nieuwe groep</string>
+    <string name="addgroup_subtitle_text">Kies lampen om een nieuwe groep te maken</string>
+    <string name="addgroup_savebutton_text">Opslaan</string>
+    <string name="adapter_lightsselectable_nolights">Er zijn geen lichten in uw Hue netwerk</string>
+    <string name="addgroup_lights_noneselected">U moet tenminste één lamp selecteren</string>
+    <string name="addgroup_groupname_hint">Vul een groepsnaam in…</string>
+    <string name="addgroup_name_empty">U heeft geen groepsnaam opgegeven</string>
+    <string name="addgroup_snackbar_success">Nieuwe groep aangemaakt!</string>
+    <string name="addgroup_snackbar_undo">Undo</string>
 </resources>

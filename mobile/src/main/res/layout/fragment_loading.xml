@@ -11,16 +11,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_horizontal_margin">
 
-    <com.github.rahatarmanahmed.cpv.CircularProgressView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.gc.materialdesign.views.ProgressBarCircularIndeterminate
         android:id="@+id/loading_spinner_view"
         android:layout_width="@dimen/loading_spinner_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/loading_spinner_width"
         android:layout_centerInParent="true"
-        app:cpv_animAutostart="true"
-        app:cpv_indeterminate="true"
-        app:cpv_thickness="@dimen/loading_spinner_thickness"
-        app:cpv_color="@color/rwslinkman_blue_light"/>
+        android:background="@color/rwslinkman_blue_light" />
 
     <TextView
         android:layout_width="wrap_content"

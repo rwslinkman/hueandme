@@ -5,18 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.rahatarmanahmed.cpv.CircularProgressView;
+import com.gc.materialdesign.views.ProgressBarCircularIndeterminate;
 
 import java.util.ArrayList;
 
@@ -120,7 +117,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
                 HueIPAddressAdapter adapter = new HueIPAddressAdapter(ipAddresses, NoBridgeFragment.this);
                 mRecyclerView.swapAdapter(adapter, true);
 
-                CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+                ProgressBarCircularIndeterminate progressView = (ProgressBarCircularIndeterminate) mRootView.findViewById(R.id.scanning_spinner_view);
                 progressView.setVisibility(View.INVISIBLE);
 
                 TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
@@ -137,7 +134,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
     private void onPushlinkRequired(String ipAddress)
     {
         // Hide spinner view
-        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+        ProgressBarCircularIndeterminate progressView = (ProgressBarCircularIndeterminate) mRootView.findViewById(R.id.scanning_spinner_view);
         progressView.setVisibility(View.INVISIBLE);
         // Show warning icon
         TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
@@ -164,7 +161,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
             public void run() {
                 mRecyclerView.setVisibility(View.GONE);
 
-                CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+                ProgressBarCircularIndeterminate progressView = (ProgressBarCircularIndeterminate) mRootView.findViewById(R.id.scanning_spinner_view);
                 progressView.setVisibility(View.INVISIBLE);
 
                 TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
@@ -207,6 +204,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
     {
         NoBridgeFragment fragment = new NoBridgeFragment();
         Bundle args = new Bundle();
+        args.putInt(EXTRA_FRAGMENT_MARKER, FragmentMarker.NoBridge.getValue());
         fragment.setArguments(args);
         fragment.setHasOptionsMenu(false);
         return fragment;
@@ -237,7 +235,7 @@ public class NoBridgeFragment extends AbstractFragment implements View.OnClickLi
     public void onConnectClick(View connectButton, String ipAddress)
     {
         // Show spinner view
-        CircularProgressView progressView = (CircularProgressView) mRootView.findViewById(R.id.scanning_spinner_view);
+        ProgressBarCircularIndeterminate progressView = (ProgressBarCircularIndeterminate) mRootView.findViewById(R.id.scanning_spinner_view);
         progressView.setVisibility(View.VISIBLE);
         // Hide warning icon
         TextAwesome warningView = (TextAwesome) mRootView.findViewById(R.id.scanning_warning_view);
