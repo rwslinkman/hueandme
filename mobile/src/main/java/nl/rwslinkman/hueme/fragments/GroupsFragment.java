@@ -15,16 +15,16 @@ import java.util.List;
 
 import nl.rwslinkman.hueme.MainActivity;
 import nl.rwslinkman.hueme.R;
-import nl.rwslinkman.hueme.ui.BridgeResourceAdapter;
+import nl.rwslinkman.hueme.ui.BridgeResourceSwitchAdapter;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupsFragment extends AbstractActionMenuFragment implements BridgeResourceAdapter.OnBridgeResourceItemClickedListener<PHGroup>
+public class GroupsFragment extends AbstractActionMenuFragment implements BridgeResourceSwitchAdapter.OnBridgeResourceItemEventListener<PHGroup>
 {
     public static final String TAG = GroupsFragment.class.getSimpleName();
     private RecyclerView mGroupsListView;
-    private BridgeResourceAdapter<PHGroup> mGroupsAdapter;
+    private BridgeResourceSwitchAdapter<PHGroup> mGroupsAdapter;
 
     @Override
     public void onResume()
@@ -38,8 +38,8 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
             String noGroupsText = this.getString(R.string.groups_nogroups_text);
 
             // Prepare adapter
-            this.mGroupsAdapter = new BridgeResourceAdapter<>(this.getResources(), hueGroups, noGroupsText);
-            this.mGroupsAdapter.setOnBridgeResourceItemClickedListener(this);
+            this.mGroupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueGroups, noGroupsText);
+            this.mGroupsAdapter.setOnBridgeResourceItemEventListener(this);
 
             // Insert adapter
             mGroupsListView.setHasFixedSize(true);
@@ -95,5 +95,12 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
     public void onBridgeResourceItemClicked(PHGroup clickedItem)
     {
         ((MainActivity) getActivity()).startDetailActivity(clickedItem);
+    }
+
+    @Override
+    public void onBridgeResourceItemSwitchChanged(PHGroup clickedItem, boolean isChecked)
+    {
+        String onoff = (isChecked) ? "ON" : "OFF";
+        Log.d(TAG, "Groups list item clicked: Turn " + onoff + " lights in " + clickedItem.getName());
     }
 }

@@ -16,7 +16,7 @@
         android:minHeight="@dimen/abc_action_bar_default_height_material" />
 
 
-    <!-- DrawerLayout below toolbar (menu + container) -->
+    <!-- DrawerLayout below toolbar (menu + mContainer) -->
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
         android:layout_width="match_parent"

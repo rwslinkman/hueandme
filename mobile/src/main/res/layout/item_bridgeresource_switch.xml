@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/item_bridgeresource_container"
+    android:background="?android:attr/selectableItemBackground">
+
+    <nl.rwslinkman.awesome.TextAwesome
+        android:id="@+id/item_bridgeresource_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="@dimen/groupsitem_icon_marginvert"
+        android:layout_marginBottom="@dimen/groupsitem_icon_marginvert"
+        android:layout_marginLeft="@dimen/groupsitem_icon_marginleft"
+        android:layout_marginStart="@dimen/groupsitem_icon_marginleft"
+        android:gravity="center_vertical"
+        android:text="@string/fa_lightbulb_o"
+        android:textColor="@color/rwslinkman_blue_light"
+        android:textSize="@dimen/groupsitem_icon_size"/>
+
+    <!-- On/Off switch -->
+    <com.gc.materialdesign.views.Switch
+        android:id="@+id/item_bridgeresource_onoff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@color/rwslinkman_blue_dark"/>
+
+    <TextView
+        android:id="@+id/item_bridgeresource_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/item_bridgeresource_icon"
+        android:layout_toRightOf="@id/item_bridgeresource_icon"
+        android:layout_alignEnd="@id/item_bridgeresource_onoff"
+        android:layout_alignRight="@id/item_bridgeresource_onoff"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/item_ap_address_marginleft"
+        android:layout_marginStart="@dimen/item_ap_address_marginleft"
+        android:textColor="@color/rwslinkman_blue_dark"
+        android:textSize="@dimen/groupsitem_name_textsize"/>
+
+</RelativeLayout>
