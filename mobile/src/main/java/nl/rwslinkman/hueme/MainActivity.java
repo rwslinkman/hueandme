@@ -106,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
 
     public void registerServiceReceiver(IntentFilter updatesFilter)
     {
-        //
         HueService service = app.getHueService();
         service.registerReceiver(hueUpdateReceiver, updatesFilter);
     }

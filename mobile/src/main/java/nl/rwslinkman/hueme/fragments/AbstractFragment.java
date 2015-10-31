@@ -1,5 +1,7 @@
 package nl.rwslinkman.hueme.fragments;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,7 +14,9 @@ import android.view.ViewGroup;
 
 import com.philips.lighting.model.PHBridge;
 
+import nl.rwslinkman.hueme.HueMe;
 import nl.rwslinkman.hueme.R;
+import nl.rwslinkman.hueme.service.HueService;
 
 /**
  * @author Rick Slinkman
@@ -72,4 +76,19 @@ public abstract class AbstractFragment extends Fragment
     {
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+    protected void registerUpdates(BroadcastReceiver receiver, IntentFilter requestedUpdates)
+    {
+        HueMe app = (HueMe) getActivity().getApplication();
+        HueService service = app.getHueService();
+        service.registerReceiver(receiver, requestedUpdates);
+    }
+
+    protected void unregisterUpdates(BroadcastReceiver receiver)
+    {
+        HueMe app = (HueMe) getActivity().getApplication();
+        HueService service = app.getHueService();
+        service.unregisterReceiver(receiver);
+    }
+
 }

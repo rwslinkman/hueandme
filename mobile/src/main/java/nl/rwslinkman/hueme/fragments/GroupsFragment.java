@@ -1,6 +1,10 @@
 package nl.rwslinkman.hueme.fragments;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,8 +13,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.philips.lighting.model.PHBridge;
-import com.philips.lighting.model.PHBridgeResourcesCache;
 import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
@@ -31,7 +33,24 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
 {
     public static final String TAG = GroupsFragment.class.getSimpleName();
     private RecyclerView mGroupsListView;
-    private BridgeResourceSwitchAdapter<PHGroup> mGroupsAdapter;
+    private BroadcastReceiver groupsReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            switch(intent.getAction())
+            {
+                case HueService.HUE_GROUPS_STATE_UPDATE:
+                    Log.d(TAG, "Group state updated");
+                    break;
+                case HueService.HUE_LIGHTS_STATE_UPDATE:
+                    Log.d(TAG, "Lights state updated");
+                    break;
+                case HueService.HUE_POSSIBLE_STATE_UPDATE:
+                    Log.d(TAG, "Possible state update");
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onResume()
@@ -52,18 +71,20 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
             }
 
             // Prepare adapter
-            this.mGroupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueStateGroups, noGroupsText);
-            this.mGroupsAdapter.setOnBridgeResourceItemEventListener(this);
+            BridgeResourceSwitchAdapter<PHGroup> groupsAdapter = new BridgeResourceSwitchAdapter<>(this.getResources(), hueStateGroups, noGroupsText);
+            groupsAdapter.setOnBridgeResourceItemEventListener(this);
 
             // Insert adapter
             mGroupsListView.setHasFixedSize(true);
             mGroupsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mGroupsListView.setAdapter(mGroupsAdapter);
+            mGroupsListView.setAdapter(groupsAdapter);
         }
         else
         {
             Log.e(TAG, "No bridge set :(");
         }
+
+        this.registerUpdates(this.groupsReceiver, this.getGroupUpdatesIntentFilter());
     }
 
     public PHLightState getGroupState(PHGroup group)
@@ -137,5 +158,14 @@ public class GroupsFragment extends AbstractActionMenuFragment implements Bridge
         {
             Log.e(TAG, "No bridge set :(");
         }
+    }
+
+    public IntentFilter getGroupUpdatesIntentFilter()
+    {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(HueService.HUE_GROUPS_STATE_UPDATE);
+        intentFilter.addAction(HueService.HUE_LIGHTS_STATE_UPDATE);
+        intentFilter.addAction(HueService.HUE_POSSIBLE_STATE_UPDATE);
+        return intentFilter;
     }
 }
