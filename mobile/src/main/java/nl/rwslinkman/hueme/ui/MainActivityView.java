@@ -59,8 +59,11 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close
         );
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+        if(mActivity.getSupportActionBar() != null)
+        {
+            mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+        }
         mDrawerToggle.syncState();
 
         // Init NavigationDrawer
@@ -128,25 +131,27 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         this.displayGroups();
     }
 
-    public void displayGroups()
-    {
-        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
-        PHBridge bridge = service.getBridge();
-
-        GroupsFragment fragment = GroupsFragment.newInstance();
-        fragment.setActiveBridge(bridge);
-        this.switchFragment(fragment);
-    }
-
     private void switchFragment(AbstractFragment fragmentToDisplay)
     {
-        // update the main content by replacing fragments
+        this.switchFragment(fragmentToDisplay, null);
+    }
+
+    private void switchFragment(AbstractFragment fragmentToDisplay, PHBridge activeBridge)
+    {
+        if(activeBridge != null)
+        {
+            // Allow fragment to use it
+            fragmentToDisplay.setActiveBridge(activeBridge);
+        }
+
+        // Update the main content by replacing fragments
         FragmentManager fragmentManager = mActivity.getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
                 .replace(R.id.container, fragmentToDisplay)
                 .commit();
 
+        // Close drawer if needed
         if(mDrawerLayout.isDrawerOpen(mNavigationView))
         {
             mDrawerLayout.closeDrawer(mNavigationView);
@@ -176,6 +181,15 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         return false;
     }
 
+    public void displayGroups()
+    {
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+        PHBridge bridge = service.getBridge();
+
+        GroupsFragment fragment = GroupsFragment.newInstance();
+        this.switchFragment(fragment, bridge);
+    }
+
     private void displayInfo()
     {
         InfoFragment fragment = InfoFragment.newInstance();
@@ -184,8 +198,11 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
 
     private void displayLights()
     {
+        HueService service = ((HueMe) mActivity.getApplication()).getHueService();
+        PHBridge bridge = service.getBridge();
+
         LightsFragment fragment = LightsFragment.newInstance();
-        this.switchFragment(fragment);
+        this.switchFragment(fragment, bridge);
     }
 
     public void displayConnectingState()
@@ -197,11 +214,12 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
     @Override
     public boolean onMenuItemClick(MenuItem item)
     {
-        if(this.mCurrentFragment.hasOptionsMenu())
-        {
-            return ((AbstractActionMenuFragment) this.mCurrentFragment).handleMenuItemClick(item);
-        }
-        return false;
+//        if(this.mCurrentFragment.hasOptionsMenu())
+//        {
+//            return ((AbstractActionMenuFragment) this.mCurrentFragment).handleMenuItemClick(item);
+//        }
+//        return false;
+        return this.mCurrentFragment.hasOptionsMenu() && ((AbstractActionMenuFragment) this.mCurrentFragment).handleMenuItemClick(item);
     }
 
     public boolean handleOptionsMenu(MenuInflater inflater, Menu menu)
@@ -226,5 +244,9 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         AddGroupFragment fragment = AddGroupFragment.newInstance();
         fragment.setActiveBridge(bridge);
         this.switchFragment(fragment);
+    }
+
+    public void displaySearchLights() {
+        // TODO: show new fragment
     }
 }

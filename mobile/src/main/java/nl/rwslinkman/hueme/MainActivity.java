@@ -5,13 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHBridgeResource;
 import com.philips.lighting.model.PHLight;
 
 import nl.rwslinkman.hueme.service.HueService;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
             switch (action) {
                 case HueService.DISPLAY_NO_BRIDGE_STATE: {
                     // TODO: Display "NoBridgeFragment"
-                    Log.e(TAG, "No bridge found, received via broadcast");
+                    Log.wtf(TAG, "No bridge found, received via broadcast");
                     break;
                 }
                 case HueService.HUE_HEARTBEAT_UPDATE: {
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
                     HueService service = app.getHueService();
                     service.unregisterReceiver(this);
 
-                    runOnUiThread(new Runnable() {
+                    new Handler().post(new Runnable() {
                         @Override
                         public void run() {
                             mView.displayConnectedState();
@@ -188,18 +190,18 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         return mView;
     }
 
-    public void startDetailActivity(PHGroup group)
+    public void startDetailActivity(PHBridgeResource resource)
     {
+        if(resource instanceof PHLight)
+        {
+            Toast.makeText(this, "Light detail Activity", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // TODO: Convert to BridgeResourceDetailActivity
         Intent detailIntent = new Intent(this, GroupDetailActivity.class);
-        detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, group.getIdentifier());
+        detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, resource.getIdentifier());
 
         app.getHueService().unregisterReceiver(hueUpdateReceiver);
         this.startActivityForResult(detailIntent, REQUESTCODE_DETAIL_GROUP);
-    }
-
-    public void startDetailActivity(PHLight light)
-    {
-        Log.d(TAG, "Switching to LightDetailActivity (todo)");
-        // TODO: See method startDetailActivity(PHGroup group);
     }
 }

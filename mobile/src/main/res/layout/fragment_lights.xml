@@ -1,20 +1,46 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="nl.rwslinkman.hueme.fragments.LightsFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    tools:context="nl.rwslinkman.hueme.fragments.LightsFragment">
+    android:background="@android:color/white">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/lights_title_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/lights_title_text"
+        android:textSize="@dimen/lights_title_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <TextView
+        android:id="@+id/lights_subtitle_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lights_title_view"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:text="@string/lights_subtitle_text"
+        android:textSize="@dimen/lights_subtitle_textsize"
+        android:textColor="@color/rwslinkman_blue_dark" />
+
+    <!-- List of selectable lights -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/lights_list_view"
+        android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/lights_text_helloworld" />
+        android:layout_below="@id/lights_subtitle_view"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/lights_list_margintop"
+        android:fastScrollEnabled="false"
+        android:divider="@android:color/darker_gray"
+        android:focusable="true"
+        android:clickable="true" />
 
-</FrameLayout>
+</RelativeLayout>

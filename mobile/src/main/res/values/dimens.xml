@@ -9,39 +9,52 @@
     <dimen name="navigation_header_height">120dp</dimen>
     <dimen name="navdrwr_statebulb">20pt</dimen>
     <dimen name="drawerhead_statebulb_padding">8dp</dimen>
+    <dimen name="navigationheader_statemsg_textsize">18sp</dimen>
 
+    <!-- Loading -->
     <dimen name="loading_spinner_width">100dp</dimen>
     <dimen name="loading_spinner_thickness">6dp</dimen>
     <dimen name="loading_text_margintop">16dp</dimen>
     <dimen name="loading_text_textsize">18sp</dimen>
-    <dimen name="navigationheader_statemsg_textsize">18sp</dimen>
+    <!-- No bridges -->
     <dimen name="nobridges_warning_size">120sp</dimen>
     <dimen name="nobridges_startscanbtn_margintop">16dp</dimen>
+    <!-- Scanning -->
     <dimen name="scanning_spinner_thickness">6dp</dimen>
     <dimen name="scanning_spinner_margintop">50dp</dimen>
     <dimen name="scanning_spinner_width">80dp</dimen>
     <dimen name="scanning_text_margintop">12dp</dimen>
     <dimen name="scanning_listbridges_marginTop">12dp</dimen>
+    <dimen name="scanning_warning_size">110sp</dimen>
+    <dimen name="scanning_warning_margintop">30dp</dimen>
+    <dimen name="scanning_btnsuccess_marginbottom">16dp</dimen>
+    <!-- AP list item -->
     <dimen name="item_ap_address_marginleft">16dp</dimen>
     <dimen name="item_ap_button_marginright">6dp</dimen>
     <dimen name="item_ap_address_textsize">18sp</dimen>
     <dimen name="item_ap_icon_size">30sp</dimen>
     <dimen name="item_ap_icon_marginleft">12dp</dimen>
-    <dimen name="scanning_warning_size">110sp</dimen>
-    <dimen name="scanning_warning_margintop">30dp</dimen>
-    <dimen name="scanning_btnsuccess_marginbottom">16dp</dimen>
-    <dimen name="groups_title_margintop">16dp</dimen>
+    <!-- Groups -->
     <dimen name="groups_title_textsize">45sp</dimen>
+    <dimen name="groups_subtitle_textsize">20sp</dimen>
     <dimen name="groups_list_margintop">16dp</dimen>
     <dimen name="groupsitem_icon_marginleft">16dp</dimen>
     <dimen name="groupsitem_icon_size">35sp</dimen>
     <dimen name="groupsitem_name_textsize">28sp</dimen>
+    <dimen name="groupsitem_icon_marginvert">8dp</dimen>
     <dimen name="groups_empty_textsize">24sp</dimen>
-    <dimen name="groups_subtitle_textsize">20sp</dimen>
+
+    <!-- Lights -->
+    <dimen name="lights_title_textsize">45sp</dimen>
+    <dimen name="lights_subtitle_textsize">0sp</dimen>
+    <dimen name="lights_list_margintop">0dp</dimen>
+
+    <!-- Connecting -->
     <dimen name="connecting_spinner_size">100dp</dimen>
     <dimen name="connecting_spinner_thickness">6dp</dimen>
     <dimen name="connecting_text_textsize">16sp</dimen>
     <dimen name="connecting_text_margintop">18sp</dimen>
+    <!-- Group detail -->
     <dimen name="groupdetail_groupname_textsize">32sp</dimen>
     <dimen name="groupdetail_groupname_margintop">12dp</dimen>
     <dimen name="groupdetail_groupname_marginside">12dp</dimen>
@@ -58,12 +71,12 @@
     <dimen name="groupdetail_nameeditview_textsize">24sp</dimen>
     <dimen name="groupdetail_changenamebutton_margintop">9dp</dimen>
     <dimen name="groupdetail_groupnamefield_marginside">9dp</dimen>
+    <!-- Add group -->
     <dimen name="addgroup_title_textsize">45sp</dimen>
     <dimen name="addgroup_subtitle_textsize">20sp</dimen>
     <dimen name="addgroup_lightslist_margintop">12dp</dimen>
     <dimen name="addgroup_groupnamefield_marginside">9dp</dimen>
     <dimen name="addgroup_nameeditview_textsize">24sp</dimen>
     <dimen name="addgroup_groupname_margintop">12dp</dimen>
-    <dimen name="groupsitem_icon_marginvert">8dp</dimen>
 
 </resources>

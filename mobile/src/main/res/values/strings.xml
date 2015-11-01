@@ -59,7 +59,7 @@
     <string name="groupdetail_deletegroup_confirm_message">Deze actie kan niet ongedaan gemaakt worden.</string>
     <string name="groupdetail_deletegroup_confirm_ok">Bevestigen</string>
     <string name="groupdetail_deletegroup_confirm_cancel">Annuleren</string>
-    <string name="toolbar_lights_add">Voeg toe</string>
+    <string name="toolbar_lights_search">Zoeken</string>
     <string name="addgroup_title_text">Nieuwe groep</string>
     <string name="addgroup_subtitle_text">Kies lampen om een nieuwe groep te maken</string>
     <string name="addgroup_savebutton_text">Opslaan</string>
@@ -71,4 +71,7 @@
     <string name="addgroup_snackbar_undo">Undo</string>
     <string name="groups_nogroups_text">Geen groepen in uw Hue netwerk</string>
     <string name="toolbar_addgroup_cancel">Terug</string>
+    <string name="lights_title_text">Lichten</string>
+    <string name="lights_subtitle_text">Alle lichten in Philips Hue</string>
+    <string name="lights_nolights_text">Geen lichten in uw Hue netwerk</string>
 </resources>
