@@ -1,11 +1,10 @@
-package nl.rwslinkman.hueme;
+package nl.rwslinkman.hueme.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -19,14 +18,18 @@ import com.philips.lighting.model.PHLightState;
 import java.util.List;
 import java.util.Map;
 
+import nl.rwslinkman.hueme.HueMe;
+import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
-import nl.rwslinkman.hueme.ui.GroupDetailActivityView;
+import nl.rwslinkman.hueme.ui.BridgeResourceDetailActivityView;
 
-public class GroupDetailActivity extends AppCompatActivity implements PHGroupListener
-{
+/**
+ @* @author Rick Slinkman
+ */
+public class GroupDetailActivity extends BridgeResourceDetailActivity implements PHGroupListener {
     public static final String TAG = GroupDetailActivity.class.getSimpleName();
     public static final String EXTRA_GROUP_IDENTIFIER = "nl.rwslinkman.hueme.groupdetailactivity.extra.group_identifier";
-    private static final int RESULTCODE_GROUP_DELETED = 2203;
+    private static final int RESULTCODE_GROUP_DELETED = 2103;
     private final BroadcastReceiver groupUpdateReceiver = new BroadcastReceiver()
     {
         @Override
@@ -42,7 +45,7 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
                     mActiveGroup = bridge.getResourceCache().getGroups().get(groupIdentifier);
 
                     PHLightState groupState = GroupDetailActivity.this.getGroupState();
-                    mView.showGroupView(groupState, mActiveGroup.getName());
+                    mView.showResourceView(groupState, mActiveGroup.getName());
                     break;
                 default:
                     break;
@@ -50,18 +53,18 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
         }
     };
     private HueMe mApp;
-    private GroupDetailActivityView mView;
+    private BridgeResourceDetailActivityView mView;
     private PHGroup mActiveGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_detail);
+        setContentView(R.layout.activity_bridgeresource_detail);
 
         this.mApp = (HueMe) getApplication();
 
-        mView = new GroupDetailActivityView(this);
+        mView = new BridgeResourceDetailActivityView(this);
 
         Intent intent = getIntent();
         if (intent != null)
@@ -152,7 +155,7 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
 
         // Show new state
         PHLightState updatedGroupState = this.getGroupState();
-        this.mView.showGroupView(updatedGroupState, mActiveGroup.getName());
+        this.mView.showResourceView(updatedGroupState, mActiveGroup.getName());
     }
 
     @Override
@@ -177,38 +180,6 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
         }
     }
 
-    public void updateGroupState(PHLightState state)
-    {
-        // Obtain service
-        HueService service = mApp.getHueService();
-        // Perform magic
-        PHBridge bridge = service.getBridge();
-        bridge.setLightStateForGroup(mActiveGroup.getIdentifier(), state, this);
-    }
-
-    public void changeGroupName(String newGroupName)
-    {
-        mActiveGroup.setName(newGroupName);
-
-        // Obtain service
-        HueService service = mApp.getHueService();
-        // Perform magic
-        PHBridge bridge = service.getBridge();
-        bridge.updateGroup(mActiveGroup, this);
-    }
-
-    public void deleteActiveGroupPermanently()
-    {
-        // Obtain service
-        HueService service = mApp.getHueService();
-        // Perform magic
-        PHBridge bridge = service.getBridge();
-        bridge.deleteGroup(mActiveGroup.getIdentifier(), this);
-
-        this.setResult(RESULTCODE_GROUP_DELETED);
-        this.finish();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item)
     {
@@ -219,5 +190,45 @@ public class GroupDetailActivity extends AppCompatActivity implements PHGroupLis
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public PHLightState getBridgeResourceState() {
+        return this.getGroupState();
+    }
+
+    @Override
+    public void updateBridgeResourceState(PHLightState state)
+    {
+        // Obtain service
+        HueService service = mApp.getHueService();
+        // Perform magic
+        PHBridge bridge = service.getBridge();
+        bridge.setLightStateForGroup(mActiveGroup.getIdentifier(), state, this);
+    }
+
+    @Override
+    public void changeBridgeResourceName(String newName)
+    {
+        mActiveGroup.setName(newName);
+
+        // Obtain service
+        HueService service = mApp.getHueService();
+        // Perform magic
+        PHBridge bridge = service.getBridge();
+        bridge.updateGroup(mActiveGroup, this);
+    }
+
+    @Override
+    public void deleteBridgeResourcePermanently()
+    {
+        // Obtain service
+        HueService service = mApp.getHueService();
+        // Perform magic
+        PHBridge bridge = service.getBridge();
+        bridge.deleteGroup(mActiveGroup.getIdentifier(), this);
+
+        this.setResult(RESULTCODE_GROUP_DELETED);
+        this.finish();
     }
 }

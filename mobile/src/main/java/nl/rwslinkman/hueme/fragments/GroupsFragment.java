@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.activity.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.BridgeResourceSwitchAdapter;

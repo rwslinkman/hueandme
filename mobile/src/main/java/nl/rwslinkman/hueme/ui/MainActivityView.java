@@ -15,7 +15,7 @@ import com.philips.lighting.model.PHBridge;
 
 import nl.rwslinkman.awesome.DrawableAwesome;
 import nl.rwslinkman.hueme.HueMe;
-import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.activity.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.fragments.AbstractActionMenuFragment;
 import nl.rwslinkman.hueme.fragments.AbstractFragment;

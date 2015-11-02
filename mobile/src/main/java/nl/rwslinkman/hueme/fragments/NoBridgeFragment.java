@@ -19,7 +19,7 @@ import java.util.ArrayList;
 
 import nl.rwslinkman.awesome.TextAwesome;
 import nl.rwslinkman.hueme.HueMe;
-import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.activity.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.ui.HueIPAddressAdapter;

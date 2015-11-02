@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import nl.rwslinkman.hueme.MainActivity;
+import nl.rwslinkman.hueme.activity.MainActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.ui.MainActivityView;
 import nl.rwslinkman.hueme.ui.SelectableLightsAdapter;

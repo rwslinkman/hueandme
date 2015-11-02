@@ -11,11 +11,11 @@ import com.gc.materialdesign.views.ButtonFlat;
 import com.gc.materialdesign.views.Switch;
 import com.gc.materialdesign.widgets.Dialog;
 import com.larswerkman.holocolorpicker.ColorPicker;
-import com.philips.lighting.model.PHGroup;
+import com.philips.lighting.model.PHBridgeResource;
 import com.philips.lighting.model.PHLight;
 import com.philips.lighting.model.PHLightState;
 
-import nl.rwslinkman.hueme.GroupDetailActivity;
+import nl.rwslinkman.hueme.activity.BridgeResourceDetailActivity;
 import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.helper.HueColorConverter;
 import nl.rwslinkman.hueme.helper.PhilipsHSB;
@@ -23,11 +23,11 @@ import nl.rwslinkman.hueme.helper.PhilipsHSB;
 /**
  * @author Rick Slinkman
  */
-public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener, View.OnClickListener, Switch.OnCheckListener
+public class BridgeResourceDetailActivityView implements ColorPicker.OnColorSelectedListener, DimmerBar.OnDimmerValueSelectedListener, View.OnClickListener, Switch.OnCheckListener
 {
-    public static final String TAG = GroupDetailActivityView.class.getSimpleName();
+    public static final String TAG = BridgeResourceDetailActivityView.class.getSimpleName();
     private Toolbar mToolbar;
-    private GroupDetailActivity mActivity;
+    private BridgeResourceDetailActivity mActivity;
     private Switch mOnOffSwitch;
     private Switch mColorloopSwitch;
     private ColorPicker mColorPickerView;
@@ -36,7 +36,7 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
     private Button mChangeNameButton;
     private Button mDeleteGroupButton;
 
-    public GroupDetailActivityView(GroupDetailActivity activity)
+    public BridgeResourceDetailActivityView(BridgeResourceDetailActivity activity)
     {
         this.mActivity = activity;
 
@@ -51,18 +51,21 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
         this.mDeleteGroupButton = (Button) this.mActivity.findViewById(R.id.groupdetail_deletegroup_button);
     }
 
-    public void createView(PHGroup group)
+    public void createView(PHBridgeResource resource)
     {
-        if(group != null)
+        if(resource != null)
         {
-            PHLightState groupState = this.mActivity.getGroupState();
-            showGroupView(groupState, group.getName());
+            PHLightState groupState = this.mActivity.getBridgeResourceState();
+            showResourceView(groupState, resource.getName());
         }
 
         // Set Toolbar to be ActionBar
         this.mActivity.setSupportActionBar(mToolbar);
-        this.mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        this.mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+        if(this.mActivity.getSupportActionBar() != null)
+        {
+            this.mActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            this.mActivity.getSupportActionBar().setHomeButtonEnabled(true);
+        }
 
         this.mColorPickerView.addSVBar(this.mDimmerView);
     }
@@ -78,9 +81,9 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
         this.mDeleteGroupButton.setOnClickListener(this);
     }
 
-    public void showGroupView(final PHLightState state, final String groupName)
+    public void showResourceView(final PHLightState state, final String resName)
     {
-        if(state == null || groupName == null || groupName.isEmpty())
+        if(state == null || resName == null || resName.isEmpty())
         {
             throw new NullPointerException("Both parameters must be suppplied");
         }
@@ -90,7 +93,7 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
             public void run() {
                 int color = HueColorConverter.convertStateToColor(state);
 
-                mToolbar.setTitle(groupName);
+                mToolbar.setTitle(resName);
 
                 // On/Off switch
                 mOnOffSwitch.setChecked(state.isOn());
@@ -101,7 +104,7 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
                 mColorPickerView.setOldCenterColor(color);
                 mColorPickerView.setNewCenterColor(color);
                 // Group name edit
-                mNameEditView.setText(groupName);
+                mNameEditView.setText(resName);
 
                 setAllViewsEnabled(true);
             }
@@ -157,7 +160,7 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
 
     private void updateGroupState(PHLightState state)
     {
-        mActivity.updateGroupState(state);
+        mActivity.updateBridgeResourceState(state);
         setAllViewsEnabled(false);
     }
 
@@ -176,7 +179,7 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
             }
 
             // Submit name change
-            this.mActivity.changeGroupName(newGroupName);
+            this.mActivity.changeBridgeResourceName(newGroupName);
             this.setAllViewsEnabled(false);
         }
         else if (v.getId() == this.mDeleteGroupButton.getId())
@@ -213,9 +216,9 @@ public class GroupDetailActivityView implements ColorPicker.OnColorSelectedListe
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mActivity.deleteActiveGroupPermanently();
+                mActivity.deleteBridgeResourcePermanently();
                 dialog.dismiss();
-                GroupDetailActivityView.this.setAllViewsEnabled(false);
+                BridgeResourceDetailActivityView.this.setAllViewsEnabled(false);
             }
         });
     }

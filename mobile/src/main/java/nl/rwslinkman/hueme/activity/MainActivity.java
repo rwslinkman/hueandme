@@ -1,4 +1,4 @@
-package nl.rwslinkman.hueme;
+package nl.rwslinkman.hueme.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,11 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.philips.lighting.model.PHBridgeResource;
+import com.philips.lighting.model.PHGroup;
 import com.philips.lighting.model.PHLight;
 
+import nl.rwslinkman.hueme.HueMe;
+import nl.rwslinkman.hueme.R;
 import nl.rwslinkman.hueme.service.HueService;
 import nl.rwslinkman.hueme.service.HueServiceStateListener;
 import nl.rwslinkman.hueme.ui.MainActivityView;
@@ -115,14 +116,9 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
-        if(requestCode == REQUESTCODE_DETAIL_GROUP)
+        if(requestCode == REQUESTCODE_DETAIL_GROUP || requestCode == REQUESTCODE_DETAIL_LIGHT)
         {
-            Log.d(TAG, "Returned from GroupDetailActivity");
             this.registerServiceReceiver(getDisplayUpdatesFilter());
-        }
-        else if(requestCode == REQUESTCODE_DETAIL_LIGHT)
-        {
-            Log.d(TAG, "Returned from LightDetailActivity (todo)");
         }
         else
         {
@@ -190,18 +186,21 @@ public class MainActivity extends AppCompatActivity implements HueServiceStateLi
         return mView;
     }
 
-    public void startDetailActivity(PHBridgeResource resource)
+    public void startDetailActivity(PHGroup resource)
     {
-        if(resource instanceof PHLight)
-        {
-            Toast.makeText(this, "Light detail Activity", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        // TODO: Convert to BridgeResourceDetailActivity
         Intent detailIntent = new Intent(this, GroupDetailActivity.class);
         detailIntent.putExtra(GroupDetailActivity.EXTRA_GROUP_IDENTIFIER, resource.getIdentifier());
 
         app.getHueService().unregisterReceiver(hueUpdateReceiver);
         this.startActivityForResult(detailIntent, REQUESTCODE_DETAIL_GROUP);
+    }
+
+    public void startDetailActivity(PHLight resource)
+    {
+        Intent detailIntent = new Intent(this, LightDetailActivity.class);
+        detailIntent.putExtra(LightDetailActivity.EXTRA_LIGHT_IDENTIFIER, resource.getIdentifier());
+
+        app.getHueService().unregisterReceiver(hueUpdateReceiver);
+        this.startActivityForResult(detailIntent, REQUESTCODE_DETAIL_LIGHT);
     }
 }
