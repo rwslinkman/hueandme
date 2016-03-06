@@ -103,8 +103,10 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
         stateBulbBuilder.setColor(mActivity.getResources().getColor(R.color.navheader_statebulb_disabled));
-        mStateBulbView.setImageDrawable(stateBulbBuilder.build());
-        mStateMessageView.setText(mActivity.getString(R.string.philips_hue_loading));
+        if(mStateBulbView != null) {
+            mStateBulbView.setImageDrawable(stateBulbBuilder.build());
+            mStateMessageView.setText(mActivity.getString(R.string.philips_hue_loading));
+        }
 
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.navmenu_loading);
@@ -119,9 +121,13 @@ public class MainActivityView implements NavigationView.OnNavigationItemSelected
         DrawableAwesome.DrawableAwesomeBuilder stateBulbBuilder = new DrawableAwesome.DrawableAwesomeBuilder(mActivity, R.string.fa_lightbulb_o);
         stateBulbBuilder.setSize(NAVHEADER_STATE_BULB_SIZE);
         stateBulbBuilder.setColor(mActivity.getResources().getColor(R.color.rwslinkman_blue_dark));
-        mStateBulbView.setImageDrawable(stateBulbBuilder.build());
+        if(mStateBulbView != null) {
+            mStateBulbView.setImageDrawable(stateBulbBuilder.build());
+        }
 
-        mStateMessageView.setText(mActivity.getString(R.string.header_statemessage_connected));
+        if(mStateMessageView != null) {
+            mStateMessageView.setText(mActivity.getString(R.string.header_statemessage_connected));
+        }
 
         mNavigationView.getMenu().clear();
         mNavigationView.inflateMenu(R.menu.navmenu_default);
